@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Engine Hardware Kits — OrganizeYourNuts.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange:        #FF8C00;
+      --orange-light:  #FF9F1C;
+      --orange-dim:    rgba(255, 140, 0, 0.12);
+      --orange-border: rgba(255, 140, 0, 0.35);
+      --bg-deep:       #0c1120;
+      --bg-mid:        #111827;
+      --bg-card:       #161f34;
+      --text-primary:  #f0f4ff;
+      --text-muted:    #8fa0c0;
+      --radius:        12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      height: 68px;
+      background: rgba(12, 17, 32, 0.75);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: background 0.3s;
+    }
+    nav.scrolled { background: rgba(12, 17, 32, 0.97); }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+    .nav-brand img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .nav-brand-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .nav-brand-name span { color: var(--orange); }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .nav-back {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--text-primary); }
+
+    .btn {
+      display: inline-block;
+      padding: 0.6rem 1.4rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+    }
+    .btn:hover { transform: translateY(-1px); opacity: 0.92; }
+    .btn:active { transform: translateY(0); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--orange), var(--orange-light));
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(255,140,0,0.35);
+    }
+    .btn-primary:hover { box-shadow: 0 6px 24px rgba(255,140,0,0.5); }
+
+    /* PAGE HERO */
+    .page-hero {
+      background: radial-gradient(ellipse 90% 70% at 50% 0%, rgba(255,140,0,0.07) 0%, transparent 65%), var(--bg-deep);
+      padding: clamp(3rem, 8vw, 5.5rem) clamp(1.5rem, 5vw, 4rem) clamp(2.5rem, 6vw, 4rem);
+      text-align: center;
+    }
+    .page-hero-inner { max-width: 760px; margin: 0 auto; }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--orange); }
+    .breadcrumb-sep { opacity: 0.4; }
+    .breadcrumb-current { color: var(--orange); font-weight: 500; }
+
+    .page-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--orange);
+      background: var(--orange-dim);
+      border: 1px solid var(--orange-border);
+      padding: 0.35rem 0.9rem;
+      border-radius: 100px;
+      margin-bottom: 1.25rem;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    h1 em { font-style: normal; color: var(--orange); }
+
+    .page-sub {
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      color: var(--text-muted);
+      max-width: 580px;
+      margin: 0 auto 2rem;
+    }
+
+    .hero-badges {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 0.4rem 0.9rem;
+      border-radius: 100px;
+    }
+    .badge svg { color: var(--orange); }
+
+    /* SECTION COMMON */
+    section { padding: clamp(3rem, 7vw, 5rem) clamp(1.5rem, 5vw, 4rem); }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 0.6rem;
+    }
+    h2 {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.6rem;
+      color: var(--text-primary);
+    }
+    .section-sub {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+    }
+
+    /* WHAT'S INCLUDED */
+    .included { background: var(--bg-mid); }
+    .included-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+    .included-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .included-card:hover { border-color: var(--orange-border); transform: translateY(-2px); }
+    .included-icon {
+      flex-shrink: 0;
+      width: 40px; height: 40px;
+      background: var(--orange-dim);
+      border: 1px solid var(--orange-border);
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--orange);
+    }
+    .included-card h3 { font-size: 0.92rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .included-card p  { font-size: 0.82rem; color: var(--text-muted); }
+
+    /* PRODUCT GRID */
+    .products-section { background: var(--bg-deep); }
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .filter-btn {
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--orange-dim);
+      border-color: var(--orange-border);
+      color: var(--orange);
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .product-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .product-card:hover {
+      border-color: var(--orange-border);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+    }
+    .product-thumb {
+      background: linear-gradient(135deg, #1a2540, #0f1a30);
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      color: var(--orange);
+      position: relative;
+    }
+    .product-badge-tag {
+      position: absolute;
+      top: 0.75rem;
+      left: 0.75rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--orange);
+      color: #fff;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+    }
+    .product-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
+    .product-body h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.35rem; }
+    .product-body p  { font-size: 0.85rem; color: var(--text-muted); flex: 1; margin-bottom: 1rem; }
+    .product-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+    .product-price {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+    .product-price span { font-size: 0.8rem; font-weight: 400; color: var(--text-muted); }
+    .add-btn {
+      padding: 0.45rem 1rem;
+      border-radius: 7px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--orange), var(--orange-light));
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
+      text-decoration: none;
+    }
+    .add-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* CTA BANNER */
+    .cta-banner {
+      background: linear-gradient(135deg, #7a3a00 0%, #c96800 40%, #FF8C00 70%, #FF9F1C 100%);
+      padding: clamp(3rem, 7vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+      text-align: center;
+    }
+    .cta-banner h2 { color: #fff; }
+    .cta-banner .section-sub { color: rgba(255,255,255,0.8); margin: 0 auto 2rem; }
+    .cta-actions { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .btn-white { background: #fff; color: #c96800; font-weight: 700; font-size: 1rem; padding: 0.85rem 2.2rem; }
+    .btn-white:hover { background: #fff8f0; }
+    .btn-outline-white {
+      background: transparent;
+      color: #fff;
+      border: 2px solid rgba(255,255,255,0.6);
+      font-size: 1rem;
+      padding: 0.85rem 2.2rem;
+    }
+    .btn-outline-white:hover { border-color: #fff; }
+
+    /* FOOTER */
+    footer {
+      background: #080d1a;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 2.5rem clamp(1.5rem, 5vw, 4rem);
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .footer-brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+    .footer-brand img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+    .footer-brand-name { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); }
+    .footer-brand-name span { color: var(--orange); }
+    .footer-copy { font-size: 0.8rem; color: var(--text-muted); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { font-size: 0.85rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--orange); }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 0 1.25rem; height: 60px; }
+      .nav-brand-name { font-size: 0.9rem; }
+      .nav-back span { display: none; }
+      section { padding: 2.5rem 1.25rem; }
+      .included-grid { grid-template-columns: 1fr; }
+      .products-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .footer-links { flex-wrap: wrap; gap: 1rem; }
+    }
+    @media (max-width: 400px) {
+      h1 { font-size: 1.8rem; }
+      .nav-brand-name { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="index.html" class="nav-brand">
+      <img src="./organizeyournuts.jpg" alt="OrganizeYourNuts logo" />
+      <span class="nav-brand-name">Organize<span>YourNuts</span>.com</span>
+    </a>
+    <div class="nav-right">
+      <a href="index.html" class="nav-back">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        <span>Back to Store</span>
+      </a>
+      <a href="#order" class="btn btn-primary">Order Now</a>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <a href="index.html#categories">Categories</a>
+        <span class="breadcrumb-sep">&#8250;</span>
+        <span class="breadcrumb-current">Engine Hardware Kits</span>
+      </div>
+      <div class="page-eyebrow">Complete Engine Fastener Sets</div>
+      <h1>Engine Hardware <em>Kits</em></h1>
+      <p class="page-sub">
+        Every bolt, stud, and washer your engine rebuild needs -- sorted, labeled, and ready to install. Stop hunting for individual fasteners and get back to wrenching.
+      </p>
+      <div class="hero-badges">
+        <div class="badge">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          ARP &amp; OEM grade hardware
+        </div>
+        <div class="badge">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Torque specs included
+        </div>
+        <div class="badge">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Application-specific kits
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT'S INCLUDED -->
+  <section class="included">
+    <div class="section-inner">
+      <p class="section-label">What's Inside</p>
+      <h2>Every Kit Includes the Essentials</h2>
+      <p class="section-sub">No guessing, no hunting for stragglers. Our kits are built around complete engine reassembly from the bottom end up.</p>
+      <div class="included-grid">
+
+        <div class="included-card">
+          <div class="included-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          </div>
+          <div>
+            <h3>Head Bolts / Head Studs</h3>
+            <p>High-tensile cylinder head fasteners for a proper, leak-free seal. Available in OEM-replacement or performance stud kits.</p>
+          </div>
+        </div>
+
+        <div class="included-card">
+          <div class="included-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+          </div>
+          <div>
+            <h3>Main Cap Bolts</h3>
+            <p>Precision main bearing cap fasteners to keep your crankshaft properly clamped under high-load conditions.</p>
+          </div>
+        </div>
+
+        <div class="included-card">
+          <div class="included-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><path d="M5 12h14"/></svg>
+          </div>
+          <div>
+            <h3>Connecting Rod Bolts</h3>
+            <p>Critical bottom-end hardware for securing rod caps. Stretch-type bolts with recommended torque and angle specs included.</p>
+          </div>
+        </div>
+
+        <div class="included-card">
+          <div class="included-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <div>
+            <h3>Intake Manifold Studs &amp; Bolts</h3>
+            <p>Stainless or black oxide intake hardware in the correct thread pitch for your application, with washers included.</p>
+          </div>
+        </div>
+
+        <div class="included-card">
+          <div class="included-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 7 13 17 8 12 1 19"/><polyline points="17 7 23 7 23 13"/></svg>
+          </div>
+          <div>
+            <h3>Exhaust Header Bolts</h3>
+            <p>High-temp rated exhaust fasteners with anti-seize coating to survive heat cycling without galling or breaking on removal.</p>
+          </div>
+        </div>
+
+        <div class="included-card">
+          <div class="included-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <div>
+            <h3>Cam Retaining &amp; Timing Hardware</h3>
+            <p>Camshaft thrust plate bolts, timing cover fasteners, and cam gear bolts -- the small stuff that always goes missing.</p>
+          </div>
+        </div>
+
+        <div class="included-card">
+          <div class="included-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <div>
+            <h3>Oil Pan &amp; Valley Cover Bolts</h3>
+            <p>Full sets of oil pan rail bolts and valley/valley pan fasteners with replacement crush washers where applicable.</p>
+          </div>
+        </div>
+
+        <div class="included-card">
+          <div class="included-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div>
+            <h3>Accessory &amp; Dress Fasteners</h3>
+            <p>Alternator bracket, water pump, and front accessory bolts so your engine bay looks as clean as it runs.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT KITS -->
+  <section class="products-section" id="order">
+    <div class="section-inner">
+      <p class="section-label">Shop Kits</p>
+      <h2>Find Your Application</h2>
+      <p class="section-sub">Kits built for specific platforms so you know every fastener fits before you open the bag.</p>
+
+      <div class="filter-bar">
+        <button class="filter-btn active">All Kits</button>
+        <button class="filter-btn">Small Block V8</button>
+        <button class="filter-btn">Big Block V8</button>
+        <button class="filter-btn">4-Cylinder</button>
+        <button class="filter-btn">Diesel</button>
+      </div>
+
+      <div class="products-grid">
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <div class="product-badge-tag">Best Seller</div>
+            <svg width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24" opacity="0.6"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+          </div>
+          <div class="product-body">
+            <h3>Small Block Chevy Complete Engine Kit</h3>
+            <p>Full rebuild hardware for SBC 283--400 cu in. Includes head bolts, main caps, rod bolts, intake, exhaust, and timing hardware. 187 pieces.</p>
+            <div class="product-footer">
+              <div class="product-price">$89.99 <span>/ kit</span></div>
+              <a href="#" class="add-btn">Add to Cart</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <svg width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24" opacity="0.6"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+          </div>
+          <div class="product-body">
+            <h3>LS Engine Complete Hardware Kit</h3>
+            <p>Purpose-built for Gen III/IV LS engines. TTY head bolts, main cap fasteners, valley cover, cam cover, and accessory hardware. 210 pieces.</p>
+            <div class="product-footer">
+              <div class="product-price">$109.99 <span>/ kit</span></div>
+              <a href="#" class="add-btn">Add to Cart</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <div class="product-badge-tag">New</div>
+            <svg width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24" opacity="0.6"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <div class="product-body">
+            <h3>Big Block Chevy Hardware Kit</h3>
+            <p>Covers BBC 396--454 cu in applications. Heavy-duty hex-head hardware throughout, with grade-8 main and rod fasteners. 201 pieces.</p>
+            <div class="product-footer">
+              <div class="product-price">$119.99 <span>/ kit</span></div>
+              <a href="#" class="add-btn">Add to Cart</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <svg width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24" opacity="0.6"><line x1="12" y1="2" x2="12" y2="22"/><path d="M5 12h14"/><rect x="8" y="2" width="8" height="5" rx="1"/></svg>
+          </div>
+          <div class="product-body">
+            <h3>Small Block Ford Complete Engine Kit</h3>
+            <p>Built for SBF 289--351W. Hex-head ARP-grade head bolts, intake, exhaust, oil pan, and front accessory fasteners. 193 pieces.</p>
+            <div class="product-footer">
+              <div class="product-price">$94.99 <span>/ kit</span></div>
+              <a href="#" class="add-btn">Add to Cart</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <svg width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24" opacity="0.6"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <div class="product-body">
+            <h3>Import 4-Cylinder Engine Kit</h3>
+            <p>Metric hardware kit for popular Japanese and European 4-cylinder applications. Head, crank, rod, cam cover, and exhaust hardware. 164 pieces.</p>
+            <div class="product-footer">
+              <div class="product-price">$74.99 <span>/ kit</span></div>
+              <a href="#" class="add-btn">Add to Cart</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-thumb">
+            <div class="product-badge-tag">Heavy Duty</div>
+            <svg width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24" opacity="0.6"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h5l2 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <div class="product-body">
+            <h3>Diesel Engine Hardware Kit</h3>
+            <p>High-clamp-load fasteners for diesel head studs, main caps, and injector hold-downs. Rated for elevated cylinder pressures. 178 pieces.</p>
+            <div class="product-footer">
+              <div class="product-price">$149.99 <span>/ kit</span></div>
+              <a href="#" class="add-btn">Add to Cart</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner">
+    <div class="section-inner">
+      <h2>Not Sure Which Kit You Need?</h2>
+      <p class="section-sub">Tell us your engine and we'll point you to the right kit -- or build a custom one.</p>
+      <div class="cta-actions">
+        <a href="#" class="btn btn-white">Contact Us</a>
+        <a href="index.html" class="btn btn-outline-white">Back to Store</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <a href="index.html" class="footer-brand">
+        <img src="./organizeyournuts.jpg" alt="OrganizeYourNuts logo" />
+        <span class="footer-brand-name">Organize<span>YourNuts</span>.com</span>
+      </a>
+      <p class="footer-copy">&copy; 2026 OrganizeYourNuts.com. All rights reserved.</p>
+      <nav class="footer-links">
+        <a href="index.html">Shop</a>
+        <a href="#">Bulk Orders</a>
+        <a href="#">Shipping</a>
+        <a href="#">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+
+    // Filter buttons (UI only — no backend yet)
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

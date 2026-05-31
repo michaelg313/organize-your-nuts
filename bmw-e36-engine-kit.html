@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BMW E36 Engine Replacement Hardware Kit — OrganizeYourNuts.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange:        #FF8C00;
+      --orange-light:  #FF9F1C;
+      --orange-dim:    rgba(255, 140, 0, 0.12);
+      --orange-border: rgba(255, 140, 0, 0.35);
+      --bg-deep:       #0c1120;
+      --bg-mid:        #111827;
+      --bg-card:       #161f34;
+      --text-primary:  #f0f4ff;
+      --text-muted:    #8fa0c0;
+      --radius:        12px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      height: 68px;
+      background: rgba(12, 17, 32, 0.75);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: background 0.3s;
+    }
+    nav.scrolled { background: rgba(12, 17, 32, 0.97); }
+    .nav-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+    .nav-brand img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+    .nav-brand-name { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.01em; }
+    .nav-brand-name span { color: var(--orange); }
+    .nav-right { display: flex; align-items: center; gap: 1rem; }
+    .nav-back {
+      font-size: 0.85rem; font-weight: 500; color: var(--text-muted);
+      text-decoration: none; display: flex; align-items: center; gap: 0.35rem; transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--text-primary); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 0.6rem 1.4rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem;
+      text-decoration: none; cursor: pointer; border: none;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+    }
+    .btn:hover { transform: translateY(-1px); opacity: 0.92; }
+    .btn:active { transform: translateY(0); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--orange), var(--orange-light));
+      color: #fff; box-shadow: 0 4px 18px rgba(255,140,0,0.35);
+    }
+    .btn-primary:hover { box-shadow: 0 6px 24px rgba(255,140,0,0.5); }
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb-bar {
+      background: var(--bg-mid);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding: 0.75rem clamp(1.5rem, 5vw, 4rem);
+    }
+    .breadcrumb {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.82rem; color: var(--text-muted);
+    }
+    .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--orange); }
+    .breadcrumb-sep { opacity: 0.4; }
+    .breadcrumb-current { color: var(--orange); font-weight: 500; }
+
+    /* ── PRODUCT HERO (2-col) ── */
+    .product-hero {
+      background: radial-gradient(ellipse 80% 60% at 60% 0%, rgba(255,140,0,0.06) 0%, transparent 60%), var(--bg-deep);
+      padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+    }
+    .product-hero-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    /* left col */
+    .ph-left {}
+    .page-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--orange); background: var(--orange-dim); border: 1px solid var(--orange-border);
+      padding: 0.3rem 0.85rem; border-radius: 100px; margin-bottom: 1.1rem;
+    }
+    h1 {
+      font-size: clamp(1.9rem, 4vw, 3rem); font-weight: 900;
+      line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 0.9rem;
+    }
+    h1 em { font-style: normal; color: var(--orange); }
+    .ph-desc {
+      font-size: 1rem; color: var(--text-muted);
+      max-width: 540px; margin-bottom: 1.75rem; line-height: 1.7;
+    }
+    .ph-badges {
+      display: flex; flex-wrap: wrap; gap: 0.65rem; margin-bottom: 2rem;
+    }
+    .badge {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.8rem; color: var(--text-muted);
+      background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06);
+      padding: 0.38rem 0.85rem; border-radius: 100px;
+    }
+    .badge svg { color: var(--orange); flex-shrink: 0; }
+
+    /* stats row */
+    .stat-row {
+      display: flex; gap: 2rem; flex-wrap: wrap;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .stat-item { display: flex; flex-direction: column; gap: 0.15rem; }
+    .stat-value { font-size: 1.5rem; font-weight: 900; color: var(--orange); letter-spacing: -0.02em; }
+    .stat-label { font-size: 0.73rem; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    /* right col — purchase card */
+    .purchase-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 2rem;
+      position: sticky;
+      top: 88px;
+    }
+    .pc-sku {
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 0.6rem;
+    }
+    .pc-name { font-size: 1.05rem; font-weight: 700; margin-bottom: 1.4rem; line-height: 1.3; }
+    .pc-price-row {
+      display: flex; align-items: baseline; gap: 0.6rem;
+      margin-bottom: 0.5rem;
+    }
+    .pc-price {
+      font-size: 2.4rem; font-weight: 900;
+      color: var(--text-primary); letter-spacing: -0.03em;
+    }
+    .pc-price-label { font-size: 0.85rem; color: var(--text-muted); }
+    .pc-savings {
+      font-size: 0.82rem; color: #68d391; font-weight: 600;
+      background: rgba(72,187,120,0.1); border: 1px solid rgba(72,187,120,0.2);
+      padding: 0.2rem 0.6rem; border-radius: 100px;
+      display: inline-block; margin-bottom: 1.4rem;
+    }
+    .pc-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 1.25rem 0; }
+
+    .pc-includes-label {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 0.75rem;
+    }
+    .pc-includes-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .pc-includes-list li {
+      display: flex; align-items: center; gap: 0.55rem;
+      font-size: 0.84rem; color: var(--text-muted);
+    }
+    .pc-includes-list li svg { color: var(--orange); flex-shrink: 0; }
+
+    .btn-cart {
+      width: 100%; padding: 1rem 1.5rem;
+      font-size: 1.05rem; font-weight: 700;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--orange), var(--orange-light));
+      color: #fff; border: none; cursor: pointer;
+      box-shadow: 0 6px 24px rgba(255,140,0,0.4);
+      display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+      margin-bottom: 0.75rem;
+      text-decoration: none;
+    }
+    .btn-cart:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(255,140,0,0.55); }
+    .btn-cart:active { transform: translateY(0); }
+
+    .pc-note {
+      font-size: 0.75rem; color: var(--text-muted); text-align: center; line-height: 1.5;
+    }
+    .pc-note svg { display: inline; vertical-align: middle; color: var(--orange); margin-right: 3px; }
+
+    /* ── KIT CONTENTS TABLE ── */
+    .contents-section { background: var(--bg-mid); padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem); }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--orange); margin-bottom: 0.5rem;
+    }
+    h2 {
+      font-size: clamp(1.6rem, 3.5vw, 2.3rem); font-weight: 800;
+      letter-spacing: -0.02em; margin-bottom: 0.5rem; color: var(--text-primary);
+    }
+    .section-sub {
+      color: var(--text-muted); font-size: 1rem; max-width: 560px; margin-bottom: 2.25rem;
+    }
+
+    .contents-table-wrap {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .contents-table {
+      width: 100%; border-collapse: collapse; font-size: 0.9rem;
+    }
+    .contents-table thead {
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .contents-table th {
+      text-align: left; padding: 1rem 1.25rem;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-muted);
+    }
+    .contents-table th.center { text-align: center; }
+    .contents-table td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      vertical-align: middle;
+    }
+    .contents-table tbody tr:last-child td { border-bottom: none; }
+    .contents-table tbody tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .ct-num {
+      width: 40px; height: 40px;
+      background: var(--orange-dim); border: 1px solid var(--orange-border);
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem; font-weight: 900; color: var(--orange);
+    }
+    .ct-item-name { font-weight: 700; font-size: 0.92rem; margin-bottom: 0.15rem; }
+    .ct-item-spec { font-size: 0.78rem; color: var(--text-muted); }
+    .ct-qty {
+      text-align: center;
+      font-size: 1rem; font-weight: 800; color: var(--orange);
+    }
+    .ct-qty-sub { font-size: 0.72rem; color: var(--text-muted); font-weight: 400; display: block; }
+    .ct-grade {
+      font-size: 0.78rem; color: var(--text-muted);
+    }
+    .ct-note { font-size: 0.78rem; color: var(--text-muted); max-width: 240px; }
+
+    .flag-badge {
+      display: inline-block; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 0.18rem 0.5rem; border-radius: 4px; white-space: nowrap;
+    }
+    .flag-tty  { background: rgba(252,129,74,0.15); color: #fc814a; }
+    .flag-crit { background: rgba(245,101,101,0.15); color: #fc8181; }
+    .flag-lock { background: rgba(129,140,248,0.15); color: #a5b4fc; }
+
+    /* totals row */
+    .contents-table tfoot td {
+      padding: 1rem 1.25rem;
+      border-top: 2px solid rgba(255,255,255,0.1);
+      font-weight: 700;
+    }
+    .totals-label { color: var(--text-muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .totals-value { font-size: 1.1rem; font-weight: 900; color: var(--orange); text-align: center; }
+
+    /* ── WHY THIS KIT ── */
+    .why-section { background: var(--bg-deep); padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem); }
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+    .why-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      display: flex; align-items: flex-start; gap: 1rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .why-card:hover { border-color: var(--orange-border); transform: translateY(-2px); }
+    .why-icon {
+      flex-shrink: 0; width: 40px; height: 40px;
+      background: var(--orange-dim); border: 1px solid var(--orange-border);
+      border-radius: 9px; display: flex; align-items: center; justify-content: center;
+      color: var(--orange);
+    }
+    .why-card h3 { font-size: 0.92rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .why-card p  { font-size: 0.82rem; color: var(--text-muted); }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      background: linear-gradient(135deg, #7a3a00 0%, #c96800 40%, #FF8C00 70%, #FF9F1C 100%);
+      padding: clamp(3rem, 7vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+      text-align: center;
+    }
+    .cta-banner h2 { color: #fff; }
+    .cta-banner .section-sub { color: rgba(255,255,255,0.8); margin: 0 auto 2rem; }
+    .cta-actions { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .btn-white { background: #fff; color: #c96800; font-weight: 700; font-size: 1rem; padding: 0.85rem 2.2rem; }
+    .btn-white:hover { background: #fff8f0; }
+    .btn-outline-white {
+      background: transparent; color: #fff;
+      border: 2px solid rgba(255,255,255,0.6);
+      font-size: 1rem; padding: 0.85rem 2.2rem;
+    }
+    .btn-outline-white:hover { border-color: #fff; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #080d1a;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 2.5rem clamp(1.5rem, 5vw, 4rem);
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1.5rem;
+    }
+    .footer-brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+    .footer-brand img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+    .footer-brand-name { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); }
+    .footer-brand-name span { color: var(--orange); }
+    .footer-copy { font-size: 0.8rem; color: var(--text-muted); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { font-size: 0.85rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--orange); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .product-hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .purchase-card { position: static; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 0 1.25rem; height: 60px; }
+      .nav-back span { display: none; }
+      .breadcrumb-bar { padding: 0.65rem 1.25rem; }
+      .product-hero, .contents-section, .why-section { padding: 2.5rem 1.25rem; }
+      .ct-note, .ct-grade { display: none; }
+      .why-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .footer-links { flex-wrap: wrap; gap: 1rem; }
+    }
+    @media (max-width: 400px) {
+      h1 { font-size: 1.75rem; }
+      .nav-brand-name { display: none; }
+      .pc-price { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="index.html" class="nav-brand">
+      <img src="./organizeyournuts.jpg" alt="OrganizeYourNuts logo" />
+      <span class="nav-brand-name">Organize<span>YourNuts</span>.com</span>
+    </a>
+    <div class="nav-right">
+      <a href="engine-hardware-kits.html" class="nav-back">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        <span>Engine Hardware Kits</span>
+      </a>
+      <a href="#add-to-cart" class="btn btn-primary">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Add to Cart
+      </a>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb-bar">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="breadcrumb-sep">&#8250;</span>
+      <a href="engine-hardware-kits.html">Engine Hardware Kits</a>
+      <span class="breadcrumb-sep">&#8250;</span>
+      <span class="breadcrumb-current">BMW E36 Engine Replacement Hardware Kit</span>
+    </div>
+  </div>
+
+  <!-- PRODUCT HERO -->
+  <div class="product-hero">
+    <div class="product-hero-inner">
+
+      <!-- LEFT: product info -->
+      <div class="ph-left">
+        <div class="page-eyebrow">Complete Kit — Ships in One Box</div>
+        <h1>BMW E36 Engine <em>Replacement</em> Hardware Kit</h1>
+        <p class="ph-desc">
+          Every bolt, stud, and washer needed to fully rebuild an M50, M52, or S50 inline-six — sorted, labeled, and ready to install. Stop sourcing 10 separate line items and get one kit that covers the complete engine from the sump to the cam cover.
+        </p>
+        <div class="ph-badges">
+          <div class="badge">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            M50 / M52 / S50 Compatible
+          </div>
+          <div class="badge">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            1992–1999 Model Years
+          </div>
+          <div class="badge">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            OEM-Grade &amp; Better Hardware
+          </div>
+          <div class="badge">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Torque Specs Card Included
+          </div>
+          <div class="badge">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Labeled Resealable Bags
+          </div>
+          <div class="badge">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            M6–M22 Thread Range
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-item">
+            <div class="stat-value">10</div>
+            <div class="stat-label">Item Types</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">233</div>
+            <div class="stat-label">Total Pieces</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">OEM+</div>
+            <div class="stat-label">Grade Standard</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">1 Box</div>
+            <div class="stat-label">Ships Together</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: purchase card -->
+      <div class="purchase-card">
+        <div class="pc-sku">SKU: OYN-E36-ENG-KIT</div>
+        <div class="pc-name">BMW E36 Complete Engine Replacement Hardware Kit</div>
+
+        <div class="pc-price-row">
+          <div class="pc-price">$159.99</div>
+          <div class="pc-price-label">/ kit</div>
+        </div>
+        <div class="pc-savings">Save $75+ vs. sourcing individually</div>
+
+        <div class="pc-divider"></div>
+
+        <div class="pc-includes-label">What's in the box</div>
+        <ul class="pc-includes-list">
+          <li>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            233 pieces across 10 fastener categories
+          </li>
+          <li>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Individually labeled resealable bags
+          </li>
+          <li>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Printed torque specs &amp; install notes card
+          </li>
+          <li>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            OEM-grade or better — Grade 8.8 / 10.9 / A2 stainless
+          </li>
+          <li>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            TTY head &amp; rod bolts included (single-use, new)
+          </li>
+          <li>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Ships within 2 business days — US stock
+          </li>
+        </ul>
+
+        <a href="#" class="btn-cart" id="add-to-cart">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          Add Kit to Cart — $159.99
+        </a>
+
+        <p class="pc-note">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Free shipping over $75 &nbsp;·&nbsp; 30-day returns
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- KIT CONTENTS TABLE -->
+  <section class="contents-section" id="contents">
+    <div class="section-inner">
+      <p class="section-label">Complete Parts List</p>
+      <h2>Everything In the Kit</h2>
+      <p class="section-sub">233 pieces across 10 fastener categories — every item needed for a full M50/M52/S50 engine rebuild.</p>
+
+      <div class="contents-table-wrap">
+        <table class="contents-table">
+          <thead>
+            <tr>
+              <th style="width:52px">#</th>
+              <th>Item</th>
+              <th class="center" style="width:100px">Qty</th>
+              <th style="width:130px">Spec / Grade</th>
+              <th class="ct-note" style="width:240px">Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr>
+              <td><div class="ct-num">1</div></td>
+              <td>
+                <div class="ct-item-name">Cylinder Head Bolts</div>
+                <div class="ct-item-spec">M11 × 1.5 &nbsp;<span class="flag-badge flag-tty">TTY</span> &nbsp;<span class="flag-badge flag-crit">Critical</span></div>
+              </td>
+              <td class="ct-qty">14<span class="ct-qty-sub">pcs</span></td>
+              <td class="ct-grade">OEM-grade<br>Single-use stretch</td>
+              <td class="ct-note">Must replace every rebuild. Torque + angle per BMW spec. Never reuse.</td>
+            </tr>
+
+            <tr>
+              <td><div class="ct-num">2</div></td>
+              <td>
+                <div class="ct-item-name">Main Bearing Cap Bolts</div>
+                <div class="ct-item-spec">M10 × 1.5 × 55 mm</div>
+              </td>
+              <td class="ct-qty">10<span class="ct-qty-sub">pcs</span></td>
+              <td class="ct-grade">Grade 10.9<br>DIN 931</td>
+              <td class="ct-note">5 main caps × 2 bolts. Replace when bearings are replaced.</td>
+            </tr>
+
+            <tr>
+              <td><div class="ct-num">3</div></td>
+              <td>
+                <div class="ct-item-name">Connecting Rod Bolts</div>
+                <div class="ct-item-spec">M9 × 1.0 (fine thread) &nbsp;<span class="flag-badge flag-tty">TTY</span> &nbsp;<span class="flag-badge flag-crit">Critical</span></div>
+              </td>
+              <td class="ct-qty">12<span class="ct-qty-sub">pcs</span></td>
+              <td class="ct-grade">OEM-grade<br>Single-use stretch</td>
+              <td class="ct-note">Unusual M9 fine thread — no M8 substitution. Torque + 70° angle.</td>
+            </tr>
+
+            <tr>
+              <td><div class="ct-num">4</div></td>
+              <td>
+                <div class="ct-item-name">Exhaust Manifold Studs &amp; Flange Nuts</div>
+                <div class="ct-item-spec">M8 × 1.25 — A2-70 Stainless</div>
+              </td>
+              <td class="ct-qty">24<span class="ct-qty-sub">pcs (12+12)</span></td>
+              <td class="ct-grade">A2-70 Stainless<br>DIN 835 double-end</td>
+              <td class="ct-note">Stainless upgrade over OEM carbon steel. Apply copper anti-seize on install.</td>
+            </tr>
+
+            <tr>
+              <td><div class="ct-num">5</div></td>
+              <td>
+                <div class="ct-item-name">Intake Manifold Bolts</div>
+                <div class="ct-item-spec">M8 × 1.25 (plenum) &amp; M6 × 1.0 (runners)</div>
+              </td>
+              <td class="ct-qty">20<span class="ct-qty-sub">pcs (8+12)</span></td>
+              <td class="ct-grade">Grade 8.8<br>Zinc plated</td>
+              <td class="ct-note">Lower plenum M8 × 35 mm; runner flanges M6 × 20 mm.</td>
+            </tr>
+
+            <tr>
+              <td><div class="ct-num">6</div></td>
+              <td>
+                <div class="ct-item-name">Valve Cover Bolts &amp; Bonded Seal Washers</div>
+                <div class="ct-item-spec">M6 × 1.0 × 25 mm with NBR seal</div>
+              </td>
+              <td class="ct-qty">20<span class="ct-qty-sub">pcs (10+10)</span></td>
+              <td class="ct-grade">OEM-spec<br>NBR bonded washer</td>
+              <td class="ct-note">Bolt + integral rubber-bonded washer assembly. Prevents cam cover oil seep.</td>
+            </tr>
+
+            <tr>
+              <td><div class="ct-num">7</div></td>
+              <td>
+                <div class="ct-item-name">Oil Pan Rail Bolts</div>
+                <div class="ct-item-spec">M6 × 1.0 (perimeter) &amp; M8 × 1.25 (corners)</div>
+              </td>
+              <td class="ct-qty">24<span class="ct-qty-sub">pcs (20+4)</span></td>
+              <td class="ct-grade">Grade 8.8<br>Zinc plated</td>
+              <td class="ct-note">Full sump bolt set. M6 × 25 mm perimeter, M8 × 30 mm corner.</td>
+            </tr>
+
+            <tr>
+              <td><div class="ct-num">8</div></td>
+              <td>
+                <div class="ct-item-name">VANOS &amp; Cam Sprocket Bolts</div>
+                <div class="ct-item-spec">M8 × 1.25 &nbsp;<span class="flag-badge flag-lock">Thread-Lock</span></div>
+              </td>
+              <td class="ct-qty">14<span class="ct-qty-sub">pcs</span></td>
+              <td class="ct-grade">OEM-grade<br>Grade 8.8</td>
+              <td class="ct-note">Covers single and double VANOS. Use Loctite 243 on sprocket bolts.</td>
+            </tr>
+
+            <tr>
+              <td><div class="ct-num">9</div></td>
+              <td>
+                <div class="ct-item-name">Water Pump &amp; Thermostat Housing Bolts</div>
+                <div class="ct-item-spec">M8 × 1.25 × 40–70 mm</div>
+              </td>
+              <td class="ct-qty">10<span class="ct-qty-sub">pcs</span></td>
+              <td class="ct-grade">A2 Stainless<br>Grade 8.8 equiv.</td>
+              <td class="ct-note">Stainless for coolant-adjacent use. Assorted lengths cover pump and stat housing positions.</td>
+            </tr>
+
+            <tr>
+              <td><div class="ct-num">10</div></td>
+              <td>
+                <div class="ct-item-name">Oil Drain Plug &amp; Aluminum Crush Washers</div>
+                <div class="ct-item-spec">M22 × 1.5 plug + crush washers</div>
+              </td>
+              <td class="ct-qty">6<span class="ct-qty-sub">pcs (1+5)</span></td>
+              <td class="ct-grade">OEM-spec plug<br>Aluminum washers</td>
+              <td class="ct-note">1 drain plug + 5 crush washers (enough for multiple oil changes). Replace washer every drain.</td>
+            </tr>
+
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2" class="totals-label">Total Pieces in Kit</td>
+              <td class="totals-value">233</td>
+              <td colspan="2"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY THIS KIT -->
+  <section class="why-section">
+    <div class="section-inner">
+      <p class="section-label">Why This Kit</p>
+      <h2>Built for the E36 Platform</h2>
+      <p class="section-sub">Every size, thread pitch, and length is confirmed against BMW ETK specs — so nothing is wrong when you open the bag.</p>
+      <div class="why-grid">
+
+        <div class="why-card">
+          <div class="why-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <div>
+            <h3>Application-Verified Specs</h3>
+            <p>Every thread pitch and length is confirmed against BMW ETK engineering specs for M50, M52, and S50 engines.</p>
+          </div>
+        </div>
+
+        <div class="why-card">
+          <div class="why-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <h3>Safety Items Are New</h3>
+            <p>TTY head bolts and rod bolts are always shipped new. These are single-use stretch fasteners — we never include pulled hardware.</p>
+          </div>
+        </div>
+
+        <div class="why-card">
+          <div class="why-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h5l2 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <div>
+            <h3>Ships in One Box</h3>
+            <p>No waiting on multiple suppliers. One order, one tracking number, arrives together so your build timeline stays on track.</p>
+          </div>
+        </div>
+
+        <div class="why-card">
+          <div class="why-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <div>
+            <h3>Torque Specs Included</h3>
+            <p>Printed card with torque values and angle specifications for every critical fastener — no flipping through a Bentley manual mid-job.</p>
+          </div>
+        </div>
+
+        <div class="why-card">
+          <div class="why-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          </div>
+          <div>
+            <h3>Labeled Resealable Bags</h3>
+            <p>Each item is sorted into its own labeled bag. Grab exactly what you need without digging through a pile of loose hardware.</p>
+          </div>
+        </div>
+
+        <div class="why-card">
+          <div class="why-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div>
+            <h3>Save $40+ vs. Piecemeal</h3>
+            <p>Sourcing 10 separate line items individually from dealers and specialty suppliers adds up fast. The kit price beats the sum of parts.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner">
+    <div class="section-inner">
+      <h2>Ready to Rebuild Your E36?</h2>
+      <p class="section-sub">One kit. One click. Everything you need to get the engine back together right.</p>
+      <div class="cta-actions">
+        <a href="#add-to-cart" class="btn btn-white">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          Add to Cart — $237.99
+        </a>
+        <a href="engine-hardware-kits.html" class="btn btn-outline-white">Browse All Engine Kits</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <a href="index.html" class="footer-brand">
+        <img src="./organizeyournuts.jpg" alt="OrganizeYourNuts logo" />
+        <span class="footer-brand-name">Organize<span>YourNuts</span>.com</span>
+      </a>
+      <p class="footer-copy">&copy; 2026 OrganizeYourNuts.com. All rights reserved.</p>
+      <nav class="footer-links">
+        <a href="index.html">Shop</a>
+        <a href="engine-hardware-kits.html">Engine Kits</a>
+        <a href="#">Bulk Orders</a>
+        <a href="#">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+  </script>
+
+</body>
+</html>

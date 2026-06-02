@@ -275,8 +275,79 @@
     .totals-label { color: var(--text-muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; }
     .totals-value { font-size: 1.1rem; font-weight: 900; color: var(--orange); text-align: center; }
 
+    /* ── CAT CONVERTER ADD-ON ── */
+    .addon-section { background: var(--bg-deep); padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem); }
+
+    .addon-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2.25rem;
+    }
+    .addon-header-left { max-width: 600px; }
+    .addon-price-chip {
+      flex-shrink: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--orange-border);
+      border-radius: var(--radius);
+      padding: 1rem 1.4rem;
+      text-align: center;
+    }
+    .addon-price-chip .chip-label {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.3rem;
+    }
+    .addon-price-chip .chip-price {
+      font-size: 1.5rem; font-weight: 900; color: var(--orange); letter-spacing: -0.02em;
+    }
+    .addon-price-chip .chip-sub {
+      font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;
+    }
+
+    .connection-label {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--orange); background: var(--orange-dim); border: 1px solid var(--orange-border);
+      padding: 0.3rem 0.85rem; border-radius: 100px; margin-bottom: 0.85rem;
+    }
+
+    .addon-tables { display: flex; flex-direction: column; gap: 1.75rem; }
+    .addon-table-block {}
+    .addon-table-title {
+      font-size: 0.95rem; font-weight: 700; margin-bottom: 0.2rem;
+    }
+    .addon-table-sub {
+      font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem;
+    }
+
+    .warning-callout {
+      display: flex; align-items: flex-start; gap: 0.85rem;
+      background: rgba(252, 129, 74, 0.08);
+      border: 1px solid rgba(252, 129, 74, 0.35);
+      border-radius: 10px;
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 1rem;
+    }
+    .warning-callout-icon {
+      flex-shrink: 0; margin-top: 0.1rem; color: #fc814a;
+    }
+    .warning-callout-text {
+      font-size: 0.82rem; line-height: 1.55;
+    }
+    .warning-callout-text strong { color: #fc814a; }
+
+    .compat-note {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      background: rgba(99,179,237,0.07);
+      border: 1px solid rgba(99,179,237,0.2);
+      border-radius: 10px;
+      padding: 0.85rem 1.1rem;
+      margin-top: 1.75rem;
+      font-size: 0.82rem; color: var(--text-muted); line-height: 1.55;
+    }
+    .compat-note svg { flex-shrink: 0; color: #63b3ed; margin-top: 0.1rem; }
+    .compat-note strong { color: #63b3ed; }
+
     /* ── WHY THIS KIT ── */
-    .why-section { background: var(--bg-deep); padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem); }
+    .why-section { background: var(--bg-mid); padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem); }
     .why-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -347,7 +418,9 @@
       nav { padding: 0 1.25rem; height: 60px; }
       .nav-back span { display: none; }
       .breadcrumb-bar { padding: 0.65rem 1.25rem; }
-      .product-hero, .contents-section, .why-section { padding: 2.5rem 1.25rem; }
+      .product-hero, .contents-section, .addon-section, .why-section { padding: 2.5rem 1.25rem; }
+      .addon-header { flex-direction: column; }
+      .addon-price-chip { align-self: flex-start; }
       .ct-note, .ct-grade { display: none; }
       .why-grid { grid-template-columns: 1fr; }
       .footer-inner { flex-direction: column; align-items: flex-start; gap: 1rem; }
@@ -643,6 +716,167 @@
           </tfoot>
         </table>
       </div>
+    </div>
+  </section>
+
+  <!-- CATALYTIC CONVERTER ADD-ON -->
+  <section class="addon-section" id="cat-addon">
+    <div class="section-inner">
+
+      <div class="addon-header">
+        <div class="addon-header-left">
+          <p class="section-label">Optional Add-On</p>
+          <h2>Catalytic Converter Hardware Add-On</h2>
+          <p class="section-sub">
+            Covers the 1996–1999 BMW E36 equipped with the M52 and S52 engines. Two flange connection points, 30 fasteners total — sold as a standalone sub-kit or bundled with the main engine hardware kit.
+          </p>
+        </div>
+        <div class="addon-price-chip">
+          <div class="chip-label">Sub-Kit Price</div>
+          <div class="chip-price">$25–$35</div>
+          <div class="chip-sub">30-piece set</div>
+        </div>
+      </div>
+
+      <div class="addon-tables">
+
+        <!-- CONNECTION A -->
+        <div class="addon-table-block">
+          <div class="connection-label">
+            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+            Connection A — Exhaust Manifold to Downpipe
+          </div>
+          <div class="addon-table-title">Manifold Flange Fasteners</div>
+          <div class="addon-table-sub">12 studs and 12 copper locking nuts securing the exhaust manifold to the downpipe flange.</div>
+
+          <div class="warning-callout">
+            <div class="warning-callout-icon">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div class="warning-callout-text">
+              <strong>Single-Use Hardware — Do Not Reuse.</strong> The M7 copper locking nuts (BMW OEM #11127968) are one-time-use fasteners. The copper deforms on torque to create a gas-tight seal. Reusing these nuts risks exhaust leaks and stud pull-out. Always install new nuts every time the downpipe is removed.
+            </div>
+          </div>
+
+          <div class="contents-table-wrap">
+            <table class="contents-table">
+              <thead>
+                <tr>
+                  <th style="width:52px">#</th>
+                  <th>Item</th>
+                  <th class="center" style="width:100px">Qty</th>
+                  <th style="width:160px">OEM Part #</th>
+                  <th class="ct-note" style="width:240px">Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="ct-num">A1</div></td>
+                  <td>
+                    <div class="ct-item-name">Exhaust Manifold Studs</div>
+                    <div class="ct-item-spec">M7 × 42 mm — High-temp steel</div>
+                  </td>
+                  <td class="ct-qty">12<span class="ct-qty-sub">pcs</span></td>
+                  <td class="ct-grade">BMW OEM<br>#11121744057</td>
+                  <td class="ct-note">Double-end stud, press-fit into head. Replace if corrosion or thread damage is found.</td>
+                </tr>
+                <tr>
+                  <td><div class="ct-num">A2</div></td>
+                  <td>
+                    <div class="ct-item-name">M7 Copper Locking Nuts</div>
+                    <div class="ct-item-spec">M7 — Copper &nbsp;<span class="flag-badge flag-tty">Single Use</span> &nbsp;<span class="flag-badge flag-crit">Critical</span></div>
+                  </td>
+                  <td class="ct-qty">12<span class="ct-qty-sub">pcs</span></td>
+                  <td class="ct-grade">BMW OEM<br>#11127968</td>
+                  <td class="ct-note">Copper deforms on torque to seal against exhaust gases. Never reuse — replace every removal.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2" class="totals-label">Connection A Subtotal</td>
+                  <td class="totals-value">24</td>
+                  <td colspan="2"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- CONNECTION B -->
+        <div class="addon-table-block">
+          <div class="connection-label">
+            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+            Connection B — Cat Outlet to Mid-Pipe
+          </div>
+          <div class="addon-table-title">Cat Outlet Flange Fasteners</div>
+          <div class="addon-table-sub">3 hex flange bolts and 3 flange nuts securing the catalytic converter outlet to the mid-pipe flange.</div>
+
+          <div class="contents-table-wrap">
+            <table class="contents-table">
+              <thead>
+                <tr>
+                  <th style="width:52px">#</th>
+                  <th>Item</th>
+                  <th class="center" style="width:100px">Qty</th>
+                  <th style="width:160px">Spec / Grade</th>
+                  <th class="ct-note" style="width:240px">Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="ct-num">B1</div></td>
+                  <td>
+                    <div class="ct-item-name">M10 Hex Flange Bolts</div>
+                    <div class="ct-item-spec">M10 × 40 mm — Hex flange head</div>
+                  </td>
+                  <td class="ct-qty">3<span class="ct-qty-sub">pcs</span></td>
+                  <td class="ct-grade">Grade 8.8<br>A2-70 Stainless rec.</td>
+                  <td class="ct-note">Stainless strongly recommended — these are directly in the exhaust heat path and corrode quickly.</td>
+                </tr>
+                <tr>
+                  <td><div class="ct-num">B2</div></td>
+                  <td>
+                    <div class="ct-item-name">M10 Flange Nuts</div>
+                    <div class="ct-item-spec">M10 × 1.5 — Serrated flange</div>
+                  </td>
+                  <td class="ct-qty">3<span class="ct-qty-sub">pcs</span></td>
+                  <td class="ct-grade">Grade 8 / A2<br>Self-locking flange</td>
+                  <td class="ct-note">Serrated flange provides vibration resistance without a separate lock washer. Replace if nut face is damaged.</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2" class="totals-label">Connection B Subtotal</td>
+                  <td class="totals-value">6</td>
+                  <td colspan="2"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /addon-tables -->
+
+      <!-- TOTALS + COMPAT NOTE -->
+      <div class="contents-table-wrap" style="margin-top: 1.75rem;">
+        <table class="contents-table">
+          <tfoot>
+            <tr>
+              <td colspan="2" class="totals-label">Total Add-On Pieces (both connections)</td>
+              <td class="totals-value">30</td>
+              <td colspan="2"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="compat-note">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div>
+          <strong>M52TU Compatibility (1998–1999 Late Production):</strong> The M52TU engine, introduced in late 1998, uses identical catalytic converter flange hardware at both Connection A and Connection B. The same 30-piece add-on kit applies — no variant-specific hardware required. Confirm production date via VIN decode if uncertain.
+        </div>
+      </div>
+
     </div>
   </section>
 

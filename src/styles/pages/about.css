@@ -1,0 +1,32 @@
+/* OrganizeYourNuts — page styles: About / Contact (/about)
+   §5 "PAGE: About / Contact" from organizeyournuts-hifi.html, moved
+   verbatim, plus this page's selectors from the combined @container blocks.
+   Requires site.css loaded first.
+   NOTE: the hi-fi About page's contact form also uses .form-grid/.span2
+   (defined in checkout.css) — see the cross-page reuse list in README.md. */
+
+/* ─────────── PAGE: About / Contact ─────────── */
+.about-grid{display:grid; grid-template-columns:.85fr 1.15fr; gap:44px; align-items:center;}
+.stat-row{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:32px;}
+.stat{padding:20px 22px;}
+.stat b{
+  display:block; font-size:27px; font-weight:900; letter-spacing:-1px;
+  margin-bottom:5px; color:var(--text-primary);
+}
+.stat span{font-size:12.5px; color:var(--text-muted); line-height:1.5;}
+.contact-grid{display:grid; grid-template-columns:1.5fr 1fr; gap:26px; align-items:start;}
+.detail{padding:14px 0; border-bottom:1px solid var(--hairline);}
+.detail:last-child{border-bottom:0; padding-bottom:0;}
+.detail .dk{
+  font-size:11px; font-weight:700; letter-spacing:1.1px; text-transform:uppercase;
+  color:var(--text-muted); margin-bottom:6px;
+}
+.detail .dv{font-size:14px; line-height:1.6;}
+.detail .dv a{font-weight:500;}
+
+/* responsive — this page's selectors from the hi-fi @container blocks */
+@container (max-width:768px){
+  .stat-row{grid-template-columns:1fr;}
+  .about-grid,.contact-grid{grid-template-columns:1fr; gap:26px;}
+  .stat-row{gap:12px;}
+}

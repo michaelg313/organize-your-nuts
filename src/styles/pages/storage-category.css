@@ -1,0 +1,8 @@
+/* OrganizeYourNuts — page styles: Storage sub-category (/hardware-storage/bins,
+   template reused for Organizers & Cases)
+   The hi-fi has NO dedicated §5 block for this template. It is built
+   entirely from shared components (site.css) plus .filter-panel,
+   .filter-grid and .prod, which §5 assigns to the Hardware Kits page
+   (hardware-kits.css). This file exists so every template has a stylesheet
+   slot; whether those rules get promoted to site.css or this page imports
+   hardware-kits.css is an open decision — see README.md. */

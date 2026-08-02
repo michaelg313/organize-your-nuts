@@ -1,0 +1,36 @@
+{
+  "_comment": [
+    "EXAMPLE DATA ONLY — these three rules exist to show the shape and to prove the validator works.",
+    "Replace with real, verified fitment data before anything ships. A wrong rule here is somebody's disassembled engine (ADR-001 §2.4).",
+    "Rule shape: make + model + year_start..year_end + engine  →  platform.",
+    "Every field is required and must not be blank. Years are plain numbers. 'platform' must exactly match a handle in fitment/platforms.json.",
+    "Note rules 1 and 2: same truck, same years overlap in 1999 — the engine field is what decides the platform. That is why engine is required.",
+    "Check with:  npm run validate-fitment"
+  ],
+  "rules": [
+    {
+      "make": "Chevrolet",
+      "model": "Silverado 1500",
+      "year_start": 1999,
+      "year_end": 2006,
+      "engine": "4.8L V8",
+      "platform": "ls-gen3"
+    },
+    {
+      "make": "Chevrolet",
+      "model": "Silverado 1500",
+      "year_start": 1996,
+      "year_end": 1999,
+      "engine": "5.7L V8 Vortec",
+      "platform": "sbc-gen1"
+    },
+    {
+      "make": "Toyota",
+      "model": "Tacoma",
+      "year_start": 1995,
+      "year_end": 2004,
+      "engine": "2.7L I4",
+      "platform": "toyota-3rz"
+    }
+  ]
+}

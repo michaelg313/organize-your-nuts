@@ -1,0 +1,13 @@
+{
+  "_TODO": [
+    "STUB — this hand-maintained list stands in for the platform metaobjects that will live in Shopify (ADR-001 §5 Phases 2–3).",
+    "Once the Shopify metaobjects exist, the validator should read the live handle list from the Storefront/Admin API instead of this file.",
+    "Deliberately NOT built in Phase 1 — no Shopify API code yet.",
+    "Until then: when a platform is added in Shopify, add its handle here too, or the validator will reject rules that use it."
+  ],
+  "platforms": [
+    { "handle": "sbc-gen1", "display_name": "Small-Block Chevy — Gen I" },
+    { "handle": "ls-gen3", "display_name": "GM LS — Gen III" },
+    { "handle": "toyota-3rz", "display_name": "Toyota 3RZ-FE 2.7L I4" }
+  ]
+}

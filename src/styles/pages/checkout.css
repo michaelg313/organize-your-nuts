@@ -1,0 +1,124 @@
+/* OrganizeYourNuts — page styles: Checkout (/checkout)
+   §5 "PAGE: Checkout" from organizeyournuts-hifi.html, moved verbatim, plus
+   this page's selectors from the combined @container blocks.
+   Requires site.css loaded first.
+   NOTE: per ADR-001 §3.1 the designed multi-step checkout is replaced by
+   Shopify's hosted checkout; these styles are ported for completeness and
+   for the confirmation/summary pieces that may survive.
+   NOTE: .form-grid/.span2 defined here are also used by the About page
+   contact form; .summary comes from cart.css — see README.md. */
+
+/* ─────────── PAGE: Checkout ─────────── */
+.steps{
+  background:var(--bg-mid);
+  border-bottom:1px solid var(--hairline);
+  padding:24px 0;
+}
+.steps-inner{
+  max-width:var(--wrap); margin:0 auto; padding:0 var(--gutter);
+  display:flex; align-items:center; width:100%;
+}
+.step{
+  display:flex; align-items:center; gap:11px;
+  font-size:13px; font-weight:600; color:var(--text-muted); white-space:nowrap;
+}
+.step .n{
+  width:30px; height:30px; border-radius:50%; flex:none;
+  border:1px solid var(--hairline-2); background:var(--bg-sunken);
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:800;
+}
+.step.done{color:var(--text-primary);}
+.step.done .n{background:var(--orange-dim); border-color:var(--orange-border); color:var(--orange);}
+.step.now{color:var(--text-primary);}
+.step.now .n{
+  background:var(--grad-orange); border-color:var(--orange); color:var(--orange-ink);
+  box-shadow:0 0 0 4px var(--orange-dim),inset 0 1px 0 rgba(255,255,255,.3);
+}
+.step-line{flex:1; height:1px; background:var(--hairline-2); margin:0 16px; min-width:16px;}
+.co-grid{display:grid; grid-template-columns:1.7fr 1fr; gap:26px; align-items:start;}
+.form-grid{display:grid; grid-template-columns:1fr 1fr; gap:17px;}
+.span2{grid-column:1 / -1;}
+.step-panel{padding:28px;}
+.step-panel > h2{margin-bottom:5px; font-size:20px; font-weight:800;}
+.step-panel > .sub{font-size:13.5px; color:var(--text-muted); margin-bottom:22px;}
+.step-tag{
+  display:block; font-family:var(--mono);
+  font-size:10.5px; font-weight:700; letter-spacing:1.3px; text-transform:uppercase;
+  color:var(--orange); margin-bottom:9px;
+}
+.radio-row{display:grid; grid-template-columns:1fr 1fr; gap:13px;}
+.radio{
+  border:1px solid var(--hairline-2); border-radius:var(--r-btn); padding:14px 16px;
+  display:flex; gap:12px; align-items:flex-start; cursor:pointer; font-size:14px;
+  background:rgba(255,255,255,.02);
+  transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease);
+}
+.radio:hover{border-color:var(--hairline-3); background:rgba(255,255,255,.05);}
+.radio.sel{border-color:var(--orange); background:var(--orange-dim);}
+.radio:has(input:focus-visible){box-shadow:var(--ring);}
+.radio input{position:absolute; opacity:0; width:1px; height:1px;}
+.radio .dot{
+  width:17px; height:17px; border-radius:50%; flex:none; margin-top:2px;
+  border:1px solid var(--hairline-3); background:var(--bg-sunken);
+}
+.radio.sel .dot{
+  border-color:var(--orange); background:var(--orange);
+  box-shadow:inset 0 0 0 3.5px var(--bg-card);
+}
+.radio b{display:block; font-weight:600; margin-bottom:4px;}
+.radio .m{font-size:12px; color:var(--text-muted);}
+.checkline{
+  display:flex; align-items:center; gap:11px; font-size:13.5px;
+  color:var(--text-muted); margin-top:16px; cursor:pointer;
+}
+.checkline:hover{color:var(--text-primary);}
+.checkline input{position:absolute; opacity:0; width:1px; height:1px;}
+.checkline .bx{
+  width:18px; height:18px; border:1px solid var(--hairline-3); border-radius:5px;
+  flex:none; background:var(--bg-sunken);
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:900; color:transparent;
+}
+.checkline input:checked + .bx{
+  background:var(--grad-orange); border-color:var(--orange); color:var(--orange-ink);
+}
+.checkline:has(input:focus-visible) .bx{box-shadow:var(--ring);}
+.recap-row{
+  display:flex; justify-content:space-between; gap:18px; align-items:flex-start;
+  padding:16px 0; border-bottom:1px solid var(--hairline);
+}
+.recap-row:last-child{border-bottom:0; padding-bottom:0;}
+.recap-row .rk{
+  font-size:11px; font-weight:700; letter-spacing:1.1px; text-transform:uppercase;
+  color:var(--text-muted); margin-bottom:7px;
+}
+.recap-row .rv{font-size:14px; line-height:1.65;}
+.recap-row a{font-size:13px; font-weight:600; white-space:nowrap;}
+.confirm{text-align:center; padding:56px 30px;}
+.confirm .badge{
+  width:62px; height:62px; border-radius:50%; margin:0 auto 24px;
+  background:var(--orange-dim); border:1px solid var(--orange-border);
+  color:var(--orange); font-size:27px; font-weight:900;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 0 40px -8px var(--orange-glow),inset 0 1px 0 rgba(255,255,255,.12);
+}
+.confirm h2{margin-bottom:10px;}
+.confirm .lede{margin:0 auto; max-width:52ch;}
+.confirm .ord{
+  display:inline-block; margin:20px 0 8px; padding:11px 18px;
+  background:var(--bg-sunken); border:1px solid var(--hairline-2); border-radius:var(--r-btn);
+  font-family:var(--mono); font-size:14px; font-weight:600; letter-spacing:.04em;
+}
+
+/* responsive — this page's selectors from the hi-fi @container blocks */
+@container (max-width:768px){
+  .steps-inner{--gutter:20px;}
+  .form-grid,.radio-row{grid-template-columns:1fr;}
+  .co-grid{grid-template-columns:1fr; gap:26px;}
+  .steps{padding:18px 0;}
+  .steps-inner{flex-wrap:wrap; gap:13px;}
+  .step-line{display:none;}
+  .step{font-size:12px;}
+  .step-panel{padding:20px;}
+}

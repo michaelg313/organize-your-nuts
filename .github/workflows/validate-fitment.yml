@@ -1,0 +1,18 @@
+# Refuses a pull request if fitment/vehicle-map.json is broken.
+# A wrong fitment claim is somebody's disassembled engine (ADR-001 §2.4),
+# so this check is deliberately strict and its output deliberately readable.
+name: Validate fitment data
+
+on:
+  pull_request:
+
+jobs:
+  validate-fitment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate vehicle-map.json against known platforms
+        run: node scripts/validate-fitment.mjs

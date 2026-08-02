@@ -1,0 +1,73 @@
+/* OrganizeYourNuts — page styles: Hardware Kits (/hardware-kits)
+   §5 "PAGE: Hardware Kits" from organizeyournuts-hifi.html, moved verbatim,
+   plus this page's selectors from the combined @container blocks.
+   Requires site.css loaded first.
+   NOTE: the hi-fi Kits page also uses .cta-banner (defined in home.css) —
+   see the cross-page reuse list in README.md. .filter-panel/.filter-grid
+   and .prod defined here are also used by the Storage sub-category page. */
+
+/* ─────────── PAGE: Hardware Kits ─────────── */
+.filter-panel{
+  background:var(--bg-card); background-image:var(--sheen);
+  border:1px solid var(--hairline-2);
+  border-radius:var(--r-card); padding:24px 26px;
+  box-shadow:var(--sh-2);
+}
+.filter-panel .chip-row{
+  padding-bottom:18px; margin-bottom:20px;
+  border-bottom:1px solid var(--hairline);
+}
+.filter-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+.filter-foot{
+  display:flex; justify-content:space-between; align-items:center; gap:16px;
+  margin-top:20px; flex-wrap:wrap;
+}
+.filter-foot .note{font-size:12.5px; color:var(--text-muted); max-width:56ch; line-height:1.55;}
+
+/* jump-to-system anchor row */
+.jump{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding:20px 0 6px; margin-bottom:6px;
+}
+
+/* system group — the results grouping, NOT a filter control.
+   Deliberately typed as a section heading with a rule, so it never reads
+   as the "Engine" select in the filter panel above. */
+.sysgroup{margin-top:44px; scroll-margin-top:calc(var(--tb-h) + 84px);}
+.sysgroup:first-of-type{margin-top:26px;}
+.sysgroup-head{
+  display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+  padding-bottom:13px; margin-bottom:20px;
+  border-bottom:1px solid var(--hairline-2);
+  position:relative;
+}
+.sysgroup-head::after{
+  content:""; position:absolute; left:0; bottom:-1px; width:52px; height:2px;
+  background:var(--orange); border-radius:2px;
+}
+.sysgroup-head h3{font-size:20px; font-weight:800; letter-spacing:-.35px;}
+.sysgroup-head .cnt{font-size:12.5px; color:var(--text-muted);}
+
+/* kit / product card */
+.prod{display:flex; flex-direction:column; gap:12px; padding:16px;}
+.prod .name{font-size:15.5px; font-weight:700; line-height:1.35;}
+.prod .desc{font-size:12.5px; color:var(--text-muted); line-height:1.55; flex:1;}
+.prod .buy{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding-top:13px; margin-top:2px; border-top:1px solid var(--hairline);
+}
+.prod .price{font-size:19px; font-weight:800; letter-spacing:-.5px;}
+
+/* responsive — this page's selectors from the hi-fi @container blocks */
+@container (max-width:768px){
+  .filter-grid{grid-template-columns:1fr;}
+  .filter-panel{padding:18px;}
+  .filter-foot .btn{width:100%;}
+  .sysgroup{margin-top:34px;}
+  .prod .buy{flex-direction:column; align-items:stretch; gap:12px;}
+  .prod .buy .btn{width:100%;}
+  .prod .price{text-align:center;}
+}
+@container (max-width:400px){
+  .prod{padding:14px;}
+}

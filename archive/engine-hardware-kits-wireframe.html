@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wireframe — Engine Hardware Kits | OrganizeYourNuts.com</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #e8e8ea; color: #222; }
+
+    /* ── Wireframe tokens ── */
+    :root {
+      --wf-bg:        #f0f0f2;
+      --wf-surface:   #ffffff;
+      --wf-card:      #ffffff;
+      --wf-strip:     #e4e4e6;
+      --wf-border:    #c4c4c8;
+      --wf-placeholder: #d0d0d4;
+      --wf-label:     #888890;
+      --wf-text:      #2a2a2e;
+      --wf-sub:       #6a6a72;
+      --wf-accent:    #ff8c00;   /* orange — used only for primary CTAs */
+      --wf-dark:      #22222a;
+      --radius:       8px;
+    }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      position: sticky; top: 0; z-index: 200;
+      background: #22222a; color: #fff;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; height: 52px;
+      border-bottom: 2px solid #ff8c00;
+    }
+    .toolbar-left { display: flex; align-items: center; gap: 1rem; }
+    .toolbar-title { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.04em; }
+    .toolbar-badge {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      background: #ff8c00; color: #fff; padding: 0.2rem 0.6rem; border-radius: 4px;
+    }
+    .toolbar-link {
+      font-size: 0.78rem; color: #aaa; text-decoration: none; transition: color 0.15s;
+    }
+    .toolbar-link:hover { color: #ff8c00; }
+
+    /* ── View toggle ── */
+    .view-toggle {
+      display: flex; gap: 0.4rem; background: #333; border-radius: 6px; padding: 3px;
+    }
+    .view-btn {
+      padding: 0.3rem 0.9rem; border-radius: 4px; border: none; background: transparent;
+      color: #aaa; font-size: 0.78rem; font-weight: 600; cursor: pointer; font-family: inherit;
+      transition: background 0.15s, color 0.15s;
+    }
+    .view-btn.active { background: #ff8c00; color: #fff; }
+
+    /* ── Canvas ── */
+    .canvas {
+      padding: 2rem 1.5rem;
+      display: flex; justify-content: center;
+    }
+
+    /* ── Screen frame ── */
+    .screen {
+      background: var(--wf-bg);
+      border: 2px solid #bbbbc0;
+      border-radius: 4px;
+      overflow: hidden;
+      transition: width 0.3s ease;
+      width: 1440px;
+      max-width: 100%;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    }
+    .screen.mobile-view { width: 390px; }
+
+    /* ── Section annotation ── */
+    .section-wrap { position: relative; }
+    .section-tag {
+      position: absolute; top: 0; left: 0;
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      background: #22222a; color: #ff8c00;
+      padding: 2px 8px; border-radius: 0 0 4px 0;
+      z-index: 10; pointer-events: none;
+    }
+
+    /* ── WF Nav ── */
+    .wf-nav {
+      background: var(--wf-surface);
+      border-bottom: 1.5px solid var(--wf-border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1rem, 4vw, 3.5rem);
+      height: 64px;
+    }
+    .wf-nav-brand { display: flex; align-items: center; gap: 0.75rem; }
+    .wf-logo { width: 38px; height: 38px; background: var(--wf-placeholder); border-radius: 50%; border: 1.5px solid var(--wf-border); }
+    .wf-brand-text { font-size: 1rem; font-weight: 700; color: var(--wf-text); }
+    .wf-nav-right { display: flex; align-items: center; gap: 1.25rem; }
+    .wf-back-link { font-size: 0.82rem; color: var(--wf-label); }
+    .wf-btn { padding: 0.5rem 1.2rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600; font-family: inherit; border: none; cursor: default; }
+    .wf-btn-primary { background: var(--wf-accent); color: #fff; }
+    .wf-btn-outline { background: transparent; border: 1.5px solid var(--wf-border); color: var(--wf-text); }
+    .wf-btn-ghost { background: transparent; border: 1.5px solid var(--wf-accent); color: var(--wf-accent); }
+
+    /* ── WF Section common ── */
+    .wf-section { padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 3.5rem); }
+    .wf-section-label {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--wf-label); margin-bottom: 0.5rem;
+    }
+    .wf-h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; color: var(--wf-text); margin-bottom: 0.75rem; line-height: 1.1; }
+    .wf-h2 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; color: var(--wf-text); margin-bottom: 0.5rem; }
+    .wf-sub { font-size: 0.92rem; color: var(--wf-sub); max-width: 600px; margin-bottom: 2rem; }
+    .wf-sub.centered { text-align: center; margin-left: auto; margin-right: auto; }
+
+    /* ── Page Hero ── */
+    .wf-hero { background: #ebebed; border-bottom: 1.5px solid var(--wf-border); text-align: center; }
+    .wf-breadcrumb {
+      font-size: 0.75rem; color: var(--wf-label); margin-bottom: 1.25rem;
+      display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+    }
+    .wf-breadcrumb a { color: var(--wf-label); text-decoration: none; }
+    .wf-breadcrumb .sep { opacity: 0.5; }
+    .wf-breadcrumb .current { color: var(--wf-accent); font-weight: 600; }
+    .wf-eyebrow {
+      display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; background: var(--wf-placeholder); color: var(--wf-label);
+      padding: 0.3rem 1rem; border-radius: 100px; margin-bottom: 1rem;
+      border: 1.5px solid var(--wf-border);
+    }
+    .wf-badges { display: flex; align-items: center; justify-content: center; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
+    .wf-badge {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.78rem; font-weight: 600; color: var(--wf-sub);
+      background: var(--wf-surface); border: 1.5px solid var(--wf-border);
+      padding: 0.35rem 0.9rem; border-radius: 100px;
+    }
+    .wf-badge::before { content: '✓'; color: var(--wf-accent); font-weight: 700; }
+
+    /* ── Grid helpers ── */
+    .wf-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .wf-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .wf-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+
+    /* ── Cards ── */
+    .wf-card {
+      background: var(--wf-card); border: 1.5px solid var(--wf-border);
+      border-radius: var(--radius); padding: 1.25rem;
+      transition: border-color 0.2s;
+    }
+    .wf-icon-box {
+      width: 40px; height: 40px; background: var(--wf-placeholder);
+      border-radius: 8px; border: 1.5px solid var(--wf-border);
+      margin-bottom: 0.75rem; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .wf-icon-box.lg { width: 56px; height: 56px; border-radius: 10px; margin: 0 auto 1rem; }
+    .wf-card-title { font-size: 0.9rem; font-weight: 700; color: var(--wf-text); margin-bottom: 0.3rem; }
+    .wf-card-desc { font-size: 0.8rem; color: var(--wf-sub); line-height: 1.5; }
+    .wf-card-row { display: flex; align-items: flex-start; gap: 0.75rem; }
+
+    /* ── Value strip ── */
+    .wf-strip { background: var(--wf-strip); border-top: 1.5px solid var(--wf-border); border-bottom: 1.5px solid var(--wf-border); }
+
+    /* ── Included section ── */
+    .wf-included { background: var(--wf-strip); border-top: 1.5px solid var(--wf-border); }
+
+    /* ── Product cards ── */
+    .wf-product-card {
+      background: var(--wf-card); border: 1.5px solid var(--wf-border);
+      border-radius: var(--radius); overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .wf-product-thumb {
+      background: var(--wf-placeholder); height: 80px;
+      display: flex; align-items: center; justify-content: center;
+      border-bottom: 1.5px solid var(--wf-border); position: relative;
+    }
+    .wf-product-tag {
+      position: absolute; top: 8px; left: 8px;
+      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      background: var(--wf-accent); color: #fff; padding: 2px 7px; border-radius: 3px;
+    }
+    .wf-thumb-icon { font-size: 1.5rem; opacity: 0.25; }
+    .wf-product-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; gap: 0.4rem; }
+    .wf-product-title { font-size: 0.88rem; font-weight: 700; color: var(--wf-text); }
+    .wf-product-desc { font-size: 0.75rem; color: var(--wf-sub); flex: 1; line-height: 1.5; }
+    .wf-product-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.75rem; }
+    .wf-price { font-size: 1rem; font-weight: 800; color: var(--wf-text); }
+    .wf-add-btn { font-size: 0.75rem; font-weight: 600; font-family: inherit; background: var(--wf-accent); color: #fff; border: none; padding: 0.4rem 0.9rem; border-radius: 6px; cursor: default; }
+
+    /* ── Filter bar ── */
+    .wf-filter-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .wf-filter-chip {
+      padding: 0.3rem 0.9rem; border-radius: 100px; font-size: 0.78rem; font-weight: 600;
+      font-family: inherit; border: 1.5px solid var(--wf-border); background: var(--wf-surface);
+      color: var(--wf-sub); cursor: default;
+    }
+    .wf-filter-chip.active { background: var(--wf-accent); color: #fff; border-color: var(--wf-accent); }
+
+    /* ── CTA Banner ── */
+    .wf-cta { background: var(--wf-accent); text-align: center; }
+    .wf-cta .wf-h2 { color: #fff; }
+    .wf-cta .wf-sub { color: rgba(255,255,255,0.85); }
+    .wf-cta-actions { display: flex; align-items: center; justify-content: center; gap: 0.75rem; flex-wrap: wrap; }
+    .wf-btn-cta-white { background: #fff; color: var(--wf-accent); font-size: 0.9rem; font-weight: 700; padding: 0.65rem 1.75rem; border-radius: 7px; border: none; cursor: default; font-family: inherit; }
+    .wf-btn-cta-outline { background: transparent; color: #fff; font-size: 0.9rem; font-weight: 600; padding: 0.65rem 1.75rem; border-radius: 7px; border: 2px solid rgba(255,255,255,0.7); font-family: inherit; cursor: default; }
+
+    /* ── Footer ── */
+    .wf-footer { background: var(--wf-dark); padding: 1.75rem clamp(1rem, 4vw, 3.5rem); }
+    .wf-footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .wf-footer-brand { display: flex; align-items: center; gap: 0.6rem; }
+    .wf-footer-logo { width: 28px; height: 28px; background: #444; border-radius: 50%; border: 1px solid #555; }
+    .wf-footer-name { font-size: 0.88rem; font-weight: 700; color: #ccc; }
+    .wf-footer-copy { font-size: 0.75rem; color: #666; }
+    .wf-footer-links { display: flex; gap: 1.25rem; }
+    .wf-footer-links a { font-size: 0.8rem; color: #666; text-decoration: none; }
+
+    /* ── Responsive overrides (mobile view class) ── */
+    .mobile-view .wf-grid-4 { grid-template-columns: 1fr 1fr; }
+    .mobile-view .wf-grid-3 { grid-template-columns: 1fr; }
+    .mobile-view .wf-grid-2 { grid-template-columns: 1fr 1fr; }
+    .mobile-view .wf-h1 { font-size: 1.75rem; }
+    .mobile-view .wf-h2 { font-size: 1.4rem; }
+    .mobile-view .wf-nav-right .wf-back-link { display: none; }
+    .mobile-view .wf-badges { flex-direction: column; align-items: stretch; }
+    .mobile-view .wf-badge { justify-content: flex-start; }
+    .mobile-view .wf-cta-actions { flex-direction: column; }
+    .mobile-view .wf-btn-cta-white,
+    .mobile-view .wf-btn-cta-outline { width: 100%; max-width: 280px; text-align: center; }
+    .mobile-view .wf-footer-inner { flex-direction: column; align-items: flex-start; }
+    .mobile-view .wf-footer-links { flex-wrap: wrap; gap: 0.75rem; }
+    .mobile-view .wf-section { padding: 2rem 1rem; }
+    .mobile-view .wf-nav { padding: 0 1rem; }
+    .mobile-view .wf-brand-text { font-size: 0.82rem; }
+    .mobile-view .wf-sub { font-size: 0.85rem; }
+
+    /* ── Annotation legend ── */
+    .legend {
+      background: #22222a; border-top: 2px solid #333;
+      padding: 1.25rem 1.5rem;
+      display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;
+    }
+    .legend-title { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #888; }
+    .legend-items { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: #aaa; }
+    .legend-swatch { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <span class="toolbar-title">OrganizeYourNuts.com</span>
+      <span class="toolbar-badge">Wireframe</span>
+      <span style="color:#555; font-size:0.8rem;">›</span>
+      <span style="font-size:0.82rem; color:#ccc;">Engine Hardware Kits</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:1.5rem;">
+      <div class="view-toggle">
+        <button class="view-btn active" id="btn-desktop" onclick="setView('desktop')">🖥 Desktop</button>
+        <button class="view-btn" id="btn-mobile" onclick="setView('mobile')">📱 Mobile</button>
+      </div>
+      <a href="index.html" class="toolbar-link">← Landing Page</a>
+      <a href="engine-hardware-kits.html" class="toolbar-link">Live Page →</a>
+    </div>
+  </div>
+
+  <!-- CANVAS -->
+  <div class="canvas">
+    <div class="screen" id="screen">
+
+      <!-- ① NAV -->
+      <div class="section-wrap">
+        <span class="section-tag">① Nav</span>
+        <nav class="wf-nav">
+          <div class="wf-nav-brand">
+            <div class="wf-logo"></div>
+            <span class="wf-brand-text">OrganizeYourNuts.com</span>
+          </div>
+          <div class="wf-nav-right">
+            <span class="wf-back-link">← Back to Store</span>
+            <button class="wf-btn wf-btn-primary">Order Now</button>
+          </div>
+        </nav>
+      </div>
+
+      <!-- ② PAGE HERO -->
+      <div class="section-wrap">
+        <span class="section-tag">② Page Hero</span>
+        <div class="wf-hero wf-section">
+          <div class="wf-breadcrumb">
+            <a href="#">Home</a><span class="sep">›</span>
+            <a href="#">Categories</a><span class="sep">›</span>
+            <span class="current">Engine Hardware Kits</span>
+          </div>
+          <div class="wf-eyebrow">Complete Engine Fastener Sets</div>
+          <div class="wf-h1">Engine Hardware <span style="color:var(--wf-accent)">Kits</span></div>
+          <p class="wf-sub centered">
+            Every bolt, stud, and washer your engine rebuild needs — sorted, labeled, and ready to install.
+            Stop hunting for individual fasteners and get back to wrenching.
+          </p>
+          <div class="wf-badges">
+            <div class="wf-badge">ARP &amp; OEM grade hardware</div>
+            <div class="wf-badge">Torque specs included</div>
+            <div class="wf-badge">Application-specific kits</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ③ WHAT'S INCLUDED -->
+      <div class="section-wrap">
+        <span class="section-tag">③ What's Included</span>
+        <div class="wf-included wf-section">
+          <div class="wf-section-label">What's Inside</div>
+          <div class="wf-h2">Every Kit Includes the Essentials</div>
+          <p class="wf-sub">Built around complete engine reassembly from the bottom end up.</p>
+          <div class="wf-grid-4" id="included-grid">
+
+            <div class="wf-card wf-card-row">
+              <div class="wf-icon-box"></div>
+              <div>
+                <div class="wf-card-title">Head Bolts / Head Studs</div>
+                <div class="wf-card-desc">High-tensile cylinder head fasteners for a proper, leak-free seal.</div>
+              </div>
+            </div>
+
+            <div class="wf-card wf-card-row">
+              <div class="wf-icon-box"></div>
+              <div>
+                <div class="wf-card-title">Main Cap Bolts</div>
+                <div class="wf-card-desc">Precision bearing cap fasteners to keep the crankshaft clamped.</div>
+              </div>
+            </div>
+
+            <div class="wf-card wf-card-row">
+              <div class="wf-icon-box"></div>
+              <div>
+                <div class="wf-card-title">Connecting Rod Bolts</div>
+                <div class="wf-card-desc">Critical bottom-end hardware with torque &amp; angle specs included.</div>
+              </div>
+            </div>
+
+            <div class="wf-card wf-card-row">
+              <div class="wf-icon-box"></div>
+              <div>
+                <div class="wf-card-title">Intake Manifold Studs</div>
+                <div class="wf-card-desc">Correct thread pitch, stainless or black oxide, with washers.</div>
+              </div>
+            </div>
+
+            <div class="wf-card wf-card-row">
+              <div class="wf-icon-box"></div>
+              <div>
+                <div class="wf-card-title">Exhaust Header Bolts</div>
+                <div class="wf-card-desc">High-temp rated with anti-seize coating. Survives heat cycling.</div>
+              </div>
+            </div>
+
+            <div class="wf-card wf-card-row">
+              <div class="wf-icon-box"></div>
+              <div>
+                <div class="wf-card-title">Cam &amp; Timing Hardware</div>
+                <div class="wf-card-desc">Cam thrust plate bolts, timing cover and cam gear fasteners.</div>
+              </div>
+            </div>
+
+            <div class="wf-card wf-card-row">
+              <div class="wf-icon-box"></div>
+              <div>
+                <div class="wf-card-title">Oil Pan &amp; Valley Bolts</div>
+                <div class="wf-card-desc">Full rail bolt sets with replacement crush washers included.</div>
+              </div>
+            </div>
+
+            <div class="wf-card wf-card-row">
+              <div class="wf-icon-box"></div>
+              <div>
+                <div class="wf-card-title">Accessory Fasteners</div>
+                <div class="wf-card-desc">Alternator, water pump, and front accessory bolts.</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ④ SHOP KITS -->
+      <div class="section-wrap">
+        <span class="section-tag">④ Shop Kits</span>
+        <div class="wf-section" style="background:var(--wf-bg);">
+          <div class="wf-section-label">Shop Kits</div>
+          <div class="wf-h2">Find Your Application</div>
+          <p class="wf-sub">Kits built for specific platforms — every fastener fits before you open the bag.</p>
+
+          <div class="wf-filter-bar">
+            <button class="wf-filter-chip active">All Kits</button>
+            <button class="wf-filter-chip">Small Block V8</button>
+            <button class="wf-filter-chip">Big Block V8</button>
+            <button class="wf-filter-chip">4-Cylinder</button>
+            <button class="wf-filter-chip">Diesel</button>
+          </div>
+
+          <div class="wf-grid-3" id="kits-grid">
+
+            <div class="wf-product-card">
+              <div class="wf-product-thumb">
+                <span class="wf-product-tag">Best Seller</span>
+                <span class="wf-thumb-icon">⚙</span>
+              </div>
+              <div class="wf-product-body">
+                <div class="wf-product-title">Small Block Chevy Complete Engine Kit</div>
+                <div class="wf-product-desc">SBC 283–400 cu in. Head bolts, main caps, rod bolts, intake, exhaust &amp; timing hardware. 187 pieces.</div>
+                <div class="wf-product-footer">
+                  <span class="wf-price">$89.99</span>
+                  <button class="wf-add-btn">Add to Cart</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="wf-product-card">
+              <div class="wf-product-thumb">
+                <span class="wf-thumb-icon">⚙</span>
+              </div>
+              <div class="wf-product-body">
+                <div class="wf-product-title">LS Engine Complete Hardware Kit</div>
+                <div class="wf-product-desc">Gen III/IV LS engines. TTY head bolts, valley cover, cam cover &amp; accessory hardware. 210 pieces.</div>
+                <div class="wf-product-footer">
+                  <span class="wf-price">$109.99</span>
+                  <button class="wf-add-btn">Add to Cart</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="wf-product-card">
+              <div class="wf-product-thumb">
+                <span class="wf-product-tag">New</span>
+                <span class="wf-thumb-icon">⚙</span>
+              </div>
+              <div class="wf-product-body">
+                <div class="wf-product-title">Big Block Chevy Hardware Kit</div>
+                <div class="wf-product-desc">BBC 396–454 cu in. Heavy-duty hex-head hardware throughout, grade-8 main &amp; rod fasteners. 201 pieces.</div>
+                <div class="wf-product-footer">
+                  <span class="wf-price">$119.99</span>
+                  <button class="wf-add-btn">Add to Cart</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="wf-product-card">
+              <div class="wf-product-thumb">
+                <span class="wf-thumb-icon">⚙</span>
+              </div>
+              <div class="wf-product-body">
+                <div class="wf-product-title">Small Block Ford Complete Engine Kit</div>
+                <div class="wf-product-desc">SBF 289–351W. Hex-head ARP-grade head bolts, intake, exhaust &amp; accessory fasteners. 193 pieces.</div>
+                <div class="wf-product-footer">
+                  <span class="wf-price">$94.99</span>
+                  <button class="wf-add-btn">Add to Cart</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="wf-product-card">
+              <div class="wf-product-thumb">
+                <span class="wf-thumb-icon">⚙</span>
+              </div>
+              <div class="wf-product-body">
+                <div class="wf-product-title">Import 4-Cylinder Engine Kit</div>
+                <div class="wf-product-desc">Metric hardware for popular Japanese &amp; European 4-cylinder applications. Head, crank, cam cover. 164 pieces.</div>
+                <div class="wf-product-footer">
+                  <span class="wf-price">$74.99</span>
+                  <button class="wf-add-btn">Add to Cart</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="wf-product-card">
+              <div class="wf-product-thumb">
+                <span class="wf-product-tag">Heavy Duty</span>
+                <span class="wf-thumb-icon">⚙</span>
+              </div>
+              <div class="wf-product-body">
+                <div class="wf-product-title">Diesel Engine Hardware Kit</div>
+                <div class="wf-product-desc">High-clamp-load fasteners for diesel head studs, main caps &amp; injector hold-downs. 178 pieces.</div>
+                <div class="wf-product-footer">
+                  <span class="wf-price">$149.99</span>
+                  <button class="wf-add-btn">Add to Cart</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑤ CTA BANNER -->
+      <div class="section-wrap">
+        <span class="section-tag">⑤ CTA Banner</span>
+        <div class="wf-cta wf-section">
+          <div class="wf-h2">Not Sure Which Kit You Need?</div>
+          <p class="wf-sub centered">Tell us your engine and we'll point you to the right kit — or build a custom one.</p>
+          <div class="wf-cta-actions">
+            <button class="wf-btn-cta-white">Contact Us</button>
+            <button class="wf-btn-cta-outline">← Back to Store</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑥ FOOTER -->
+      <div class="section-wrap">
+        <span class="section-tag">⑥ Footer</span>
+        <footer class="wf-footer">
+          <div class="wf-footer-inner">
+            <div class="wf-footer-brand">
+              <div class="wf-footer-logo"></div>
+              <span class="wf-footer-name">OrganizeYourNuts.com</span>
+            </div>
+            <span class="wf-footer-copy">© 2026 OrganizeYourNuts.com. All rights reserved.</span>
+            <nav class="wf-footer-links">
+              <a href="#">Shop</a>
+              <a href="#">Bulk Orders</a>
+              <a href="#">Shipping</a>
+              <a href="#">Contact</a>
+            </nav>
+          </div>
+        </footer>
+      </div>
+
+    </div><!-- /screen -->
+  </div><!-- /canvas -->
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <span class="legend-title">Legend</span>
+    <div class="legend-items">
+      <div class="legend-item"><div class="legend-swatch" style="background:#ff8c00"></div>Primary CTA / Active state</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#d0d0d4; border:1px solid #bbb"></div>Placeholder / Image area</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#fff; border:1px solid #bbb"></div>Card / Surface</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#e4e4e6; border:1px solid #bbb"></div>Section background</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#22222a"></div>Dark surface (nav/footer)</div>
+    </div>
+  </div>
+
+  <script>
+    const screen = document.getElementById('screen');
+
+    function setView(view) {
+      document.getElementById('btn-desktop').classList.toggle('active', view === 'desktop');
+      document.getElementById('btn-mobile').classList.toggle('active', view === 'mobile');
+      screen.classList.toggle('mobile-view', view === 'mobile');
+
+      // Swap grid columns for mobile
+      const incGrid  = document.getElementById('included-grid');
+      const kitsGrid = document.getElementById('kits-grid');
+      if (view === 'mobile') {
+        incGrid.className  = 'wf-grid-2';
+        kitsGrid.className = 'wf-grid-1';
+        kitsGrid.style.gridTemplateColumns = '1fr';
+      } else {
+        incGrid.className  = 'wf-grid-4';
+        kitsGrid.className = 'wf-grid-3';
+        kitsGrid.style.gridTemplateColumns = '';
+      }
+    }
+  </script>
+
+</body>
+</html>

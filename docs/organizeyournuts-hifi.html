@@ -1,0 +1,2594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OrganizeYourNuts.com &mdash; High-Fidelity Design (7 templates)</title>
+<meta name="description" content="High-fidelity design pass for OrganizeYourNuts.com — automotive fastener kits and hardware storage.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════════════
+   OrganizeYourNuts.com — HI-FI STYLESHEET
+   ----------------------------------------------------------------------
+   Organised for the per-page split that follows sign-off:
+
+     §1  TOKENS            → shared, move to site.css verbatim
+     §2  BASE + TYPE       → shared
+     §3  COMPONENTS        → shared (buttons, cards, forms, spec plates,
+                             nav, footer, chips, states)
+     §4  REVIEW CHROME     → DELETE ON SPLIT (toolbar, frame, device sim)
+     §5  PAGE RULES        → one block per page, copy into that page only
+
+   Responsive uses CONTAINER queries against `.page`, not viewport media
+   queries, so the Desktop/Mobile toggle and a real phone hit exactly the
+   same code path. Breakpoints: 768px and 400px, per the project spec.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════ §1 · TOKENS ═══════════════════ */
+:root{
+  /* palette — project design system, unchanged */
+  --orange:#FF8C00;
+  --orange-light:#FF9F1C;
+  --orange-dim:rgba(255,140,0,0.12);
+  --orange-border:rgba(255,140,0,0.35);
+  --bg-deep:#0c1120;
+  --bg-mid:#111827;
+  --bg-card:#161f34;
+  --text-primary:#f0f4ff;
+  --text-muted:#8fa0c0;
+
+  /* derived surfaces — depth is built by layering these, not by opacity */
+  --bg-sunken:#080c17;
+  --bg-raise:#1c2642;
+  --bg-raise-2:#222d4d;
+  --sheen:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,0) 58%);
+
+  /* lines */
+  --hairline:rgba(255,255,255,0.06);
+  --hairline-2:rgba(255,255,255,0.12);
+  --hairline-3:rgba(255,255,255,0.22);
+
+  /* orange derivatives */
+  --orange-glow:rgba(255,140,0,0.20);
+  --orange-ink:#1a1200;
+  --grad-orange:linear-gradient(180deg,var(--orange-light) 0%,var(--orange) 78%);
+  --grad-orange-hi:linear-gradient(180deg,#ffb04d 0%,var(--orange-light) 82%);
+
+  /* feedback */
+  --danger:#ff6b6b;
+  --danger-dim:rgba(255,107,107,0.10);
+  --danger-border:rgba(255,107,107,0.42);
+  --good:#4ade80;
+
+  /* elevation */
+  --sh-1:0 1px 2px rgba(0,0,0,.45);
+  --sh-2:0 6px 18px -6px rgba(0,0,0,.6);
+  --sh-3:0 20px 44px -14px rgba(0,0,0,.78);
+  --sh-orange:0 8px 22px -8px rgba(255,140,0,.55);
+  --ring:0 0 0 2px var(--bg-deep),0 0 0 4px var(--orange);
+
+  /* geometry */
+  --r-card:12px;
+  --r-btn:8px;
+  --r-in:10px;
+  --r-pill:999px;
+  --maxw:1180px;
+  --gutter:40px;
+  --wrap:1080px;
+
+  /* type */
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+
+  /* motion */
+  --dur:180ms;
+  --dur-2:320ms;
+  --ease:cubic-bezier(.2,.7,.3,1);
+
+  /* review chrome only — becomes 0 when the toolbar is deleted */
+  --tb-h:52px;
+}
+
+/* ═══════════════════ §2 · BASE + TYPE ═══════════════════ */
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  padding-top:var(--tb-h);
+  font-family:"Inter",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  font-optical-sizing:auto;
+  font-synthesis-weight:none;
+  background:#4a5163;
+  color:var(--text-primary);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+h1,h2,h3,h4,p{margin:0;}
+
+h1{
+  font-size:46px; line-height:1.04; font-weight:900;
+  letter-spacing:-1.5px; text-wrap:balance;
+}
+h2{
+  font-size:30px; line-height:1.14; font-weight:800;
+  letter-spacing:-.7px; text-wrap:balance;
+}
+h3{font-size:18px; line-height:1.3; font-weight:700; letter-spacing:-.2px;}
+h4{font-size:15px; line-height:1.35; font-weight:700;}
+
+/* interior pages run a step down from the Home display size */
+.h1-page{font-size:37px; letter-spacing:-1.1px;}
+
+.eyebrow{
+  font-size:11px; font-weight:700; letter-spacing:1.7px;
+  text-transform:uppercase; color:var(--orange); margin-bottom:11px;
+}
+.lede{
+  color:var(--text-muted); font-size:16.5px; line-height:1.62;
+  max-width:62ch; font-weight:400;
+}
+.muted{color:var(--text-muted); font-size:14px; line-height:1.6;}
+.lab{
+  display:block; font-size:11px; font-weight:700; letter-spacing:1.1px;
+  text-transform:uppercase; color:var(--text-muted); margin-bottom:7px;
+}
+.spec{
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.02em;
+  color:var(--text-muted); font-weight:400;
+}
+.sec-head{margin-bottom:30px;}
+.vh{
+  position:absolute!important; width:1px; height:1px; overflow:hidden;
+  clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap;
+}
+.sec-head .lede{margin-top:11px;}
+
+a{color:var(--orange); text-decoration:none;}
+a:hover{color:var(--orange-light);}
+
+/* one focus treatment for everything that takes focus */
+:where(a,button,select,input,textarea,[tabindex]):focus-visible{
+  outline:none; box-shadow:var(--ring); border-radius:var(--r-btn);
+  position:relative; z-index:3;
+}
+
+/* ═══════════════════ §3 · COMPONENTS ═══════════════════ */
+
+/* ---- layout ---- */
+.wrap{max-width:var(--wrap); margin:0 auto; padding:0 var(--gutter);}
+.sec{padding:76px 0; position:relative;}
+.sec.tight{padding:46px 0;}
+.sec.alt{
+  background:var(--bg-mid);
+  border-top:1px solid var(--hairline);
+  border-bottom:1px solid var(--hairline);
+}
+.grid{display:grid; gap:18px;}
+.g2{grid-template-columns:repeat(2,1fr);}
+.g3{grid-template-columns:repeat(3,1fr);}
+.g4{grid-template-columns:repeat(4,1fr);}
+
+/* ---- buttons ---- */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  font:inherit; font-size:14px; font-weight:600; line-height:1;
+  padding:13px 22px; border-radius:var(--r-btn);
+  border:1px solid transparent; background:none;
+  cursor:pointer; white-space:nowrap; text-decoration:none;
+  transition:background var(--dur) var(--ease),border-color var(--dur) var(--ease),
+             color var(--dur) var(--ease),transform var(--dur) var(--ease),
+             box-shadow var(--dur) var(--ease);
+}
+.btn-primary{
+  background:var(--grad-orange); color:var(--orange-ink);
+  border-color:rgba(255,140,0,.9);
+  box-shadow:var(--sh-orange),inset 0 1px 0 rgba(255,255,255,.34);
+  font-weight:700;
+}
+.btn-primary:hover{background:var(--grad-orange-hi); transform:translateY(-1px);}
+.btn-primary:active{
+  transform:translateY(1px);
+  box-shadow:inset 0 2px 5px rgba(120,60,0,.4);
+  background:linear-gradient(180deg,var(--orange) 0%,#e87e00 100%);
+}
+.btn-outline{
+  color:var(--orange); border-color:var(--orange-border);
+  background:linear-gradient(180deg,rgba(255,140,0,.07),rgba(255,140,0,0));
+}
+.btn-outline:hover{
+  background:var(--orange-dim); border-color:var(--orange);
+  transform:translateY(-1px);
+}
+.btn-outline:active{transform:translateY(1px); background:rgba(255,140,0,.18);}
+.btn-quiet{color:var(--text-muted); border-color:var(--hairline-2);}
+.btn-quiet:hover{
+  color:var(--text-primary); border-color:var(--hairline-3);
+  background:rgba(255,255,255,.04);
+}
+.btn-quiet:active{transform:translateY(1px);}
+.btn:disabled,.btn[aria-disabled="true"]{
+  background:rgba(255,255,255,.045); color:#5d6a85;
+  border-color:var(--hairline); box-shadow:none;
+  cursor:not-allowed; transform:none; font-weight:600;
+}
+.btn-sm{padding:9px 15px; font-size:13px;}
+.btn-block{display:flex; width:100%;}
+.btn-row{display:flex; gap:12px; flex-wrap:wrap;}
+
+/* ---- cards ---- */
+.card{
+  background:var(--bg-card); background-image:var(--sheen);
+  border:1px solid var(--hairline);
+  border-radius:var(--r-card); padding:20px;
+  box-shadow:var(--sh-1);
+  transition:transform var(--dur-2) var(--ease),border-color var(--dur-2) var(--ease),
+             box-shadow var(--dur-2) var(--ease),background-color var(--dur-2) var(--ease);
+}
+/* lift is opt-in: only cards that go somewhere or do something */
+.card-lift:hover{
+  transform:translateY(-4px);
+  border-color:var(--orange-border);
+  box-shadow:var(--sh-3);
+  background-color:var(--bg-raise);
+}
+.card-lift:active{transform:translateY(-1px);}
+a.card,button.card{display:block; text-align:left; color:inherit; cursor:pointer;}
+
+/* ---- spec plate: the image placeholder ------------------------------
+   Machined drawing plate — corner registration ticks, hex-nut watermark,
+   monospace asset label carrying the intended aspect ratio. Swap for a
+   real asset by replacing the element with <img> at the same ratio.      */
+.ph{
+  position:relative; overflow:hidden;
+  border-radius:var(--r-in);
+  border:1px solid var(--hairline-2);
+  background-color:var(--bg-sunken);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%238fa0c0' stroke-width='1.1' stroke-linejoin='round'%3E%3Cpath d='M12 2.7l8 4.65v9.3L12 21.3l-8-4.65V7.35z'/%3E%3Ccircle cx='12' cy='12' r='3.5'/%3E%3C/g%3E%3C/svg%3E"),
+    repeating-linear-gradient(135deg,rgba(255,255,255,.028) 0 1px,transparent 1px 9px),
+    radial-gradient(120% 90% at 50% 0%,rgba(255,140,0,.05),transparent 62%),
+    linear-gradient(180deg,var(--bg-mid),var(--bg-sunken));
+  background-repeat:no-repeat,repeat,no-repeat,no-repeat;
+  background-position:center calc(50% - 15px),0 0,0 0,0 0;
+  background-size:30px 30px,auto,auto,auto;
+  display:flex; align-items:center; justify-content:center;
+}
+.ph::before{ /* four corner registration ticks */
+  content:""; position:absolute; inset:9px; pointer-events:none;
+  --tick:rgba(255,140,0,.42);
+  background-image:
+    linear-gradient(var(--tick),var(--tick)),linear-gradient(var(--tick),var(--tick)),
+    linear-gradient(var(--tick),var(--tick)),linear-gradient(var(--tick),var(--tick)),
+    linear-gradient(var(--tick),var(--tick)),linear-gradient(var(--tick),var(--tick)),
+    linear-gradient(var(--tick),var(--tick)),linear-gradient(var(--tick),var(--tick));
+  background-repeat:no-repeat;
+  background-size:12px 1px,1px 12px,12px 1px,1px 12px,12px 1px,1px 12px,12px 1px,1px 12px;
+  background-position:
+    left top,left top, right top,right top,
+    left bottom,left bottom, right bottom,right bottom;
+}
+.ph::after{
+  content:attr(data-label);
+  font-family:var(--mono); font-size:10.5px; letter-spacing:1.15px;
+  text-transform:uppercase; color:#6c7b98;
+  padding:0 14px; text-align:center; margin-top:30px;
+}
+.ph-hero{aspect-ratio:16/10;}
+.ph-pillar{aspect-ratio:16/9;}
+.ph-kit{aspect-ratio:4/3;}
+.ph-prod{aspect-ratio:1/1;}
+.ph-shop{aspect-ratio:4/5;}
+.ph-line{aspect-ratio:1/1;}
+.ph-sm::after{content:none;}   /* too small for a caption; alt text carries it */
+.ph-sm{background-size:22px 22px,auto,auto,auto; background-position:center calc(50% - 11px),0 0,0 0,0 0;}
+.ph-sm::before{inset:6px; background-size:8px 1px,1px 8px,8px 1px,1px 8px,8px 1px,1px 8px,8px 1px,1px 8px;}
+
+/* ---- form controls ---- */
+.field{display:block; min-width:0;}
+.ctl{
+  width:100%; font:inherit; font-size:14px; color:var(--text-primary);
+  background:var(--bg-sunken); background-image:var(--sheen);
+  border:1px solid var(--hairline-2);
+  padding:12px 13px; border-radius:var(--r-btn); min-height:46px;
+  appearance:none;
+  transition:border-color var(--dur) var(--ease),background-color var(--dur) var(--ease),
+             box-shadow var(--dur) var(--ease);
+}
+.ctl::placeholder{color:#5d6a85;}
+.ctl:hover{border-color:var(--hairline-3);}
+.ctl:focus{
+  outline:none; border-color:var(--orange);
+  background-color:#0b1020;
+  box-shadow:0 0 0 3px var(--orange-dim);
+}
+.ctl:disabled{
+  color:#5d6a85; background:rgba(255,255,255,.03);
+  border-color:var(--hairline); cursor:not-allowed;
+}
+select.ctl{
+  padding-right:38px; cursor:pointer;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238fa0c0' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"),
+    var(--sheen);
+  background-repeat:no-repeat,no-repeat;
+  background-position:right 14px center,0 0;
+  background-size:10px 6px,auto;
+}
+select.ctl:hover{
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23FF9F1C' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"),
+    var(--sheen);
+}
+textarea.ctl{min-height:124px; resize:vertical; line-height:1.6;}
+
+/* validation */
+.ctl[aria-invalid="true"]{
+  border-color:var(--danger-border); background-color:var(--danger-dim);
+}
+.ctl[aria-invalid="true"]:focus{
+  border-color:var(--danger); box-shadow:0 0 0 3px rgba(255,107,107,.18);
+}
+.err{
+  display:flex; align-items:flex-start; gap:6px; margin-top:7px;
+  font-size:12.5px; line-height:1.45; color:var(--danger); font-weight:500;
+}
+.err::before{content:"!"; font-weight:900; font-size:11px; line-height:1.5;}
+.alert{
+  display:flex; gap:11px; align-items:flex-start;
+  border:1px solid var(--danger-border); background:var(--danger-dim);
+  border-radius:var(--r-in); padding:13px 15px; margin-bottom:22px;
+}
+.alert .amark{
+  flex:none; width:20px; height:20px; border-radius:50%;
+  background:var(--danger); color:#2a0808;
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:900;
+}
+.alert p{font-size:13.5px; line-height:1.5; color:#ffd9d9;}
+.alert a{color:#ffb0b0; text-decoration:underline;}
+
+/* ---- vehicle ID plate: fitment chrome, echoes the spec plate ---- */
+.veh-chip{
+  position:relative;
+  display:inline-flex; align-items:center; gap:9px;
+  background:var(--orange-dim); border:1px solid var(--orange-border);
+  color:var(--text-primary); border-radius:var(--r-btn);
+  padding:9px 15px; font-size:13.5px; font-weight:600;
+  font-family:var(--mono); letter-spacing:.01em;
+}
+.veh-chip .tick{color:var(--orange); font-weight:900; font-size:12px;}
+.chip-label{
+  font-size:11px; font-weight:700; letter-spacing:1.1px;
+  text-transform:uppercase; color:var(--text-muted);
+}
+.chip-row{display:flex; align-items:center; gap:13px; flex-wrap:wrap;}
+.link-edit{font-size:13px; font-weight:600; border-radius:4px;}
+.link-edit:hover{text-decoration:underline;}
+
+/* ---- pills / tags ---- */
+.tag{
+  align-self:flex-start;
+  font-size:10px; font-weight:800; letter-spacing:1.15px; text-transform:uppercase;
+  color:var(--orange); background:var(--orange-dim);
+  border:1px solid var(--orange-border); border-radius:5px; padding:4px 8px;
+}
+.chip{
+  display:inline-flex; align-items:center;
+  font-size:13px; font-weight:600; color:var(--text-muted);
+  border:1px solid var(--hairline-2); border-radius:var(--r-pill);
+  padding:8px 15px; background:rgba(255,255,255,.02);
+  transition:color var(--dur) var(--ease),border-color var(--dur) var(--ease),
+             background var(--dur) var(--ease),transform var(--dur) var(--ease);
+}
+.chip:hover{
+  color:var(--text-primary); border-color:var(--orange-border);
+  background:var(--orange-dim); transform:translateY(-1px);
+}
+.chip:active{transform:translateY(0);}
+
+/* ---- breadcrumb ---- */
+.crumb{
+  font-family:var(--mono); font-size:11.5px; letter-spacing:.02em;
+  color:var(--text-muted); margin-bottom:18px;
+}
+.crumb a{color:var(--text-muted);}
+.crumb a:hover{color:var(--orange); text-decoration:underline;}
+.crumb b{color:var(--text-primary); font-weight:600;}
+.crumb span{opacity:.5; padding:0 6px;}
+
+/* ---- NAV: frosted at rest, solid past 20px ---- */
+.nav-sentinel{display:block; height:1px; margin-bottom:-1px;}
+.nav{
+  position:sticky; top:var(--tb-h); z-index:50; /* SPLIT: top → 0 */
+  background:rgba(12,17,32,.62);
+  backdrop-filter:blur(14px) saturate(150%);
+  -webkit-backdrop-filter:blur(14px) saturate(150%);
+  border-bottom:1px solid var(--hairline);
+  transition:background var(--dur-2) var(--ease),border-color var(--dur-2) var(--ease),
+             box-shadow var(--dur-2) var(--ease);
+}
+.nav.solid{
+  background:var(--bg-deep);
+  border-bottom-color:var(--hairline-2);
+  box-shadow:0 8px 24px -12px rgba(0,0,0,.9);
+}
+.nav-inner{
+  max-width:var(--wrap); margin:0 auto; padding:0 var(--gutter);
+  height:68px; display:flex; align-items:center; gap:26px;
+}
+.logo{
+  display:inline-flex; align-items:center; gap:10px;
+  font-weight:800; font-size:15px; letter-spacing:-.2px;
+  color:var(--text-primary); flex:none;
+}
+.logo:hover{color:var(--text-primary);}
+.logo .mark{
+  width:30px; height:30px; border-radius:9px; flex:none;
+  background:var(--orange-dim); border:1px solid var(--orange-border);
+  color:var(--orange);
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:900;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.09);
+  transition:background var(--dur) var(--ease),box-shadow var(--dur) var(--ease);
+}
+.logo:hover .mark{background:rgba(255,140,0,.2); box-shadow:0 0 0 3px var(--orange-dim);}
+.logo .word span{color:var(--orange);}
+.nav-links{display:flex; gap:24px; margin-left:6px;}
+.nav-links a{
+  position:relative;
+  font-size:14px; font-weight:500; color:var(--text-muted);
+  padding:24px 0; border-radius:0;
+  transition:color var(--dur) var(--ease);
+}
+.nav-links a::after{
+  content:""; position:absolute; left:0; right:0; bottom:20px; height:2px;
+  background:var(--orange); border-radius:2px;
+  transform:scaleX(0); transform-origin:left;
+  transition:transform var(--dur-2) var(--ease);
+}
+.nav-links a:hover{color:var(--text-primary);}
+.nav-links a:hover::after{transform:scaleX(1);}
+.nav-links a.on{color:var(--text-primary); font-weight:600;}
+.nav-links a.on::after{transform:scaleX(1);}
+.nav-right{margin-left:auto; display:flex; align-items:center; gap:12px;}
+.cart-btn{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:13px; font-weight:600; color:var(--text-primary);
+  padding:10px 15px; border:1px solid var(--hairline-2);
+  border-radius:var(--r-btn); background:rgba(255,255,255,.03);
+  transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease),
+             transform var(--dur) var(--ease);
+}
+.cart-btn:hover{
+  color:var(--text-primary); border-color:var(--orange-border);
+  background:var(--orange-dim); transform:translateY(-1px);
+}
+.cart-btn:active{transform:translateY(0);}
+.cart-btn .count{
+  background:var(--grad-orange); color:var(--orange-ink);
+  font-size:11px; font-weight:800; border-radius:var(--r-pill);
+  padding:2px 7px; box-shadow:inset 0 1px 0 rgba(255,255,255,.3);
+}
+.hamburger{
+  display:none; width:42px; height:42px; padding:0;
+  align-items:center; justify-content:center;
+  font-size:18px; color:var(--text-primary);
+  background:rgba(255,255,255,.03); border:1px solid var(--hairline-2);
+  border-radius:var(--r-btn); cursor:pointer;
+}
+.hamburger:hover{border-color:var(--orange-border); background:var(--orange-dim);}
+.nav-min .nav-inner{justify-content:space-between;}
+.nav-min .secure{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:12.5px; color:var(--text-muted); font-weight:500;
+}
+.nav-min .secure b{color:var(--good); font-size:13px;}
+
+/* ---- FOOTER ---- */
+.footer{
+  background:var(--bg-mid);
+  border-top:1px solid var(--hairline-2);
+  padding:56px 0 28px;
+  background-image:linear-gradient(180deg,rgba(255,140,0,.035),transparent 180px);
+}
+.foot-grid{display:grid; grid-template-columns:2.2fr 1fr 1fr 1fr; gap:34px;}
+.foot-grid h3{
+  font-size:11px; font-weight:700; letter-spacing:1.3px;
+  text-transform:uppercase; color:var(--text-primary); margin-bottom:14px;
+}
+.foot-grid ul{list-style:none; margin:0; padding:0; display:grid; gap:10px;}
+.foot-grid a{font-size:13px; color:var(--text-muted);}
+.foot-grid a:hover{color:var(--orange); text-decoration:underline;}
+.foot-bottom{
+  margin-top:38px; padding-top:20px; border-top:1px solid var(--hairline);
+  display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap;
+  font-size:12px; color:var(--text-muted);
+}
+.footer.min{padding:28px 0;}
+.footer.min .foot-bottom{margin:0; padding:0; border:0;}
+
+/* ---- empty / prompt states ---- */
+.state{
+  text-align:center; padding:62px 30px;
+  border:1px dashed var(--hairline-2); border-radius:var(--r-card);
+  background:
+    radial-gradient(100% 80% at 50% 0%,rgba(255,140,0,.05),transparent 70%),
+    var(--bg-card);
+}
+.state .badge-lg{
+  width:60px; height:60px; border-radius:16px; margin:0 auto 22px;
+  background:var(--orange-dim); border:1px solid var(--orange-border);
+  color:var(--orange); font-size:26px; font-weight:900;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 0 30px -8px var(--orange-glow);
+}
+.state h2{margin-bottom:12px;}
+.state .lede{margin:0 auto; max-width:48ch;}
+.state .btn-row{justify-content:center; margin-top:28px;}
+
+/* ═══════════════════ §5 · PAGE RULES ═══════════════════ */
+
+/* ─────────── PAGE: Home ─────────── */
+/* quick vehicle entry — the on-ramp, Home only */
+.veh-bar{
+  background:var(--bg-mid);
+  border-bottom:1px solid var(--hairline);
+  padding:26px 0;
+  background-image:
+    radial-gradient(80% 140% at 12% 0%,rgba(255,140,0,.07),transparent 62%),
+    linear-gradient(180deg,rgba(255,255,255,.02),transparent);
+}
+.veh-head{display:flex; align-items:baseline; gap:13px; margin-bottom:16px; flex-wrap:wrap;}
+.veh-head strong{font-size:15.5px; font-weight:700; letter-spacing:-.1px;}
+.veh-head .hint{font-size:12.5px; color:var(--text-muted);}
+.veh-form{display:grid; grid-template-columns:repeat(4,1fr) auto; gap:13px; align-items:end;}
+.veh-form .btn{min-height:46px;}
+
+/* hero */
+.hero{
+  padding:84px 0 78px; overflow:hidden;
+  background-image:
+    radial-gradient(58% 76% at 78% 12%,rgba(255,140,0,.13),transparent 66%),
+    radial-gradient(40% 60% at 6% 96%,rgba(255,159,28,.06),transparent 70%);
+}
+.hero-grid{display:grid; grid-template-columns:1.12fr .88fr; gap:52px; align-items:center;}
+.hero h1{margin-bottom:18px;}
+.hero .lede{font-size:17px; max-width:52ch;}
+/* fitment readout — mono data strip, the hero's supporting evidence */
+.readout{
+  margin-top:30px; padding-top:22px; border-top:1px solid var(--hairline-2);
+  display:flex; gap:30px; flex-wrap:wrap;
+}
+.readout div{font-size:12px; color:var(--text-muted); line-height:1.45;}
+.readout b{
+  display:block; color:var(--text-primary); font-size:16px; font-weight:800;
+  letter-spacing:-.3px; margin-bottom:3px;
+}
+.hero-plate{position:relative;}
+.hero-plate .ph{box-shadow:var(--sh-3);}
+
+/* two pillars */
+.pillar{
+  display:flex; flex-direction:column; gap:15px; padding:24px;
+  color:inherit; height:100%;
+}
+.pillar h3{font-size:21px; font-weight:800;}
+.pillar ul{margin:0; padding-left:19px; color:var(--text-muted); font-size:13.5px; line-height:1.95;}
+.pillar ul li::marker{color:var(--orange-border);}
+.pillar .go{
+  font-size:14px; font-weight:700; color:var(--orange); margin-top:auto;
+  display:inline-flex; align-items:center; gap:7px;
+}
+.pillar .go .arw{transition:transform var(--dur-2) var(--ease); display:inline-block;}
+.card-lift:hover .go .arw{transform:translateX(4px);}
+
+/* cta banner — shared by Home and Kits */
+.cta-banner{
+  background:
+    radial-gradient(70% 160% at 100% 0%,rgba(255,140,0,.14),transparent 62%),
+    var(--bg-card);
+  border:1px solid var(--orange-border);
+  border-radius:var(--r-card); padding:36px 38px;
+  display:flex; align-items:center; gap:30px; justify-content:space-between;
+  flex-wrap:wrap; box-shadow:var(--sh-2);
+}
+.cta-banner h2{margin-bottom:8px;}
+
+/* ─────────── PAGE: Hardware Kits ─────────── */
+.filter-panel{
+  background:var(--bg-card); background-image:var(--sheen);
+  border:1px solid var(--hairline-2);
+  border-radius:var(--r-card); padding:24px 26px;
+  box-shadow:var(--sh-2);
+}
+.filter-panel .chip-row{
+  padding-bottom:18px; margin-bottom:20px;
+  border-bottom:1px solid var(--hairline);
+}
+.filter-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+.filter-foot{
+  display:flex; justify-content:space-between; align-items:center; gap:16px;
+  margin-top:20px; flex-wrap:wrap;
+}
+.filter-foot .note{font-size:12.5px; color:var(--text-muted); max-width:56ch; line-height:1.55;}
+
+/* jump-to-system anchor row */
+.jump{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding:20px 0 6px; margin-bottom:6px;
+}
+
+/* system group — the results grouping, NOT a filter control.
+   Deliberately typed as a section heading with a rule, so it never reads
+   as the "Engine" select in the filter panel above. */
+.sysgroup{margin-top:44px; scroll-margin-top:calc(var(--tb-h) + 84px);}
+.sysgroup:first-of-type{margin-top:26px;}
+.sysgroup-head{
+  display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+  padding-bottom:13px; margin-bottom:20px;
+  border-bottom:1px solid var(--hairline-2);
+  position:relative;
+}
+.sysgroup-head::after{
+  content:""; position:absolute; left:0; bottom:-1px; width:52px; height:2px;
+  background:var(--orange); border-radius:2px;
+}
+.sysgroup-head h3{font-size:20px; font-weight:800; letter-spacing:-.35px;}
+.sysgroup-head .cnt{font-size:12.5px; color:var(--text-muted);}
+
+/* kit / product card */
+.prod{display:flex; flex-direction:column; gap:12px; padding:16px;}
+.prod .name{font-size:15.5px; font-weight:700; line-height:1.35;}
+.prod .desc{font-size:12.5px; color:var(--text-muted); line-height:1.55; flex:1;}
+.prod .buy{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding-top:13px; margin-top:2px; border-top:1px solid var(--hairline);
+}
+.prod .price{font-size:19px; font-weight:800; letter-spacing:-.5px;}
+
+/* ─────────── PAGE: Hardware Storage ─────────── */
+.stor-card{display:flex; flex-direction:column; gap:15px; padding:20px; color:inherit; height:100%;}
+.stor-card .meta{font-family:var(--mono); font-size:11.5px; color:var(--text-muted);}
+.stor-card .go{
+  font-size:14px; font-weight:700; color:var(--orange); margin-top:auto;
+  display:inline-flex; align-items:center; gap:7px;
+}
+
+/* ─────────── PAGE: Cart ─────────── */
+.cart-grid{display:grid; grid-template-columns:1.75fr 1fr; gap:26px; align-items:start;}
+.line{
+  display:grid; grid-template-columns:92px 1fr auto auto auto; gap:18px;
+  align-items:center; padding:16px; margin-bottom:14px;
+}
+.line .l-name{font-size:15.5px; font-weight:700; margin-bottom:6px;}
+.line .l-meta{font-size:12.5px; color:var(--text-muted); line-height:1.5;}
+.line .l-price{font-size:17px; font-weight:800; white-space:nowrap; letter-spacing:-.3px;}
+.line select.ctl{width:82px; min-height:42px; padding:9px 10px; padding-right:30px;}
+.line select.ctl{background-position:right 10px center,0 0;}
+.line .rm{
+  width:38px; height:38px; padding:0; flex:none;
+  display:flex; align-items:center; justify-content:center;
+  background:none; border:1px solid transparent; border-radius:var(--r-btn);
+  color:var(--text-muted); font-size:15px; cursor:pointer; font-family:inherit;
+  transition:color var(--dur) var(--ease),background var(--dur) var(--ease),
+             border-color var(--dur) var(--ease);
+}
+.line .rm:hover{color:var(--danger); background:var(--danger-dim); border-color:var(--danger-border);}
+.fits{
+  display:inline-flex; align-items:center; gap:6px; margin-top:9px;
+  font-family:var(--mono); font-size:10.5px; font-weight:600; letter-spacing:.5px;
+  color:var(--orange); background:var(--orange-dim);
+  border:1px solid var(--orange-border); border-radius:5px; padding:4px 8px;
+}
+.summary{position:sticky; top:calc(var(--tb-h) + 88px); padding:24px;} /* SPLIT: 88px */
+.summary h3{margin-bottom:18px;}
+.sum-row{
+  display:flex; justify-content:space-between; gap:14px;
+  font-size:14px; padding:10px 0; color:var(--text-muted);
+}
+.sum-row span:last-child{color:var(--text-primary); font-weight:600;}
+.sum-row.total{
+  border-top:1px solid var(--hairline-2); margin-top:10px; padding-top:17px;
+  font-size:17px; font-weight:800; color:var(--text-primary);
+}
+.sum-row.total span:last-child{font-size:21px; font-weight:900; letter-spacing:-.6px;}
+
+/* ─────────── PAGE: Checkout ─────────── */
+.steps{
+  background:var(--bg-mid);
+  border-bottom:1px solid var(--hairline);
+  padding:24px 0;
+}
+.steps-inner{
+  max-width:var(--wrap); margin:0 auto; padding:0 var(--gutter);
+  display:flex; align-items:center; width:100%;
+}
+.step{
+  display:flex; align-items:center; gap:11px;
+  font-size:13px; font-weight:600; color:var(--text-muted); white-space:nowrap;
+}
+.step .n{
+  width:30px; height:30px; border-radius:50%; flex:none;
+  border:1px solid var(--hairline-2); background:var(--bg-sunken);
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:800;
+}
+.step.done{color:var(--text-primary);}
+.step.done .n{background:var(--orange-dim); border-color:var(--orange-border); color:var(--orange);}
+.step.now{color:var(--text-primary);}
+.step.now .n{
+  background:var(--grad-orange); border-color:var(--orange); color:var(--orange-ink);
+  box-shadow:0 0 0 4px var(--orange-dim),inset 0 1px 0 rgba(255,255,255,.3);
+}
+.step-line{flex:1; height:1px; background:var(--hairline-2); margin:0 16px; min-width:16px;}
+.co-grid{display:grid; grid-template-columns:1.7fr 1fr; gap:26px; align-items:start;}
+.form-grid{display:grid; grid-template-columns:1fr 1fr; gap:17px;}
+.span2{grid-column:1 / -1;}
+.step-panel{padding:28px;}
+.step-panel > h2{margin-bottom:5px; font-size:20px; font-weight:800;}
+.step-panel > .sub{font-size:13.5px; color:var(--text-muted); margin-bottom:22px;}
+.step-tag{
+  display:block; font-family:var(--mono);
+  font-size:10.5px; font-weight:700; letter-spacing:1.3px; text-transform:uppercase;
+  color:var(--orange); margin-bottom:9px;
+}
+.radio-row{display:grid; grid-template-columns:1fr 1fr; gap:13px;}
+.radio{
+  border:1px solid var(--hairline-2); border-radius:var(--r-btn); padding:14px 16px;
+  display:flex; gap:12px; align-items:flex-start; cursor:pointer; font-size:14px;
+  background:rgba(255,255,255,.02);
+  transition:border-color var(--dur) var(--ease),background var(--dur) var(--ease);
+}
+.radio:hover{border-color:var(--hairline-3); background:rgba(255,255,255,.05);}
+.radio.sel{border-color:var(--orange); background:var(--orange-dim);}
+.radio:has(input:focus-visible){box-shadow:var(--ring);}
+.radio input{position:absolute; opacity:0; width:1px; height:1px;}
+.radio .dot{
+  width:17px; height:17px; border-radius:50%; flex:none; margin-top:2px;
+  border:1px solid var(--hairline-3); background:var(--bg-sunken);
+}
+.radio.sel .dot{
+  border-color:var(--orange); background:var(--orange);
+  box-shadow:inset 0 0 0 3.5px var(--bg-card);
+}
+.radio b{display:block; font-weight:600; margin-bottom:4px;}
+.radio .m{font-size:12px; color:var(--text-muted);}
+.checkline{
+  display:flex; align-items:center; gap:11px; font-size:13.5px;
+  color:var(--text-muted); margin-top:16px; cursor:pointer;
+}
+.checkline:hover{color:var(--text-primary);}
+.checkline input{position:absolute; opacity:0; width:1px; height:1px;}
+.checkline .bx{
+  width:18px; height:18px; border:1px solid var(--hairline-3); border-radius:5px;
+  flex:none; background:var(--bg-sunken);
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:900; color:transparent;
+}
+.checkline input:checked + .bx{
+  background:var(--grad-orange); border-color:var(--orange); color:var(--orange-ink);
+}
+.checkline:has(input:focus-visible) .bx{box-shadow:var(--ring);}
+.recap-row{
+  display:flex; justify-content:space-between; gap:18px; align-items:flex-start;
+  padding:16px 0; border-bottom:1px solid var(--hairline);
+}
+.recap-row:last-child{border-bottom:0; padding-bottom:0;}
+.recap-row .rk{
+  font-size:11px; font-weight:700; letter-spacing:1.1px; text-transform:uppercase;
+  color:var(--text-muted); margin-bottom:7px;
+}
+.recap-row .rv{font-size:14px; line-height:1.65;}
+.recap-row a{font-size:13px; font-weight:600; white-space:nowrap;}
+.confirm{text-align:center; padding:56px 30px;}
+.confirm .badge{
+  width:62px; height:62px; border-radius:50%; margin:0 auto 24px;
+  background:var(--orange-dim); border:1px solid var(--orange-border);
+  color:var(--orange); font-size:27px; font-weight:900;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 0 40px -8px var(--orange-glow),inset 0 1px 0 rgba(255,255,255,.12);
+}
+.confirm h2{margin-bottom:10px;}
+.confirm .lede{margin:0 auto; max-width:52ch;}
+.confirm .ord{
+  display:inline-block; margin:20px 0 8px; padding:11px 18px;
+  background:var(--bg-sunken); border:1px solid var(--hairline-2); border-radius:var(--r-btn);
+  font-family:var(--mono); font-size:14px; font-weight:600; letter-spacing:.04em;
+}
+
+/* ─────────── PAGE: About / Contact ─────────── */
+.about-grid{display:grid; grid-template-columns:.85fr 1.15fr; gap:44px; align-items:center;}
+.stat-row{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:32px;}
+.stat{padding:20px 22px;}
+.stat b{
+  display:block; font-size:27px; font-weight:900; letter-spacing:-1px;
+  margin-bottom:5px; color:var(--text-primary);
+}
+.stat span{font-size:12.5px; color:var(--text-muted); line-height:1.5;}
+.contact-grid{display:grid; grid-template-columns:1.5fr 1fr; gap:26px; align-items:start;}
+.detail{padding:14px 0; border-bottom:1px solid var(--hairline);}
+.detail:last-child{border-bottom:0; padding-bottom:0;}
+.detail .dk{
+  font-size:11px; font-weight:700; letter-spacing:1.1px; text-transform:uppercase;
+  color:var(--text-muted); margin-bottom:6px;
+}
+.detail .dv{font-size:14px; line-height:1.6;}
+.detail .dv a{font-weight:500;}
+
+/* ═══════════════════ RESPONSIVE (container queries on .page) ═══════════════════ */
+@container (max-width:768px){
+  .wrap,.nav-inner,.steps-inner{--gutter:20px;}
+  .sec{padding:46px 0;}
+  .sec.tight{padding:32px 0;}
+  h1{font-size:32px; letter-spacing:-.9px;}
+  .h1-page{font-size:27px; letter-spacing:-.7px;}
+  h2{font-size:23px; letter-spacing:-.5px;}
+  .lede,.hero .lede{font-size:15px;}
+  .nav-inner{height:60px; gap:14px;}
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .cart-btn .lbl{display:none;}
+  .g2,.g3,.g4{grid-template-columns:1fr;}
+  .btn-row{flex-direction:column;}
+  .btn-row .btn{width:100%;}
+  .veh-form,.filter-grid,.form-grid,.radio-row,.stat-row{grid-template-columns:1fr;}
+  .hero{padding:40px 0 44px;}
+  .hero-grid,.cart-grid,.co-grid,.about-grid,.contact-grid{grid-template-columns:1fr; gap:26px;}
+  .readout{gap:18px; flex-direction:column;}
+  .cta-banner{padding:26px 22px; flex-direction:column; align-items:flex-start; gap:20px;}
+  .cta-banner .btn-row{width:100%;}
+  .filter-panel{padding:18px;}
+  .filter-foot .btn{width:100%;}
+  .sysgroup{margin-top:34px;}
+  .prod .buy{flex-direction:column; align-items:stretch; gap:12px;}
+  .prod .buy .btn{width:100%;}
+  .prod .price{text-align:center;}
+  .line{grid-template-columns:68px 1fr; row-gap:14px; column-gap:14px;}
+  .line .l-price,.line select.ctl,.line .rm{grid-column:2;}
+  .line .l-price{text-align:left;}
+  .line select.ctl{width:100%;}
+  .line .rm{justify-self:start; margin-left:-8px;}
+  .summary{position:static;}
+  .steps{padding:18px 0;}
+  .steps-inner{flex-wrap:wrap; gap:13px;}
+  .step-line{display:none;}
+  .step{font-size:12px;}
+  .step-panel{padding:20px;}
+  .foot-grid{grid-template-columns:1fr; gap:26px;}
+  .state{padding:44px 20px;}
+  .stat-row{gap:12px;}
+}
+@container (max-width:400px){
+  h1{font-size:27px;}
+  .h1-page{font-size:24px;}
+  .logo .word{display:none;}
+  .veh-head{gap:6px;}
+  .cta-banner{padding:22px 18px;}
+  .prod{padding:14px;}
+}
+
+/* ═══════════════════ MOTION ═══════════════════
+   One orchestrated moment: the Home hero entrance. Everything else is a
+   state transition on a control the person is touching. */
+@keyframes rise{
+  from{opacity:0; transform:translateY(14px);}
+  to{opacity:1; transform:none;}
+}
+@keyframes plate-in{
+  from{opacity:0; transform:translateY(20px) scale(.985);}
+  to{opacity:1; transform:none;}
+}
+.enter > *{animation:rise 620ms var(--ease) both;}
+.enter > *:nth-child(1){animation-delay:40ms;}
+.enter > *:nth-child(2){animation-delay:110ms;}
+.enter > *:nth-child(3){animation-delay:180ms;}
+.enter > *:nth-child(4){animation-delay:250ms;}
+.enter > *:nth-child(5){animation-delay:320ms;}
+.enter-plate{animation:plate-in 760ms var(--ease) 180ms both;}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  *,*::before,*::after{
+    animation-duration:.01ms !important; animation-delay:0ms !important;
+    animation-iteration-count:1 !important; transition-duration:.01ms !important;
+  }
+  .card-lift:hover{transform:none;}
+  .btn-primary:hover,.btn-outline:hover,.cart-btn:hover,.chip:hover{transform:none;}
+}
+
+/* ═══════════════════ §4 · REVIEW CHROME — DELETE ON SPLIT ═══════════════════ */
+.toolbar{
+  position:fixed; top:0; left:0; right:0; height:var(--tb-h); z-index:2000;
+  background:rgba(18,22,34,.92); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--hairline-2);
+  display:flex; align-items:center; gap:16px; padding:0 18px; font-size:13px;
+}
+.tb-brand{font-weight:700; font-size:14px; white-space:nowrap;}
+.tb-brand span{color:var(--orange);}
+.tb-sub{color:var(--text-muted); font-size:11px; white-space:nowrap;}
+.toolbar .spacer{flex:1;}
+.toolbar select{
+  background:#252b3d; color:var(--text-primary); border:1px solid var(--hairline-2);
+  padding:8px 10px; border-radius:var(--r-btn); font:inherit; font-size:12px;
+  max-width:38vw;
+}
+.toggle-group{display:flex; border:1px solid var(--hairline-2); border-radius:var(--r-btn); overflow:hidden;}
+.toggle-group button{
+  background:#252b3d; color:var(--text-muted); border:0; padding:9px 16px;
+  font:inherit; font-size:12px; font-weight:600; cursor:pointer;
+}
+.toggle-group button:hover{color:var(--text-primary);}
+.toggle-group button.active{background:var(--grad-orange); color:var(--orange-ink);}
+@media (max-width:760px){ .tb-sub{display:none;} }
+@media (max-width:520px){ .tb-brand{display:none;} }
+
+.frame{width:min(100% - 28px,var(--maxw)); margin:30px auto 0;}
+body.mobile .frame{width:min(100% - 28px,390px);}
+.frame-label{
+  display:flex; align-items:baseline; gap:11px; flex-wrap:wrap;
+  padding:0 4px 9px; font-size:11px; font-weight:700;
+  letter-spacing:1.4px; text-transform:uppercase; color:#f2f5fb;
+}
+.frame-label .route{
+  font-family:var(--mono); font-size:11px; font-weight:400;
+  letter-spacing:0; text-transform:none; color:#cdd5e6;
+}
+.frame-label .st{
+  font-family:var(--mono); font-size:10px; letter-spacing:.6px;
+  background:var(--orange); color:var(--orange-ink);
+  padding:2px 7px; border-radius:4px; text-transform:uppercase;
+}
+.page{
+  container-type:inline-size;              /* drives all responsive rules */
+  background:var(--bg-deep);
+  border:1px solid rgba(0,0,0,.4);
+  border-radius:16px; overflow:clip;
+  box-shadow:0 26px 60px -24px rgba(0,0,0,.7);
+}
+.endnote{
+  width:min(100% - 28px,var(--wrap)); margin:38px auto 64px;
+  text-align:center; color:#e7ebf5; font-size:12.5px; line-height:1.75;
+}
+.endnote code{font-family:var(--mono); font-size:11.5px; color:#ffd9a8;}
+</style>
+</head>
+<body class="desktop">
+
+<!-- ═══ REVIEW CHROME — not part of the site. Delete on split. ═══ -->
+<div class="toolbar">
+  <div class="tb-brand">OrganizeYour<span>Nuts</span> &mdash; Hi-Fi</div>
+  <div class="tb-sub">7 templates + 4 states &middot; clickable</div>
+  <div class="spacer"></div>
+  <label class="lab" for="jump" style="margin:0;">Jump to</label>
+  <select id="jump" onchange="if(this.value){location.hash=this.value;this.selectedIndex=0;}">
+    <option value="">Page&hellip;</option>
+    <optgroup label="Templates">
+      <option value="#home">① Home</option>
+      <option value="#kits">② Hardware Kits &mdash; Overview &amp; Shop</option>
+      <option value="#storage">③ Hardware Storage &mdash; Overview</option>
+      <option value="#bins">④ Storage Sub-category (Bins)</option>
+      <option value="#cart">⑤ Cart</option>
+      <option value="#checkout">⑥ Checkout</option>
+      <option value="#about">⑦ About / Contact</option>
+    </optgroup>
+    <optgroup label="States">
+      <option value="#kits-empty">Kits &mdash; no vehicle set</option>
+      <option value="#kits-partial">Kits &mdash; systems with no fit omitted</option>
+      <option value="#cart-empty">Cart &mdash; empty</option>
+      <option value="#contact-error">Contact &mdash; validation errors</option>
+    </optgroup>
+  </select>
+  <div class="toggle-group" role="group" aria-label="Preview width">
+    <button id="btn-desktop" class="active" type="button" onclick="setView('desktop')">Desktop</button>
+    <button id="btn-mobile" type="button" onclick="setView('mobile')">Mobile</button>
+  </div>
+</div>
+
+<div class="frame" id="home">
+  <div class="frame-label">Home <span class="route">/</span></div>
+  <div class="page">
+    <span class="nav-sentinel" aria-hidden="true"></span>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="logo" href="#home"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+        <nav class="nav-links" aria-label="Main">
+          <a href="#home" class="on" aria-current="page">Home</a>
+          <a href="#kits">Hardware Kits</a>
+          <a href="#storage">Hardware Storage</a>
+          <a href="#about">About / Contact</a>
+        </nav>
+        <div class="nav-right">
+          <a class="cart-btn" href="#cart"><span class="lbl">Cart</span> <span class="count">2</span></a>
+          <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="veh-bar" aria-labelledby="veh-h">
+      <div class="wrap">
+        <div class="veh-head">
+          <strong id="veh-h">Find hardware that fits your vehicle</strong>
+          <span class="hint">Set it once &mdash; it carries through to your kits and your cart.</span>
+        </div>
+        <form class="veh-form" onsubmit="return false;">
+          <label class="field"><span class="lab">Make</span>
+            <select class="ctl"><option>Select make</option><option selected>Chevrolet</option><option>Ford</option><option>Dodge</option><option>Toyota</option></select>
+          </label>
+          <label class="field"><span class="lab">Model</span>
+            <select class="ctl"><option>Select model</option><option selected>Silverado 1500</option><option>Camaro</option><option>Tahoe</option></select>
+          </label>
+          <label class="field"><span class="lab">Year</span>
+            <select class="ctl"><option>Select year</option><option selected>2016</option><option>2015</option><option>2014</option></select>
+          </label>
+          <label class="field"><span class="lab">Engine</span>
+            <select class="ctl"><option>Select engine</option><option selected>5.3L V8</option><option>4.3L V6</option><option>6.2L V8</option></select>
+          </label>
+          <a class="btn btn-primary" href="#kits">Show my kits</a>
+        </form>
+      </div>
+    </section>
+
+    <section class="sec hero">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div class="enter">
+            <p class="eyebrow">Automotive fasteners &amp; storage</p>
+            <h1>Every bolt your build needs, in one kit.</h1>
+            <p class="lede">Complete grade-8 fastener kits matched to your make, model, year and engine &mdash; plus the bins and cases to keep them sorted once the box is open.</p>
+            <div class="btn-row" style="margin-top:28px;">
+              <a class="btn btn-primary" href="#kits">Shop hardware kits</a>
+              <a class="btn btn-outline" href="#storage">Shop storage</a>
+            </div>
+            <div class="readout">
+              <div><b>1,400+</b> kits in stock</div>
+              <div><b>Ships same day</b> before 3pm ET</div>
+              <div><b>Bulk pricing</b> on 10+ kits</div>
+            </div>
+          </div>
+          <div class="hero-plate enter-plate"><div class="ph ph-hero" role="img" aria-label="Placeholder: Hero image" data-label="Hero image · 16:10"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec alt" aria-labelledby="pillars-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="eyebrow">Two ways to shop</p>
+          <h2 id="pillars-h">Kits for the job, storage for the rest</h2>
+          <p class="lede">Start with what fits your vehicle, then sort what&rsquo;s left over.</p>
+        </div>
+        <div class="grid g2">
+          <a class="card card-lift pillar" href="#kits">
+            <div class="ph ph-pillar" role="img" aria-label="Placeholder: Kits image" data-label="Kits image · 16:9"></div>
+            <h3>Hardware Kits</h3>
+            <p class="muted">Set your vehicle and see every kit that fits it, grouped by system.</p>
+            <ul>
+              <li>Engines &middot; Transmissions &middot; Steering &amp; Suspension</li>
+              <li>Diff / Axle &middot; Body &amp; Interior Trim</li>
+              <li>Grade-8 and stainless options</li>
+            </ul>
+            <span class="go">Set your vehicle, see kits <span class="arw">&rarr;</span></span>
+          </a>
+          <a class="card card-lift pillar" href="#storage">
+            <div class="ph ph-pillar" role="img" aria-label="Placeholder: Storage image" data-label="Storage image · 16:9"></div>
+            <h3>Hardware Storage</h3>
+            <p class="muted">Bins, organizers and cases sized for loose fasteners.</p>
+            <ul>
+              <li>Stackable bins and wall racks</li>
+              <li>Compartment organizers, 12&ndash;48 slots</li>
+              <li>Hard cases for the toolbox or truck</li>
+            </ul>
+            <span class="go">Browse storage <span class="arw">&rarr;</span></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec tight">
+      <div class="wrap">
+        <div class="cta-banner">
+          <div>
+            <h2>Not sure which kit you need?</h2>
+            <p class="muted">Tell us the year, engine and what you&rsquo;re rebuilding &mdash; we&rsquo;ll match the hardware.</p>
+          </div>
+          <div class="btn-row">
+            <a class="btn btn-primary" href="#kits">Shop kits</a>
+            <a class="btn btn-outline" href="#about">Contact us</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="wrap">
+        <h2 class="vh">Site links</h2>
+        <div class="foot-grid">
+          <div>
+            <a class="logo" href="#home" style="margin-bottom:14px;"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+            <p class="muted" style="max-width:34ch;">Automotive fastener kits and hardware storage, shipped from Georgia.</p>
+          </div>
+          <div><h3>Hardware Kits</h3><ul>
+            <li><a href="#kits">Shop by vehicle</a></li>
+            <li><a href="#kits-engines">Engine kits</a></li>
+            <li><a href="#kits-trans">Transmission kits</a></li>
+            <li><a href="#kits-steer">Steering &amp; suspension</a></li>
+          </ul></div>
+          <div><h3>Storage</h3><ul>
+            <li><a href="#bins">Bins</a></li>
+            <li><a href="#bins">Organizers</a></li>
+            <li><a href="#bins">Cases</a></li>
+          </ul></div>
+          <div><h3>Company</h3><ul>
+            <li><a href="#about">About us</a></li>
+            <li><a href="#about">Contact</a></li>
+            <li><a href="#cart">Cart</a></li>
+          </ul></div>
+        </div>
+        <div class="foot-bottom">
+          <span>&copy; 2026 OrganizeYourNuts.com</span>
+          <span>Shipping &middot; Returns &middot; Privacy</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div class="frame" id="kits">
+  <div class="frame-label">Hardware Kits &mdash; Overview &amp; Shop <span class="route">/hardware-kits</span></div>
+  <div class="page">
+    <span class="nav-sentinel" aria-hidden="true"></span>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="logo" href="#home"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+        <nav class="nav-links" aria-label="Main">
+          <a href="#home">Home</a>
+          <a href="#kits" class="on" aria-current="page">Hardware Kits</a>
+          <a href="#storage">Hardware Storage</a>
+          <a href="#about">About / Contact</a>
+        </nav>
+        <div class="nav-right">
+          <a class="cart-btn" href="#cart"><span class="lbl">Cart</span> <span class="count">2</span></a>
+          <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="sec tight">
+      <div class="wrap">
+        <div class="crumb"><a href="#home">Home</a><span>/</span><b>Hardware Kits</b></div>
+        <p class="eyebrow">Shop by vehicle</p>
+        <h1 class="h1-page">Hardware kits that fit your vehicle</h1>
+        <p class="lede">Tell us what you&rsquo;re working on. We&rsquo;ll show every kit that fits it &mdash; engine, transmission, steering, axle and trim &mdash; all on this page.</p>
+      </div>
+    </section>
+
+    <section class="sec tight alt" aria-labelledby="filter-h-set">
+      <div class="wrap">
+        <h2 id="filter-h-set" class="vh">Vehicle filter</h2>
+        <div class="filter-panel">
+          <div class="chip-row">
+            <span class="chip-label">Your vehicle</span>
+            <span class="veh-chip"><span class="tick" aria-hidden="true">&#10003;</span> 2016 Chevrolet Silverado 1500 &middot; 5.3L V8</span>
+            <a class="link-edit" href="#kits-empty">Change vehicle</a>
+          </div>
+          <div class="filter-grid">
+            <label class="field"><span class="lab">Make</span>
+              <select class="ctl"><option selected>Chevrolet</option><option>Ford</option><option>Dodge</option></select>
+            </label>
+            <label class="field"><span class="lab">Model</span>
+              <select class="ctl"><option selected>Silverado 1500</option><option>Camaro</option><option>Tahoe</option></select>
+            </label>
+            <label class="field"><span class="lab">Year</span>
+              <select class="ctl"><option selected>2016</option><option>2015</option><option>2014</option></select>
+            </label>
+            <label class="field"><span class="lab">Engine <span class="spec" style="text-transform:none; letter-spacing:0;">(your motor)</span></span>
+              <select class="ctl"><option selected>5.3L V8</option><option>4.3L V6</option><option>6.2L V8</option></select>
+            </label>
+          </div>
+          <div class="filter-foot">
+            <p class="note">Set your vehicle once and it applies to every result below. It stays with you through the cart.</p>
+            <button class="btn btn-primary" type="button">Update results</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="wrap">
+        <div class="sec-head" style="margin-bottom:8px;">
+          <h2>34 kits fit your Silverado</h2>
+          <p class="lede">Grouped by the system they belong to. Systems with no fitting kits aren&rsquo;t shown.</p>
+        </div>
+        <nav class="jump" aria-label="Jump to system">
+          <span class="chip-label">Jump to</span>
+          <a class="chip" href="#kits-engines">Engines</a>
+          <a class="chip" href="#kits-trans">Transmissions</a>
+          <a class="chip" href="#kits-steer">Steering &amp; Suspension</a>
+          <a class="chip" href="#kits-diff">Diff / Axle</a>
+          <a class="chip" href="#kits-body">Body &amp; Interior Trim</a>
+        </nav>
+        <section class="sysgroup" id="kits-engines" aria-labelledby="kits-engines-h">
+          <div class="sysgroup-head">
+            <h3 id="kits-engines-h">Engines</h3>
+            <span class="cnt">9 engine-hardware kits &middot; head, main, rod, manifold and accessory fasteners</span>
+          </div>
+          <div class="grid g3">
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              <span class="tag">Best seller</span>
+              <h4 class="name">LS Complete Engine Hardware Kit</h4>
+              <p class="desc">Head bolts, main caps, rod bolts, intake studs and header bolts &mdash; 214 pieces, grade 8.</p>
+              <div class="buy"><span class="price">$109.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              
+              <h4 class="name">Small Block Chevy Engine Kit</h4>
+              <p class="desc">Full short- and long-block fastener set with valley cover and oil pan hardware.</p>
+              <div class="buy"><span class="price">$89.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              <span class="tag">New</span>
+              <h4 class="name">Cam &amp; Timing Cover Hardware Set</h4>
+              <p class="desc">Timing cover, cam retainer and front dress bolts. Zinc-plated.</p>
+              <div class="buy"><span class="price">$34.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+          </div>
+        </section>
+        <section class="sysgroup" id="kits-trans" aria-labelledby="kits-trans-h">
+          <div class="sysgroup-head">
+            <h3 id="kits-trans-h">Transmissions</h3>
+            <span class="cnt">6 kits &middot; bellhousing, pan and crossmember hardware</span>
+          </div>
+          <div class="grid g3">
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              
+              <h4 class="name">6L80 Transmission Bolt Kit</h4>
+              <p class="desc">Bellhousing, pan and cooler line fasteners for the 6L80/6L90 case.</p>
+              <div class="buy"><span class="price">$59.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              
+              <h4 class="name">Transmission Crossmember Set</h4>
+              <p class="desc">Mount and crossmember bolts with lock washers and flange nuts.</p>
+              <div class="buy"><span class="price">$27.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              
+              <h4 class="name">Torque Converter Bolt Set</h4>
+              <p class="desc">Six-bolt converter hardware, grade 8, with thread locker.</p>
+              <div class="buy"><span class="price">$18.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+          </div>
+        </section>
+        <section class="sysgroup" id="kits-steer" aria-labelledby="kits-steer-h">
+          <div class="sysgroup-head">
+            <h3 id="kits-steer-h">Steering &amp; Suspension</h3>
+            <span class="cnt">8 kits &middot; control arm, knuckle and shock hardware</span>
+          </div>
+          <div class="grid g3">
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              
+              <h4 class="name">Front Control Arm Hardware Kit</h4>
+              <p class="desc">Upper and lower arm bolts, cam bolts and nuts for alignment adjustment.</p>
+              <div class="buy"><span class="price">$64.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              
+              <h4 class="name">Shock &amp; Sway Bar Bolt Set</h4>
+              <p class="desc">Front and rear shock mounts plus end link and bushing hardware.</p>
+              <div class="buy"><span class="price">$41.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              
+              <h4 class="name">Steering Rack Mounting Kit</h4>
+              <p class="desc">Rack bolts, tie rod nuts and cotter pins. Corrosion-resistant finish.</p>
+              <div class="buy"><span class="price">$32.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+          </div>
+        </section>
+        <section class="sysgroup" id="kits-diff" aria-labelledby="kits-diff-h">
+          <div class="sysgroup-head">
+            <h3 id="kits-diff-h">Diff / Axle</h3>
+            <span class="cnt">5 kits &middot; cover, ring gear and axle flange hardware</span>
+          </div>
+          <div class="grid g3">
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              
+              <h4 class="name">Differential Cover Bolt Kit</h4>
+              <p class="desc">Ten-bolt cover set with gasket-safe washers for the 9.5&quot; rear.</p>
+              <div class="buy"><span class="price">$22.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              <span class="tag">Heavy duty</span>
+              <h4 class="name">Ring Gear Bolt Set</h4>
+              <p class="desc">Left-hand thread ring gear bolts rated for towing loads.</p>
+              <div class="buy"><span class="price">$38.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              
+              <h4 class="name">Axle Flange &amp; U-Joint Kit</h4>
+              <p class="desc">Flange bolts, strap hardware and driveshaft fasteners.</p>
+              <div class="buy"><span class="price">$29.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+          </div>
+        </section>
+        <section class="sysgroup" id="kits-body" aria-labelledby="kits-body-h">
+          <div class="sysgroup-head">
+            <h3 id="kits-body-h">Body &amp; Interior Trim</h3>
+            <span class="cnt">6 kits &middot; fender, bed, door and panel fasteners</span>
+          </div>
+          <div class="grid g3">
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              
+              <h4 class="name">Fender &amp; Bed Bolt Kit</h4>
+              <p class="desc">Body bolts with captured washers, matched to factory head size.</p>
+              <div class="buy"><span class="price">$44.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              
+              <h4 class="name">Interior Trim Clip Assortment</h4>
+              <p class="desc">Door panel, pillar and headliner clips in factory sizes. 180 pieces.</p>
+              <div class="buy"><span class="price">$19.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              
+              <h4 class="name">Grille &amp; Bumper Hardware Set</h4>
+              <p class="desc">Front-end fasteners including bumper brackets and grille screws.</p>
+              <div class="buy"><span class="price">$26.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="sec tight alt">
+      <div class="wrap">
+        <div class="cta-banner">
+          <div>
+            <h2>Can&rsquo;t find your vehicle?</h2>
+            <p class="muted">Send us the year, model and engine and we&rsquo;ll build the kit list for you.</p>
+          </div>
+          <div class="btn-row">
+            <a class="btn btn-primary" href="#about">Contact us</a>
+            <a class="btn btn-outline" href="#cart">View cart</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="wrap">
+        <h2 class="vh">Site links</h2>
+        <div class="foot-grid">
+          <div>
+            <a class="logo" href="#home" style="margin-bottom:14px;"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+            <p class="muted" style="max-width:34ch;">Automotive fastener kits and hardware storage, shipped from Georgia.</p>
+          </div>
+          <div><h3>Hardware Kits</h3><ul>
+            <li><a href="#kits">Shop by vehicle</a></li>
+            <li><a href="#kits-engines">Engine kits</a></li>
+            <li><a href="#kits-trans">Transmission kits</a></li>
+            <li><a href="#kits-steer">Steering &amp; suspension</a></li>
+          </ul></div>
+          <div><h3>Storage</h3><ul>
+            <li><a href="#bins">Bins</a></li>
+            <li><a href="#bins">Organizers</a></li>
+            <li><a href="#bins">Cases</a></li>
+          </ul></div>
+          <div><h3>Company</h3><ul>
+            <li><a href="#about">About us</a></li>
+            <li><a href="#about">Contact</a></li>
+            <li><a href="#cart">Cart</a></li>
+          </ul></div>
+        </div>
+        <div class="foot-bottom">
+          <span>&copy; 2026 OrganizeYourNuts.com</span>
+          <span>Shipping &middot; Returns &middot; Privacy</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div class="frame" id="kits-empty">
+  <div class="frame-label"><span class="st">state</span>Hardware Kits &mdash; no vehicle set <span class="route">/hardware-kits</span></div>
+  <div class="page">
+    <span class="nav-sentinel" aria-hidden="true"></span>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="logo" href="#home"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+        <nav class="nav-links" aria-label="Main">
+          <a href="#home">Home</a>
+          <a href="#kits" class="on" aria-current="page">Hardware Kits</a>
+          <a href="#storage">Hardware Storage</a>
+          <a href="#about">About / Contact</a>
+        </nav>
+        <div class="nav-right">
+          <a class="cart-btn" href="#cart"><span class="lbl">Cart</span> <span class="count">2</span></a>
+          <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="sec tight">
+      <div class="wrap">
+        <div class="crumb"><a href="#home">Home</a><span>/</span><b>Hardware Kits</b></div>
+        <p class="eyebrow">Shop by vehicle</p>
+        <h1 class="h1-page">Hardware kits that fit your vehicle</h1>
+        <p class="lede">Tell us what you&rsquo;re working on. We&rsquo;ll show every kit that fits it &mdash; engine, transmission, steering, axle and trim &mdash; all on this page.</p>
+      </div>
+    </section>
+
+    <section class="sec tight alt" aria-labelledby="filter-h-empty">
+      <div class="wrap">
+        <h2 id="filter-h-empty" class="vh">Vehicle filter</h2>
+        <div class="filter-panel">
+          <div class="chip-row">
+            <span class="chip-label">Your vehicle</span>
+            <span class="spec">Not set yet</span>
+          </div>
+          <div class="filter-grid">
+            <label class="field"><span class="lab">Make</span>
+              <select class="ctl"><option selected>Select make</option><option>Chevrolet</option><option>Ford</option><option>Dodge</option><option>Toyota</option></select>
+            </label>
+            <label class="field"><span class="lab">Model</span>
+              <select class="ctl"><option selected>Select model</option><option>Silverado 1500</option><option>Camaro</option><option>Tahoe</option></select>
+            </label>
+            <label class="field"><span class="lab">Year</span>
+              <select class="ctl"><option selected>Select year</option><option>2016</option><option>2015</option><option>2014</option></select>
+            </label>
+            <label class="field"><span class="lab">Engine <span class="spec" style="text-transform:none; letter-spacing:0;">(your motor)</span></span>
+              <select class="ctl"><option selected>Select engine</option><option>5.3L V8</option><option>4.3L V6</option><option>6.2L V8</option></select>
+            </label>
+          </div>
+          <div class="filter-foot">
+            <p class="note">Set your vehicle once and it applies to every result below. It stays with you through the cart.</p>
+            <button class="btn btn-primary" type="button" disabled>Update results</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="wrap">
+        <div class="state">
+          <div class="badge-lg" aria-hidden="true">&#11041;</div>
+          <h2>Set your vehicle to see kits</h2>
+          <p class="lede">Pick a make, model, year and engine above. We&rsquo;ll show every kit that fits &mdash; engine, transmission, steering, axle and trim &mdash; grouped by system.</p>
+          <div class="btn-row"><a class="btn btn-outline" href="#about">Ask us to look it up</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec tight alt">
+      <div class="wrap">
+        <div class="cta-banner">
+          <div>
+            <h2>Can&rsquo;t find your vehicle?</h2>
+            <p class="muted">Send us the year, model and engine and we&rsquo;ll build the kit list for you.</p>
+          </div>
+          <div class="btn-row">
+            <a class="btn btn-primary" href="#about">Contact us</a>
+            <a class="btn btn-outline" href="#cart">View cart</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="wrap">
+        <h2 class="vh">Site links</h2>
+        <div class="foot-grid">
+          <div>
+            <a class="logo" href="#home" style="margin-bottom:14px;"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+            <p class="muted" style="max-width:34ch;">Automotive fastener kits and hardware storage, shipped from Georgia.</p>
+          </div>
+          <div><h3>Hardware Kits</h3><ul>
+            <li><a href="#kits">Shop by vehicle</a></li>
+            <li><a href="#kits-engines">Engine kits</a></li>
+            <li><a href="#kits-trans">Transmission kits</a></li>
+            <li><a href="#kits-steer">Steering &amp; suspension</a></li>
+          </ul></div>
+          <div><h3>Storage</h3><ul>
+            <li><a href="#bins">Bins</a></li>
+            <li><a href="#bins">Organizers</a></li>
+            <li><a href="#bins">Cases</a></li>
+          </ul></div>
+          <div><h3>Company</h3><ul>
+            <li><a href="#about">About us</a></li>
+            <li><a href="#about">Contact</a></li>
+            <li><a href="#cart">Cart</a></li>
+          </ul></div>
+        </div>
+        <div class="foot-bottom">
+          <span>&copy; 2026 OrganizeYourNuts.com</span>
+          <span>Shipping &middot; Returns &middot; Privacy</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div class="frame" id="kits-partial">
+  <div class="frame-label"><span class="st">state</span>Hardware Kits &mdash; systems with no fit omitted <span class="route">/hardware-kits</span></div>
+  <div class="page">
+    <span class="nav-sentinel" aria-hidden="true"></span>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="logo" href="#home"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+        <nav class="nav-links" aria-label="Main">
+          <a href="#home">Home</a>
+          <a href="#kits" class="on" aria-current="page">Hardware Kits</a>
+          <a href="#storage">Hardware Storage</a>
+          <a href="#about">About / Contact</a>
+        </nav>
+        <div class="nav-right">
+          <a class="cart-btn" href="#cart"><span class="lbl">Cart</span> <span class="count">2</span></a>
+          <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="sec tight">
+      <div class="wrap">
+        <div class="crumb"><a href="#home">Home</a><span>/</span><b>Hardware Kits</b></div>
+        <p class="eyebrow">Shop by vehicle</p>
+        <h1 class="h1-page">Hardware kits that fit your vehicle</h1>
+        <p class="lede">Tell us what you&rsquo;re working on. We&rsquo;ll show every kit that fits it &mdash; engine, transmission, steering, axle and trim &mdash; all on this page.</p>
+      </div>
+    </section>
+
+    <section class="sec tight alt" aria-labelledby="filter-h-tacoma">
+      <div class="wrap">
+        <h2 id="filter-h-tacoma" class="vh">Vehicle filter</h2>
+        <div class="filter-panel">
+          <div class="chip-row">
+            <span class="chip-label">Your vehicle</span>
+            <span class="veh-chip"><span class="tick" aria-hidden="true">&#10003;</span> 1997 Toyota Tacoma &middot; 2.7L I4</span>
+            <a class="link-edit" href="#kits-empty">Change vehicle</a>
+          </div>
+          <div class="filter-grid">
+            <label class="field"><span class="lab">Make</span>
+              <select class="ctl"><option selected>Toyota</option><option>Chevrolet</option><option>Ford</option><option>Dodge</option></select>
+            </label>
+            <label class="field"><span class="lab">Model</span>
+              <select class="ctl"><option selected>Tacoma</option><option>4Runner</option><option>Hilux</option></select>
+            </label>
+            <label class="field"><span class="lab">Year</span>
+              <select class="ctl"><option selected>1997</option><option>1998</option><option>1999</option></select>
+            </label>
+            <label class="field"><span class="lab">Engine <span class="spec" style="text-transform:none; letter-spacing:0;">(your motor)</span></span>
+              <select class="ctl"><option selected>2.7L I4</option><option>3.4L V6</option></select>
+            </label>
+          </div>
+          <div class="filter-foot">
+            <p class="note">Set your vehicle once and it applies to every result below. It stays with you through the cart.</p>
+            <button class="btn btn-primary" type="button">Update results</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="wrap">
+        <div class="sec-head" style="margin-bottom:8px;">
+          <h2>11 kits fit your Tacoma</h2>
+          <p class="lede">Grouped by the system they belong to. Systems with no fitting kits aren&rsquo;t shown.</p>
+          <p class="spec" style="margin-top:14px;">No fit for this vehicle: Transmissions, Diff / Axle</p>
+        </div>
+        <nav class="jump" aria-label="Jump to system">
+          <span class="chip-label">Jump to</span>
+          <a class="chip" href="#tac-engines">Engines</a>
+          <a class="chip" href="#tac-steer">Steering &amp; Suspension</a>
+          <a class="chip" href="#tac-body">Body &amp; Interior Trim</a>
+        </nav>
+        <section class="sysgroup" id="tac-engines" aria-labelledby="tac-engines-h">
+          <div class="sysgroup-head">
+            <h3 id="tac-engines-h">Engines</h3>
+            <span class="cnt">4 kits &middot; head, main, rod and manifold fasteners</span>
+          </div>
+          <div class="grid g3">
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              
+              <h4 class="name">Import 4-Cylinder Engine Kit</h4>
+              <p class="desc">Head, main and rod hardware for import four-cylinder blocks. 148 pieces, grade 8.</p>
+              <div class="buy"><span class="price">$74.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+          </div>
+        </section>
+        <section class="sysgroup" id="tac-steer" aria-labelledby="tac-steer-h">
+          <div class="sysgroup-head">
+            <h3 id="tac-steer-h">Steering &amp; Suspension</h3>
+            <span class="cnt">4 kits &middot; control arm, knuckle and shock hardware</span>
+          </div>
+          <div class="grid g3">
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              
+              <h4 class="name">Steering Rack Mounting Kit</h4>
+              <p class="desc">Rack bolts, tie rod nuts and cotter pins. Corrosion-resistant finish.</p>
+              <div class="buy"><span class="price">$32.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              
+              <h4 class="name">Shock &amp; Sway Bar Bolt Set</h4>
+              <p class="desc">Front and rear shock mounts plus end link and bushing hardware.</p>
+              <div class="buy"><span class="price">$41.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+          </div>
+        </section>
+        <section class="sysgroup" id="tac-body" aria-labelledby="tac-body-h">
+          <div class="sysgroup-head">
+            <h3 id="tac-body-h">Body &amp; Interior Trim</h3>
+            <span class="cnt">3 kits &middot; fender, door and panel fasteners</span>
+          </div>
+          <div class="grid g3">
+            <article class="card card-lift prod">
+              <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>
+              
+              <h4 class="name">Interior Trim Clip Assortment</h4>
+              <p class="desc">Door panel, pillar and headliner clips in factory sizes. 180 pieces.</p>
+              <div class="buy"><span class="price">$19.99</span><button class="btn btn-primary btn-sm" type="button">Add to cart</button></div>
+            </article>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="sec tight alt">
+      <div class="wrap">
+        <div class="cta-banner">
+          <div>
+            <h2>Can&rsquo;t find your vehicle?</h2>
+            <p class="muted">Send us the year, model and engine and we&rsquo;ll build the kit list for you.</p>
+          </div>
+          <div class="btn-row">
+            <a class="btn btn-primary" href="#about">Contact us</a>
+            <a class="btn btn-outline" href="#cart">View cart</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="wrap">
+        <h2 class="vh">Site links</h2>
+        <div class="foot-grid">
+          <div>
+            <a class="logo" href="#home" style="margin-bottom:14px;"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+            <p class="muted" style="max-width:34ch;">Automotive fastener kits and hardware storage, shipped from Georgia.</p>
+          </div>
+          <div><h3>Hardware Kits</h3><ul>
+            <li><a href="#kits">Shop by vehicle</a></li>
+            <li><a href="#kits-engines">Engine kits</a></li>
+            <li><a href="#kits-trans">Transmission kits</a></li>
+            <li><a href="#kits-steer">Steering &amp; suspension</a></li>
+          </ul></div>
+          <div><h3>Storage</h3><ul>
+            <li><a href="#bins">Bins</a></li>
+            <li><a href="#bins">Organizers</a></li>
+            <li><a href="#bins">Cases</a></li>
+          </ul></div>
+          <div><h3>Company</h3><ul>
+            <li><a href="#about">About us</a></li>
+            <li><a href="#about">Contact</a></li>
+            <li><a href="#cart">Cart</a></li>
+          </ul></div>
+        </div>
+        <div class="foot-bottom">
+          <span>&copy; 2026 OrganizeYourNuts.com</span>
+          <span>Shipping &middot; Returns &middot; Privacy</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div class="frame" id="storage">
+  <div class="frame-label">Hardware Storage &mdash; Overview <span class="route">/hardware-storage</span></div>
+  <div class="page">
+    <span class="nav-sentinel" aria-hidden="true"></span>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="logo" href="#home"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+        <nav class="nav-links" aria-label="Main">
+          <a href="#home">Home</a>
+          <a href="#kits">Hardware Kits</a>
+          <a href="#storage" class="on" aria-current="page">Hardware Storage</a>
+          <a href="#about">About / Contact</a>
+        </nav>
+        <div class="nav-right">
+          <a class="cart-btn" href="#cart"><span class="lbl">Cart</span> <span class="count">2</span></a>
+          <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="sec tight">
+      <div class="wrap">
+        <div class="crumb"><a href="#home">Home</a><span>/</span><b>Hardware Storage</b></div>
+        <p class="eyebrow">Keep it sorted</p>
+        <h1 class="h1-page">Storage built for loose hardware</h1>
+        <p class="lede">Bins, organizers and cases sized around fastener sizes rather than general shop clutter. Storage isn&rsquo;t vehicle-specific &mdash; pick by capacity and where it lives.</p>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="wrap">
+        <h2 class="vh">Storage types</h2>
+        <div class="grid g3">
+          <a class="card card-lift stor-card" href="#bins">
+            <div class="ph ph-pillar" role="img" aria-label="Placeholder: Bins image" data-label="Bins image · 16:9"></div>
+            <h3>Bins</h3>
+            <p class="muted">Stackable and wall-mount bins for bulk nuts, bolts and washers.</p>
+            <span class="meta">24 products &middot; from $6.99</span>
+            <span class="go">Shop bins <span class="arw">&rarr;</span></span>
+          </a>
+          <a class="card card-lift stor-card" href="#bins">
+            <div class="ph ph-pillar" role="img" aria-label="Placeholder: Organizers image" data-label="Organizers image · 16:9"></div>
+            <h3>Organizers</h3>
+            <p class="muted">Compartment trays from 12 to 48 slots, with adjustable dividers.</p>
+            <span class="meta">18 products &middot; from $12.99</span>
+            <span class="go">Shop organizers <span class="arw">&rarr;</span></span>
+          </a>
+          <a class="card card-lift stor-card" href="#bins">
+            <div class="ph ph-pillar" role="img" aria-label="Placeholder: Cases image" data-label="Cases image · 16:9"></div>
+            <h3>Cases</h3>
+            <p class="muted">Hard-shell cases that travel between the bench and the truck.</p>
+            <span class="meta">11 products &middot; from $24.99</span>
+            <span class="go">Shop cases <span class="arw">&rarr;</span></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="wrap">
+        <h2 class="vh">Site links</h2>
+        <div class="foot-grid">
+          <div>
+            <a class="logo" href="#home" style="margin-bottom:14px;"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+            <p class="muted" style="max-width:34ch;">Automotive fastener kits and hardware storage, shipped from Georgia.</p>
+          </div>
+          <div><h3>Hardware Kits</h3><ul>
+            <li><a href="#kits">Shop by vehicle</a></li>
+            <li><a href="#kits-engines">Engine kits</a></li>
+            <li><a href="#kits-trans">Transmission kits</a></li>
+            <li><a href="#kits-steer">Steering &amp; suspension</a></li>
+          </ul></div>
+          <div><h3>Storage</h3><ul>
+            <li><a href="#bins">Bins</a></li>
+            <li><a href="#bins">Organizers</a></li>
+            <li><a href="#bins">Cases</a></li>
+          </ul></div>
+          <div><h3>Company</h3><ul>
+            <li><a href="#about">About us</a></li>
+            <li><a href="#about">Contact</a></li>
+            <li><a href="#cart">Cart</a></li>
+          </ul></div>
+        </div>
+        <div class="foot-bottom">
+          <span>&copy; 2026 OrganizeYourNuts.com</span>
+          <span>Shipping &middot; Returns &middot; Privacy</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div class="frame" id="bins">
+  <div class="frame-label">Storage Sub-category &mdash; Bins <span class="route">/hardware-storage/bins &middot; template reused for Organizers &amp; Cases</span></div>
+  <div class="page">
+    <span class="nav-sentinel" aria-hidden="true"></span>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="logo" href="#home"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+        <nav class="nav-links" aria-label="Main">
+          <a href="#home">Home</a>
+          <a href="#kits">Hardware Kits</a>
+          <a href="#storage" class="on" aria-current="page">Hardware Storage</a>
+          <a href="#about">About / Contact</a>
+        </nav>
+        <div class="nav-right">
+          <a class="cart-btn" href="#cart"><span class="lbl">Cart</span> <span class="count">2</span></a>
+          <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="sec tight">
+      <div class="wrap">
+        <div class="crumb"><a href="#home">Home</a><span>/</span><a href="#storage">Hardware Storage</a><span>/</span><b>Bins</b></div>
+        <p class="eyebrow">Hardware Storage</p>
+        <h1 class="h1-page">Bins</h1>
+        <p class="lede">Stackable, wall-mount and shelf bins for bulk fasteners. Sort by size, material or how many compartments you need.</p>
+      </div>
+    </section>
+
+    <section class="sec tight alt" aria-labelledby="binfilter-h">
+      <div class="wrap">
+        <h2 id="binfilter-h" class="vh">Filter bins</h2>
+        <div class="filter-panel">
+          <div class="filter-grid">
+            <label class="field"><span class="lab">Size</span>
+              <select class="ctl"><option selected>All sizes</option><option>Small (under 6&quot;)</option><option>Medium (6&ndash;12&quot;)</option><option>Large (12&quot;+)</option></select>
+            </label>
+            <label class="field"><span class="lab">Material</span>
+              <select class="ctl"><option selected>All materials</option><option>Polypropylene</option><option>Steel</option><option>Clear polycarbonate</option></select>
+            </label>
+            <label class="field"><span class="lab">Compartments</span>
+              <select class="ctl"><option selected>Any</option><option>Single</option><option>2&ndash;8</option><option>9&ndash;24</option><option>25+</option></select>
+            </label>
+            <label class="field"><span class="lab">Sort by</span>
+              <select class="ctl"><option selected>Most popular</option><option>Price: low to high</option><option>Price: high to low</option><option>Newest</option></select>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="wrap">
+        <div class="sec-head" style="margin-bottom:22px;">
+          <h2>24 bins</h2>
+          <p class="lede">Showing all sizes and materials.</p>
+        </div>
+        <div class="grid g4">
+            <article class="card card-lift prod">
+              <div class="ph ph-prod" role="img" aria-label="Placeholder: Product" data-label="Product · 1:1"></div>
+              <span class="tag">Best seller</span>
+              <h3 class="name">Stackable Shop Bin &mdash; Medium</h3>
+              <p class="desc">9&quot; polypropylene bin with a hanging lip for louvered panels.</p>
+              <div class="buy"><span class="price">$8.99</span><button class="btn btn-primary btn-sm" type="button">Add</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-prod" role="img" aria-label="Placeholder: Product" data-label="Product · 1:1"></div>
+              
+              <h3 class="name">Clear-Front Parts Bin</h3>
+              <p class="desc">See-through face so you can spot the size without pulling the bin.</p>
+              <div class="buy"><span class="price">$11.49</span><button class="btn btn-primary btn-sm" type="button">Add</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-prod" role="img" aria-label="Placeholder: Product" data-label="Product · 1:1"></div>
+              
+              <h3 class="name">Wall-Mount Bin Rack &mdash; 12 Bins</h3>
+              <p class="desc">Steel rack with twelve small bins. Mounting hardware included.</p>
+              <div class="buy"><span class="price">$46.99</span><button class="btn btn-primary btn-sm" type="button">Add</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-prod" role="img" aria-label="Placeholder: Product" data-label="Product · 1:1"></div>
+              
+              <h3 class="name">Heavy-Duty Bulk Bin &mdash; Large</h3>
+              <p class="desc">16&quot; bin rated for 40 lb of loose bolts. Reinforced base.</p>
+              <div class="buy"><span class="price">$19.99</span><button class="btn btn-primary btn-sm" type="button">Add</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-prod" role="img" aria-label="Placeholder: Product" data-label="Product · 1:1"></div>
+              
+              <h3 class="name">Small Fastener Bin &mdash; 6 Pack</h3>
+              <p class="desc">Six 4&quot; bins for washers, clips and small nuts.</p>
+              <div class="buy"><span class="price">$14.99</span><button class="btn btn-primary btn-sm" type="button">Add</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-prod" role="img" aria-label="Placeholder: Product" data-label="Product · 1:1"></div>
+              <span class="tag">New</span>
+              <h3 class="name">Magnetic Bench Bin</h3>
+              <p class="desc">Sticks to the fender or the toolbox so bolts don&rsquo;t roll away.</p>
+              <div class="buy"><span class="price">$16.99</span><button class="btn btn-primary btn-sm" type="button">Add</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-prod" role="img" aria-label="Placeholder: Product" data-label="Product · 1:1"></div>
+              
+              <h3 class="name">Divided Bin with Inserts</h3>
+              <p class="desc">One bin, four removable dividers for mixed thread sizes.</p>
+              <div class="buy"><span class="price">$13.99</span><button class="btn btn-primary btn-sm" type="button">Add</button></div>
+            </article>
+            <article class="card card-lift prod">
+              <div class="ph ph-prod" role="img" aria-label="Placeholder: Product" data-label="Product · 1:1"></div>
+              
+              <h3 class="name">Stacking Bin Starter Set &mdash; 18</h3>
+              <p class="desc">Mixed small and medium bins to outfit a shelf in one go.</p>
+              <div class="buy"><span class="price">$59.99</span><button class="btn btn-primary btn-sm" type="button">Add</button></div>
+            </article>
+        </div>
+        <div class="btn-row" style="justify-content:center; margin-top:36px;">
+          <button class="btn btn-outline" type="button">Load more bins</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="wrap">
+        <h2 class="vh">Site links</h2>
+        <div class="foot-grid">
+          <div>
+            <a class="logo" href="#home" style="margin-bottom:14px;"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+            <p class="muted" style="max-width:34ch;">Automotive fastener kits and hardware storage, shipped from Georgia.</p>
+          </div>
+          <div><h3>Hardware Kits</h3><ul>
+            <li><a href="#kits">Shop by vehicle</a></li>
+            <li><a href="#kits-engines">Engine kits</a></li>
+            <li><a href="#kits-trans">Transmission kits</a></li>
+            <li><a href="#kits-steer">Steering &amp; suspension</a></li>
+          </ul></div>
+          <div><h3>Storage</h3><ul>
+            <li><a href="#bins">Bins</a></li>
+            <li><a href="#bins">Organizers</a></li>
+            <li><a href="#bins">Cases</a></li>
+          </ul></div>
+          <div><h3>Company</h3><ul>
+            <li><a href="#about">About us</a></li>
+            <li><a href="#about">Contact</a></li>
+            <li><a href="#cart">Cart</a></li>
+          </ul></div>
+        </div>
+        <div class="foot-bottom">
+          <span>&copy; 2026 OrganizeYourNuts.com</span>
+          <span>Shipping &middot; Returns &middot; Privacy</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div class="frame" id="cart">
+  <div class="frame-label">Cart <span class="route">/cart &middot; review only</span></div>
+  <div class="page">
+    <span class="nav-sentinel" aria-hidden="true"></span>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="logo" href="#home"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+        <nav class="nav-links" aria-label="Main">
+          <a href="#home">Home</a>
+          <a href="#kits">Hardware Kits</a>
+          <a href="#storage">Hardware Storage</a>
+          <a href="#about">About / Contact</a>
+        </nav>
+        <div class="nav-right">
+          <a class="cart-btn" href="#cart"><span class="lbl">Cart</span> <span class="count">2</span></a>
+          <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="sec tight">
+      <div class="wrap">
+        <div class="crumb"><a href="#home">Home</a><span>/</span><b>Cart</b></div>
+        <h1 class="h1-page" style="margin-bottom:20px;">Your cart &middot; 2 items</h1>
+        <div class="chip-row">
+          <span class="chip-label">Fitment</span>
+          <span class="veh-chip"><span class="tick" aria-hidden="true">&#10003;</span> 2016 Chevrolet Silverado 1500 &middot; 5.3L V8</span>
+          <span class="muted" style="font-size:12.5px;">Applies to kit items. Storage items fit any shop.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" style="padding-top:10px;">
+      <div class="wrap">
+        <h2 class="vh">Items in your cart</h2>
+        <div class="cart-grid">
+          <div>
+            <article class="card line">
+              <div class="ph ph-line ph-sm" role="img" aria-label="Placeholder: Kit" data-label="Kit · 1:1"></div>
+              <div>
+                <h3 class="l-name">LS Complete Engine Hardware Kit</h3>
+                <div class="l-meta">Engines &middot; 214 pieces &middot; grade 8</div>
+                <span class="fits"><span aria-hidden="true">&#10003;</span> Fits your Silverado</span>
+              </div>
+              <label class="field"><span class="lab" style="margin-bottom:4px;">Qty</span>
+                <select class="ctl" aria-label="Quantity, LS Complete Engine Hardware Kit"><option>1</option><option selected>2</option><option>3</option></select>
+              </label>
+              <div class="l-price">$219.98</div>
+              <button class="rm" type="button" aria-label="Remove LS Complete Engine Hardware Kit from cart">&#10005;</button>
+            </article>
+
+            <article class="card line">
+              <div class="ph ph-line ph-sm" role="img" aria-label="Placeholder: Bin" data-label="Bin · 1:1"></div>
+              <div>
+                <h3 class="l-name">Wall-Mount Bin Rack &mdash; 12 Bins</h3>
+                <div class="l-meta">Storage &middot; Bins &middot; steel rack, mounting hardware included</div>
+              </div>
+              <label class="field"><span class="lab" style="margin-bottom:4px;">Qty</span>
+                <select class="ctl" aria-label="Quantity, Wall-Mount Bin Rack"><option selected>1</option><option>2</option><option>3</option></select>
+              </label>
+              <div class="l-price">$46.99</div>
+              <button class="rm" type="button" aria-label="Remove Wall-Mount Bin Rack from cart">&#10005;</button>
+            </article>
+
+            <div class="btn-row" style="margin-top:22px;">
+              <a class="btn btn-quiet" href="#kits">&larr; Keep shopping kits</a>
+              <a class="btn btn-quiet" href="#storage">Browse storage</a>
+            </div>
+          </div>
+
+          <aside class="card summary" aria-labelledby="sum-1">
+            <h3 id="sum-1">Order summary</h3>
+            <div class="sum-row"><span>Subtotal</span><span>$266.97</span></div>
+            <div class="sum-row"><span>Estimated shipping</span><span>$12.50</span></div>
+            <div class="sum-row"><span>Estimated tax</span><span>$18.69</span></div>
+            <div class="sum-row total"><span>Total</span><span>$298.16</span></div>
+            <a class="btn btn-primary btn-block" href="#checkout" style="margin-top:20px;">Proceed to checkout</a>
+            <p class="muted" style="font-size:12px; margin-top:13px; text-align:center;">Shipping and tax confirmed at checkout.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="wrap">
+        <h2 class="vh">Site links</h2>
+        <div class="foot-grid">
+          <div>
+            <a class="logo" href="#home" style="margin-bottom:14px;"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+            <p class="muted" style="max-width:34ch;">Automotive fastener kits and hardware storage, shipped from Georgia.</p>
+          </div>
+          <div><h3>Hardware Kits</h3><ul>
+            <li><a href="#kits">Shop by vehicle</a></li>
+            <li><a href="#kits-engines">Engine kits</a></li>
+            <li><a href="#kits-trans">Transmission kits</a></li>
+            <li><a href="#kits-steer">Steering &amp; suspension</a></li>
+          </ul></div>
+          <div><h3>Storage</h3><ul>
+            <li><a href="#bins">Bins</a></li>
+            <li><a href="#bins">Organizers</a></li>
+            <li><a href="#bins">Cases</a></li>
+          </ul></div>
+          <div><h3>Company</h3><ul>
+            <li><a href="#about">About us</a></li>
+            <li><a href="#about">Contact</a></li>
+            <li><a href="#cart">Cart</a></li>
+          </ul></div>
+        </div>
+        <div class="foot-bottom">
+          <span>&copy; 2026 OrganizeYourNuts.com</span>
+          <span>Shipping &middot; Returns &middot; Privacy</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div class="frame" id="cart-empty">
+  <div class="frame-label"><span class="st">state</span>Cart &mdash; empty <span class="route">/cart</span></div>
+  <div class="page">
+    <span class="nav-sentinel" aria-hidden="true"></span>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="logo" href="#home"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+        <nav class="nav-links" aria-label="Main">
+          <a href="#home">Home</a>
+          <a href="#kits">Hardware Kits</a>
+          <a href="#storage">Hardware Storage</a>
+          <a href="#about">About / Contact</a>
+        </nav>
+        <div class="nav-right">
+          <a class="cart-btn" href="#cart"><span class="lbl">Cart</span> </a>
+          <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="sec tight">
+      <div class="wrap">
+        <div class="crumb"><a href="#home">Home</a><span>/</span><b>Cart</b></div>
+        <h1 class="h1-page">Your cart</h1>
+      </div>
+    </section>
+
+    <section class="sec" style="padding-top:10px;">
+      <div class="wrap">
+        <div class="state">
+          <div class="badge-lg" aria-hidden="true">&#11041;</div>
+          <h2>Your cart is empty</h2>
+          <p class="lede">Nothing in here yet. Start with the kits that fit your vehicle, or pick up storage to sort what you already have.</p>
+          <div class="btn-row">
+            <a class="btn btn-primary" href="#kits">Shop hardware kits</a>
+            <a class="btn btn-outline" href="#storage">Browse storage</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="wrap">
+        <h2 class="vh">Site links</h2>
+        <div class="foot-grid">
+          <div>
+            <a class="logo" href="#home" style="margin-bottom:14px;"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+            <p class="muted" style="max-width:34ch;">Automotive fastener kits and hardware storage, shipped from Georgia.</p>
+          </div>
+          <div><h3>Hardware Kits</h3><ul>
+            <li><a href="#kits">Shop by vehicle</a></li>
+            <li><a href="#kits-engines">Engine kits</a></li>
+            <li><a href="#kits-trans">Transmission kits</a></li>
+            <li><a href="#kits-steer">Steering &amp; suspension</a></li>
+          </ul></div>
+          <div><h3>Storage</h3><ul>
+            <li><a href="#bins">Bins</a></li>
+            <li><a href="#bins">Organizers</a></li>
+            <li><a href="#bins">Cases</a></li>
+          </ul></div>
+          <div><h3>Company</h3><ul>
+            <li><a href="#about">About us</a></li>
+            <li><a href="#about">Contact</a></li>
+            <li><a href="#cart">Cart</a></li>
+          </ul></div>
+        </div>
+        <div class="foot-bottom">
+          <span>&copy; 2026 OrganizeYourNuts.com</span>
+          <span>Shipping &middot; Returns &middot; Privacy</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div class="frame" id="checkout">
+  <div class="frame-label">Checkout &mdash; Multi-step <span class="route">/checkout &middot; four steps stacked for review</span></div>
+  <div class="page">
+    <span class="nav-sentinel" aria-hidden="true"></span>
+    <header class="nav nav-min">
+      <div class="nav-inner">
+        <a class="logo" href="#home"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+        <span class="secure"><b>&#9679;</b> Secure checkout</span>
+      </div>
+    </header>
+    <h1 class="vh">Checkout</h1>
+    <div class="steps" role="group" aria-label="Checkout progress, step 1 of 4">
+        <div class="steps-inner">
+          <div class="step now"><span class="n" aria-hidden="true">1</span> Shipping</div>
+          <div class="step-line" aria-hidden="true"></div>
+          <div class="step"><span class="n" aria-hidden="true">2</span> Payment</div>
+          <div class="step-line" aria-hidden="true"></div>
+          <div class="step"><span class="n" aria-hidden="true">3</span> Review</div>
+          <div class="step-line" aria-hidden="true"></div>
+          <div class="step"><span class="n" aria-hidden="true">&#10003;</span> Confirmation</div>
+        </div>
+    </div>
+
+    <section class="sec tight">
+      <div class="wrap">
+        <div class="co-grid">
+          <form class="card step-panel" onsubmit="return false;">
+            <span class="step-tag">Step 1 of 3</span>
+            <h2>Shipping address</h2>
+            <p class="sub">Where should we send this order?</p>
+            <div class="form-grid">
+              <label class="field"><span class="lab">Full name</span><input class="ctl" type="text" name="name" autocomplete="name" placeholder="Michael Grant"></label>
+              <label class="field"><span class="lab">Email</span><input class="ctl" type="email" name="email" autocomplete="email" placeholder="you@example.com"></label>
+              <label class="field span2"><span class="lab">Street address</span><input class="ctl" type="text" autocomplete="street-address" placeholder="1420 Industrial Way"></label>
+              <label class="field"><span class="lab">City</span><input class="ctl" type="text" autocomplete="address-level2" placeholder="Covington"></label>
+              <label class="field"><span class="lab">State</span>
+                <select class="ctl" autocomplete="address-level1"><option selected>Georgia</option><option>Alabama</option><option>Florida</option></select>
+              </label>
+              <label class="field"><span class="lab">ZIP code</span><input class="ctl" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="30014"></label>
+              <label class="field"><span class="lab">Phone</span><input class="ctl" type="tel" autocomplete="tel" placeholder="(770) 555-0142"></label>
+            </div>
+            <fieldset style="border:0; padding:0; margin:26px 0 0; min-width:0;">
+              <legend class="lab">Delivery method</legend>
+              <div class="radio-row">
+                <label class="radio sel"><input type="radio" name="ship" checked><span class="dot" aria-hidden="true"></span><span><b>Standard &mdash; $12.50</b><span class="m">Arrives in 3&ndash;5 business days</span></span></label>
+                <label class="radio"><input type="radio" name="ship"><span class="dot" aria-hidden="true"></span><span><b>Expedited &mdash; $28.00</b><span class="m">Arrives in 1&ndash;2 business days</span></span></label>
+              </div>
+            </fieldset>
+            <button class="btn btn-primary btn-block" type="submit" style="margin-top:26px;">Continue to payment</button>
+            <div style="text-align:center; margin-top:16px;"><a href="#cart" style="font-size:13px;">&larr; Back to cart</a></div>
+          </form>
+
+          <aside class="card summary" aria-labelledby="sum-2">
+            <h3 id="sum-2">Order summary</h3>
+            <div class="sum-row"><span>LS Engine Kit &times; 2</span><span>$219.98</span></div>
+            <div class="sum-row"><span>Bin Rack &times; 1</span><span>$46.99</span></div>
+            <div class="sum-row"><span>Shipping</span><span>$12.50</span></div>
+            <div class="sum-row"><span>Tax</span><span>$18.69</span></div>
+            <div class="sum-row total"><span>Total</span><span>$298.16</span></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec tight alt">
+      <div class="wrap">
+        <div class="steps-inner" style="padding:0; margin-bottom:26px;">
+          <div class="step done"><span class="n" aria-hidden="true">&#10003;</span> Shipping</div>
+          <div class="step-line" aria-hidden="true"></div>
+          <div class="step now"><span class="n" aria-hidden="true">2</span> Payment</div>
+          <div class="step-line" aria-hidden="true"></div>
+          <div class="step"><span class="n" aria-hidden="true">3</span> Review</div>
+          <div class="step-line" aria-hidden="true"></div>
+          <div class="step"><span class="n" aria-hidden="true">&#10003;</span> Confirmation</div>
+        </div>
+        <div class="co-grid">
+          <form class="card step-panel" onsubmit="return false;">
+            <span class="step-tag">Step 2 of 3</span>
+            <h2>Payment details</h2>
+            <p class="sub">Card details are entered on the live site &mdash; placeholders only here.</p>
+            <div class="form-grid">
+              <label class="field span2"><span class="lab">Card number</span><input class="ctl" type="text" inputmode="numeric" placeholder="&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull;"></label>
+              <label class="field"><span class="lab">Expiry</span><input class="ctl" type="text" placeholder="MM / YY"></label>
+              <label class="field"><span class="lab">Security code</span><input class="ctl" type="text" inputmode="numeric" placeholder="&bull;&bull;&bull;"></label>
+              <label class="field span2"><span class="lab">Name on card</span><input class="ctl" type="text" placeholder="Michael Grant"></label>
+            </div>
+            <label class="checkline"><input type="checkbox" checked><span class="bx" aria-hidden="true">&#10003;</span> Billing address is the same as shipping</label>
+            <button class="btn btn-primary btn-block" type="submit" style="margin-top:26px;">Continue to review</button>
+            <div style="text-align:center; margin-top:16px;"><a href="#checkout" style="font-size:13px;">&larr; Back to shipping</a></div>
+          </form>
+
+          <aside class="card summary" aria-labelledby="sum-3">
+            <h3 id="sum-3">Order summary</h3>
+            <div class="sum-row"><span>Items (3)</span><span>$266.97</span></div>
+            <div class="sum-row"><span>Shipping &mdash; standard</span><span>$12.50</span></div>
+            <div class="sum-row"><span>Tax</span><span>$18.69</span></div>
+            <div class="sum-row total"><span>Total</span><span>$298.16</span></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec tight">
+      <div class="wrap">
+        <div class="steps-inner" style="padding:0; margin-bottom:26px;">
+          <div class="step done"><span class="n" aria-hidden="true">&#10003;</span> Shipping</div>
+          <div class="step-line" aria-hidden="true"></div>
+          <div class="step done"><span class="n" aria-hidden="true">&#10003;</span> Payment</div>
+          <div class="step-line" aria-hidden="true"></div>
+          <div class="step now"><span class="n" aria-hidden="true">3</span> Review</div>
+          <div class="step-line" aria-hidden="true"></div>
+          <div class="step"><span class="n" aria-hidden="true">&#10003;</span> Confirmation</div>
+        </div>
+        <div class="co-grid">
+          <div class="card step-panel">
+            <span class="step-tag">Step 3 of 3</span>
+            <h2>Review your order</h2>
+            <p class="sub">Check everything before you place the order.</p>
+            <div class="recap">
+              <div class="recap-row">
+                <div>
+                  <div class="rk">Items</div>
+                  <div class="rv">LS Complete Engine Hardware Kit &times; 2 &mdash; $219.98<br>Wall-Mount Bin Rack, 12 Bins &times; 1 &mdash; $46.99</div>
+                </div>
+                <a href="#cart">Edit</a>
+              </div>
+              <div class="recap-row">
+                <div>
+                  <div class="rk">Ship to</div>
+                  <div class="rv">Michael Grant<br>1420 Industrial Way, Covington, GA 30014<br>Standard delivery, 3&ndash;5 business days</div>
+                </div>
+                <a href="#checkout">Edit</a>
+              </div>
+              <div class="recap-row">
+                <div>
+                  <div class="rk">Payment</div>
+                  <div class="rv">Visa ending 4412<br>Billing address same as shipping</div>
+                </div>
+                <a href="#checkout">Edit</a>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-block" type="button" style="margin-top:26px;">Place order &middot; $298.16</button>
+          </div>
+
+          <aside class="card summary" aria-labelledby="sum-4">
+            <h3 id="sum-4">Totals</h3>
+            <div class="sum-row"><span>Subtotal</span><span>$266.97</span></div>
+            <div class="sum-row"><span>Shipping</span><span>$12.50</span></div>
+            <div class="sum-row"><span>Tax</span><span>$18.69</span></div>
+            <div class="sum-row total"><span>Total</span><span>$298.16</span></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec tight alt">
+      <div class="wrap">
+        <div class="steps-inner" style="padding:0; margin-bottom:26px;">
+          <div class="step done"><span class="n" aria-hidden="true">&#10003;</span> Shipping</div>
+          <div class="step-line" aria-hidden="true"></div>
+          <div class="step done"><span class="n" aria-hidden="true">&#10003;</span> Payment</div>
+          <div class="step-line" aria-hidden="true"></div>
+          <div class="step done"><span class="n" aria-hidden="true">&#10003;</span> Review</div>
+          <div class="step-line" aria-hidden="true"></div>
+          <div class="step now"><span class="n" aria-hidden="true">&#10003;</span> Confirmation</div>
+        </div>
+        <div class="card confirm">
+          <div class="badge" aria-hidden="true">&#10003;</div>
+          <h2>Order placed</h2>
+          <p class="lede">We&rsquo;ve sent a receipt to your email. You&rsquo;ll get tracking as soon as the box ships &mdash; today if you ordered before 3pm ET.</p>
+          <div class="ord">Order #OYN-24817</div>
+          <p class="muted" style="font-size:13px;">Arriving Tue, Jul 28 &ndash; Thu, Jul 30</p>
+          <div class="btn-row" style="justify-content:center; margin-top:26px;">
+            <a class="btn btn-primary" href="#kits">Keep shopping kits</a>
+            <a class="btn btn-outline" href="#home">Back to home</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer min">
+      <div class="wrap">
+        <div class="foot-bottom">
+          <span>&copy; 2026 OrganizeYourNuts.com</span>
+          <span>Shipping &middot; Returns &middot; Privacy &middot; Support</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div class="frame" id="about">
+  <div class="frame-label">About / Contact <span class="route">/about</span></div>
+  <div class="page">
+    <span class="nav-sentinel" aria-hidden="true"></span>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="logo" href="#home"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+        <nav class="nav-links" aria-label="Main">
+          <a href="#home">Home</a>
+          <a href="#kits">Hardware Kits</a>
+          <a href="#storage">Hardware Storage</a>
+          <a href="#about" class="on" aria-current="page">About / Contact</a>
+        </nav>
+        <div class="nav-right">
+          <a class="cart-btn" href="#cart"><span class="lbl">Cart</span> <span class="count">2</span></a>
+          <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="sec tight">
+      <div class="wrap">
+        <div class="crumb"><a href="#home">Home</a><span>/</span><b>About / Contact</b></div>
+        <p class="eyebrow">Who we are</p>
+        <h1 class="h1-page">Built by people who&rsquo;ve hunted for one missing bolt</h1>
+        <p class="lede">We started OrganizeYourNuts because finishing a rebuild shouldn&rsquo;t mean three trips to the parts store for hardware nobody stocks as a set.</p>
+      </div>
+    </section>
+
+    <section class="sec" style="padding-top:10px;">
+      <div class="wrap">
+        <div class="about-grid">
+          <div class="ph ph-shop" role="img" aria-label="Placeholder: Shop photo" data-label="Shop photo · 4:5"></div>
+          <div>
+            <h2>Kits, not guesswork</h2>
+            <p class="muted" style="font-size:15px; line-height:1.75; margin-top:14px;">Every kit is assembled against the factory fastener list for the vehicle it&rsquo;s built for &mdash; right thread pitch, right grade, right count, with the odd trim clips nobody remembers until the panel is off. We stock grade-8 and stainless in the sizes that actually come up on the bench, and we ship them out of one warehouse in Covington, Georgia.</p>
+            <p class="muted" style="font-size:15px; line-height:1.75; margin-top:14px;">If a kit doesn&rsquo;t fit what you&rsquo;re working on, send it back inside 30 days. We&rsquo;d rather you get the right hardware than keep the wrong box.</p>
+            <div class="stat-row">
+              <div class="card stat"><b>1,400+</b><span>Kits catalogued by vehicle</span></div>
+              <div class="card stat"><b>30 days</b><span>No-questions returns</span></div>
+              <div class="card stat"><b>Same day</b><span>Shipping before 3pm ET</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec alt" aria-labelledby="contact-h">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="eyebrow">Get in touch</p>
+          <h2 id="contact-h">Tell us what you&rsquo;re building</h2>
+          <p class="lede">Give us the year, model and engine, and what you&rsquo;re rebuilding. We&rsquo;ll come back with the kits that fit.</p>
+        </div>
+        <div class="contact-grid">
+          <form class="card" style="padding:26px;" onsubmit="return false;">
+            <div class="form-grid">
+              <label class="field"><span class="lab">Name</span><input class="ctl" type="text" autocomplete="name" placeholder="Your name"></label>
+              <label class="field"><span class="lab">Email</span><input class="ctl" type="email" autocomplete="email" placeholder="you@example.com"></label>
+              <label class="field span2"><span class="lab">Message</span><textarea class="ctl" placeholder="2016 Silverado, 5.3L &mdash; rebuilding the top end and need head and intake hardware."></textarea></label>
+            </div>
+            <button class="btn btn-primary btn-block" type="submit" style="margin-top:20px;">Send message</button>
+            <p class="muted" style="font-size:12px; margin-top:13px;">We answer within one business day.</p>
+          </form>
+          <aside class="card" style="padding:26px;">
+            <h3 style="margin-bottom:10px;">Reach us directly</h3>
+            <div class="detail"><div class="dk">Email</div><div class="dv"><a href="mailto:help@organizeyournuts.com">help@organizeyournuts.com</a></div></div>
+            <div class="detail"><div class="dk">Phone</div><div class="dv"><a href="tel:+17705550142">(770) 555-0142</a></div></div>
+            <div class="detail"><div class="dk">Hours</div><div class="dv">Mon&ndash;Fri, 8am&ndash;6pm ET<br>Sat, 9am&ndash;2pm ET</div></div>
+            <div class="detail"><div class="dk">Warehouse</div><div class="dv">1420 Industrial Way<br>Covington, GA 30014</div></div>
+            <div class="detail"><div class="dk">Bulk orders</div><div class="dv">10+ kits? Ask about tiered pricing.</div></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="wrap">
+        <h2 class="vh">Site links</h2>
+        <div class="foot-grid">
+          <div>
+            <a class="logo" href="#home" style="margin-bottom:14px;"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+            <p class="muted" style="max-width:34ch;">Automotive fastener kits and hardware storage, shipped from Georgia.</p>
+          </div>
+          <div><h3>Hardware Kits</h3><ul>
+            <li><a href="#kits">Shop by vehicle</a></li>
+            <li><a href="#kits-engines">Engine kits</a></li>
+            <li><a href="#kits-trans">Transmission kits</a></li>
+            <li><a href="#kits-steer">Steering &amp; suspension</a></li>
+          </ul></div>
+          <div><h3>Storage</h3><ul>
+            <li><a href="#bins">Bins</a></li>
+            <li><a href="#bins">Organizers</a></li>
+            <li><a href="#bins">Cases</a></li>
+          </ul></div>
+          <div><h3>Company</h3><ul>
+            <li><a href="#about">About us</a></li>
+            <li><a href="#about">Contact</a></li>
+            <li><a href="#cart">Cart</a></li>
+          </ul></div>
+        </div>
+        <div class="foot-bottom">
+          <span>&copy; 2026 OrganizeYourNuts.com</span>
+          <span>Shipping &middot; Returns &middot; Privacy</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div class="frame" id="contact-error">
+  <div class="frame-label"><span class="st">state</span>Contact form &mdash; validation errors <span class="route">/about</span></div>
+  <div class="page">
+    <span class="nav-sentinel" aria-hidden="true"></span>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="logo" href="#home"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+        <nav class="nav-links" aria-label="Main">
+          <a href="#home">Home</a>
+          <a href="#kits">Hardware Kits</a>
+          <a href="#storage">Hardware Storage</a>
+          <a href="#about" class="on" aria-current="page">About / Contact</a>
+        </nav>
+        <div class="nav-right">
+          <a class="cart-btn" href="#cart"><span class="lbl">Cart</span> <span class="count">2</span></a>
+          <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+        </div>
+      </div>
+    </header>
+    <h1 class="vh">Contact us</h1>
+    <section class="sec alt" aria-labelledby="contact-h-err">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="eyebrow">Get in touch</p>
+          <h2 id="contact-h-err">Tell us what you&rsquo;re building</h2>
+          <p class="lede">Give us the year, model and engine, and what you&rsquo;re rebuilding. We&rsquo;ll come back with the kits that fit.</p>
+        </div>
+        <div class="contact-grid">
+          <form class="card" style="padding:26px;" onsubmit="return false;" novalidate>
+            <div class="alert" role="alert">
+              <span class="amark" aria-hidden="true">!</span>
+              <p>This didn&rsquo;t send. Three fields need attention &mdash; <a href="#err-name">start with your name</a>.</p>
+            </div>
+            <div class="form-grid">
+              <label class="field"><span class="lab">Name</span>
+                <input class="ctl" id="err-name" type="text" placeholder="Your name" aria-invalid="true" aria-describedby="e-name" value="">
+                <span class="err" id="e-name">Enter your name.</span>
+              </label>
+              <label class="field"><span class="lab">Email</span>
+                <input class="ctl" type="email" value="michael@garage" aria-invalid="true" aria-describedby="e-email">
+                <span class="err" id="e-email">Enter a full email address &mdash; we reply by email.</span>
+              </label>
+              <label class="field span2"><span class="lab">Message</span>
+                <textarea class="ctl" placeholder="2016 Silverado, 5.3L &mdash; rebuilding the top end and need head and intake hardware." aria-invalid="true" aria-describedby="e-msg"></textarea>
+                <span class="err" id="e-msg">Tell us the vehicle and what you&rsquo;re rebuilding.</span>
+              </label>
+            </div>
+            <button class="btn btn-primary btn-block" type="submit" style="margin-top:20px;">Send message</button>
+            <p class="muted" style="font-size:12px; margin-top:13px;">We answer within one business day.</p>
+          </form>
+          <aside class="card" style="padding:26px;">
+            <h3 style="margin-bottom:10px;">Reach us directly</h3>
+            <div class="detail"><div class="dk">Email</div><div class="dv"><a href="mailto:help@organizeyournuts.com">help@organizeyournuts.com</a></div></div>
+            <div class="detail"><div class="dk">Phone</div><div class="dv"><a href="tel:+17705550142">(770) 555-0142</a></div></div>
+            <div class="detail"><div class="dk">Hours</div><div class="dv">Mon&ndash;Fri, 8am&ndash;6pm ET<br>Sat, 9am&ndash;2pm ET</div></div>
+            <div class="detail"><div class="dk">Warehouse</div><div class="dv">1420 Industrial Way<br>Covington, GA 30014</div></div>
+            <div class="detail"><div class="dk">Bulk orders</div><div class="dv">10+ kits? Ask about tiered pricing.</div></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="wrap">
+        <h2 class="vh">Site links</h2>
+        <div class="foot-grid">
+          <div>
+            <a class="logo" href="#home" style="margin-bottom:14px;"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
+            <p class="muted" style="max-width:34ch;">Automotive fastener kits and hardware storage, shipped from Georgia.</p>
+          </div>
+          <div><h3>Hardware Kits</h3><ul>
+            <li><a href="#kits">Shop by vehicle</a></li>
+            <li><a href="#kits-engines">Engine kits</a></li>
+            <li><a href="#kits-trans">Transmission kits</a></li>
+            <li><a href="#kits-steer">Steering &amp; suspension</a></li>
+          </ul></div>
+          <div><h3>Storage</h3><ul>
+            <li><a href="#bins">Bins</a></li>
+            <li><a href="#bins">Organizers</a></li>
+            <li><a href="#bins">Cases</a></li>
+          </ul></div>
+          <div><h3>Company</h3><ul>
+            <li><a href="#about">About us</a></li>
+            <li><a href="#about">Contact</a></li>
+            <li><a href="#cart">Cart</a></li>
+          </ul></div>
+        </div>
+        <div class="foot-bottom">
+          <span>&copy; 2026 OrganizeYourNuts.com</span>
+          <span>Shipping &middot; Returns &middot; Privacy</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div class="endnote">
+  High fidelity &mdash; 7 templates plus 4 non-happy-path states. The toolbar is review chrome.<br>
+  Responsive is driven by <code>@container</code> queries on <code>.page</code>, so the Mobile toggle and a real phone take the same code path.
+</div>
+
+<script>
+/* ═══ Review chrome: device-width toggle ═══ */
+function setView(mode){
+  document.body.classList.remove('desktop','mobile');
+  document.body.classList.add(mode);
+  document.getElementById('btn-desktop').classList.toggle('active', mode==='desktop');
+  document.getElementById('btn-mobile').classList.toggle('active', mode==='mobile');
+}
+
+/* ═══ Site behaviour ═══════════════════════════════════════════════════
+   1. Nav: frosted → solid past 20px of scroll, per page.
+   2. Delivery-method radios: reflect selection on the card.
+   Both survive the per-page split unchanged.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* 1 — a 1px sentinel sits directly above each sticky nav. When it leaves
+   the top of the viewport the nav has begun sticking, so go solid. The
+   -20px root margin is the 20px threshold from the design system. */
+(function(){
+  var offset = parseInt(getComputedStyle(document.documentElement)
+                .getPropertyValue('--tb-h')) || 0;      /* 0 after split */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      var nav = e.target.nextElementSibling;
+      if(nav) nav.classList.toggle('solid', !e.isIntersecting);
+    });
+  }, {rootMargin: '-' + (offset + 20) + 'px 0px 0px 0px', threshold: 0});
+  document.querySelectorAll('.nav-sentinel').forEach(function(s){ io.observe(s); });
+})();
+
+/* 2 — REVIEW CHROME ONLY: let Add to cart / Add walk the purchase path.
+   The markup stays a <button> because on the live site it posts to the
+   cart rather than navigating. Delete this block with the toolbar. */
+document.querySelectorAll('.prod .buy button').forEach(function(b){
+  b.addEventListener('click', function(){ location.hash = '#cart'; });
+});
+
+/* 3 — radio cards */
+document.querySelectorAll('.radio-row').forEach(function(row){
+  row.querySelectorAll('.radio').forEach(function(r){
+    r.addEventListener('change', function(){
+      row.querySelectorAll('.radio').forEach(function(x){ x.classList.remove('sel'); });
+      r.classList.add('sel');
+    });
+  });
+});
+</script>
+</body>
+</html>

@@ -41,8 +41,9 @@ platforms. The same check runs automatically on every GitHub pull request
 
 ## Deliberately not built yet
 
-- **No front-end framework.** The Hydrogen-vs-Astro decision is still open; Phase 1 is
-  framework-agnostic on purpose. Nothing is scaffolded.
+- **No front-end scaffolding yet.** The framework is decided — **Astro**, per
+  [ADR-002-frontend-framework.md](ADR-002-frontend-framework.md) — but nothing is scaffolded;
+  dependencies get approved when scaffolding starts.
 - **No front-end routes, no Shopify Storefront API code, no cart or checkout logic.** Phases 2+.
 - **No real fitment data.** The three rules in `fitment/vehicle-map.json` are labelled examples.
 - **No dependencies.** The validator is plain Node; the stylesheet is plain CSS

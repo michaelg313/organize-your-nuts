@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OrganizeYourNuts.com — Restructured Site Wireframe (Grayscale, Lo-Fi) — Rev. filter-on-overview</title>
+<style>
+  /* ============================================================
+     GRAYSCALE LO-FI WIREFRAME — REVISION
+     Change in this rev: vehicle + engine selection (Make/Model/
+     Year/Engine) now lives on the Hardware Kits OVERVIEW page.
+     This collapses the 5 per-system sub-pages — they are no
+     longer separate pages; "systems" survive as a results facet.
+     Template count: 8 -> 7.
+
+     Methodology unchanged (matches engine-hardware-kits-wireframe.html):
+       - Desktop/Mobile toggle in a fixed top toolbar
+       - Every section numbered ① ② ③ ... and annotated
+       - Cross-links between page wireframes
+     ============================================================ */
+
+  :root{
+    --ink:#222; --line:#999; --line-soft:#bbb;
+    --box:#e8e8e8; --box-2:#ddd; --box-3:#f2f2f2;
+    --greek:#cfcfcf; --note-bg:#fffef0; --note-line:#d9d4a0;
+    --page-bg:#fafafa; --toolbar:#2b2b2b;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:"Segoe UI", Arial, sans-serif;
+    background:#8a8a8a; color:var(--ink); padding-top:52px;
+  }
+
+  /* ---------- TOOLBAR ---------- */
+  .toolbar{
+    position:fixed; top:0; left:0; right:0; height:52px;
+    background:var(--toolbar); color:#fff; z-index:1000;
+    display:flex; align-items:center; gap:18px; padding:0 18px;
+    box-shadow:0 2px 8px rgba(0,0,0,.4); font-size:13px;
+  }
+  .toolbar strong{font-size:14px; letter-spacing:.3px;}
+  .toolbar .spacer{flex:1;}
+  .toggle-group{display:flex; border:1px solid #666; border-radius:4px; overflow:hidden;}
+  .toggle-group button{
+    background:#3d3d3d; color:#ccc; border:0; padding:7px 16px;
+    font-size:12px; cursor:pointer; font-weight:600;
+  }
+  .toggle-group button.active{background:#e8e8e8; color:#222;}
+  .toolbar select{
+    background:#3d3d3d; color:#eee; border:1px solid #666;
+    padding:6px 8px; border-radius:4px; font-size:12px;
+  }
+
+  /* ---------- CANVAS ---------- */
+  .canvas{
+    margin:24px auto; background:var(--page-bg);
+    border:2px solid #555; transition:max-width .2s ease;
+  }
+  body.desktop .canvas{max-width:1180px;}
+  body.mobile  .canvas{max-width:390px;}
+  .device-label{
+    background:#555; color:#ddd; font-size:11px; letter-spacing:1px;
+    text-transform:uppercase; padding:4px 10px; text-align:center;
+  }
+
+  /* ---------- SECTION SCAFFOLD ---------- */
+  .section{border-bottom:2px dashed var(--line); padding:18px 20px 22px; position:relative;}
+  .section:last-child{border-bottom:0;}
+  .sec-head{display:flex; align-items:baseline; gap:10px; margin-bottom:4px;}
+  .sec-num{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:26px; height:26px; border:2px solid var(--ink);
+    border-radius:50%; font-weight:700; font-size:13px;
+  }
+  .sec-title{font-weight:700; font-size:15px; text-transform:uppercase; letter-spacing:.5px;}
+  .sec-note{
+    background:var(--note-bg); border-left:3px solid var(--note-line);
+    padding:6px 10px; font-size:12px; color:#555; margin:6px 0 14px; line-height:1.45;
+  }
+  .sec-note em{color:#333; font-style:normal; font-weight:600;}
+
+  /* ---------- BOXES ---------- */
+  .box{
+    background:var(--box); border:1.5px solid var(--line-soft);
+    display:flex; align-items:center; justify-content:center;
+    color:#777; font-size:12px; text-align:center; padding:10px;
+    min-height:44px; border-radius:3px;
+  }
+  .box.tall{min-height:120px;}
+  .box.img{background:repeating-linear-gradient(45deg,#e0e0e0,#e0e0e0 8px,#d6d6d6 8px,#d6d6d6 16px); color:#666;}
+  .box.img::after{content:"🖼 image";}
+  .box.img.noicon::after{content:"";}
+  .label{font-size:11px; color:#888; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px; display:block;}
+
+  .greek{height:9px; background:var(--greek); border-radius:3px; margin:6px 0;}
+  .greek.w90{width:90%;} .greek.w80{width:80%;} .greek.w70{width:70%;}
+  .greek.w60{width:60%;} .greek.w50{width:50%;} .greek.w40{width:40%;} .greek.w30{width:30%;}
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    border:2px solid var(--ink); background:#fff; color:#333;
+    padding:9px 18px; font-size:12px; font-weight:600; border-radius:4px; min-height:38px;
+  }
+  .btn.solid{background:#555; color:#fff;}
+  .btn.block{display:flex; width:100%;}
+
+  .row{display:flex; gap:12px; flex-wrap:wrap;}
+  .row > *{flex:1;}
+
+  .pill{
+    display:inline-block; border:1.5px solid var(--line); border-radius:20px;
+    padding:5px 12px; font-size:11px; color:#666; background:#fff; margin:0 6px 6px 0;
+  }
+  .pill.sel{background:#555; color:#fff; border-color:#555;}
+
+  .grid{display:grid; gap:14px;}
+  .grid.c2{grid-template-columns:repeat(2,1fr);}
+  .grid.c3{grid-template-columns:repeat(3,1fr);}
+  .grid.c4{grid-template-columns:repeat(4,1fr);}
+  .grid.c5{grid-template-columns:repeat(5,1fr);}
+  body.mobile .grid.c2, body.mobile .grid.c3,
+  body.mobile .grid.c4, body.mobile .grid.c5{grid-template-columns:1fr;}
+
+  .card{
+    border:1.5px solid var(--line-soft); border-radius:6px; padding:12px;
+    background:#fff; display:flex; flex-direction:column; gap:8px;
+  }
+  .card .thumb{
+    background:repeating-linear-gradient(45deg,#e4e4e4,#e4e4e4 8px,#dadada 8px,#dadada 16px);
+    min-height:90px; border-radius:4px; display:flex; align-items:center;
+    justify-content:center; color:#888; font-size:11px;
+  }
+  .card .cardtitle{font-weight:600; font-size:13px; color:#444;}
+
+  .navbar{
+    display:flex; align-items:center; gap:14px;
+    border:1.5px solid var(--line-soft); background:#fff;
+    padding:10px 14px; border-radius:4px;
+  }
+  .navbar .logo{
+    width:120px; height:30px; background:var(--box-2);
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; color:#777; border-radius:3px;
+  }
+  .navbar .navlinks{display:flex; gap:14px; flex:1; flex-wrap:wrap;}
+  .navbar .navlinks span{font-size:12px; color:#555; border-bottom:1px dotted #aaa; padding-bottom:1px;}
+  body.mobile .navbar .navlinks{display:none;}
+  .navbar .hamburger{display:none; font-size:20px; color:#555;}
+  body.mobile .navbar .hamburger{display:block;}
+  body.mobile .navbar .desktop-cta{display:none;}
+
+  .filterwrap{border:1.5px dashed var(--line); border-radius:6px; padding:14px; background:#fbfbfb;}
+  .filter-layer{margin-bottom:14px;}
+  .filter-layer:last-child{margin-bottom:0;}
+  .filter-layer .layer-label{
+    font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px;
+    color:#555; margin-bottom:8px; display:flex; align-items:center; gap:6px;
+  }
+  .layer-tag{font-size:9px; background:#555; color:#fff; padding:2px 6px; border-radius:3px; letter-spacing:.5px; font-weight:600;}
+  .layer-tag.alt{background:#999;}
+  .selectbox{
+    border:1.5px solid var(--line-soft); background:#fff; border-radius:4px;
+    padding:9px 10px; font-size:12px; color:#777; display:flex;
+    align-items:center; justify-content:space-between; min-height:38px;
+  }
+  .selectbox::after{content:"▾"; color:#999;}
+  .sublabel{font-size:9px; color:#aaa; text-transform:none; letter-spacing:0; font-weight:400; margin-left:4px;}
+
+  .steps{display:flex; gap:0; align-items:center; margin-bottom:16px; flex-wrap:wrap;}
+  .step-dot{display:flex; align-items:center; gap:8px; font-size:12px; color:#555;}
+  .step-dot .n{
+    width:26px; height:26px; border-radius:50%; border:2px solid var(--ink);
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; background:#fff;
+  }
+  .step-dot.done .n{background:#555; color:#fff;}
+  .step-line{flex:1; height:2px; background:var(--line-soft); min-width:20px; margin:0 6px;}
+  body.mobile .steps{flex-direction:column; align-items:flex-start; gap:10px;}
+  body.mobile .step-line{display:none;}
+
+  .page-banner{
+    max-width:1180px; margin:40px auto 0; padding:12px 18px;
+    background:#3a3a3a; color:#fff; border-radius:6px 6px 0 0;
+    display:flex; align-items:center; gap:12px;
+  }
+  body.mobile .page-banner{max-width:390px;}
+  .page-banner .tpl-badge{
+    background:#fff; color:#2b2b2b; font-weight:700; font-size:11px;
+    padding:3px 9px; border-radius:3px; letter-spacing:.5px;
+  }
+  .page-banner h2{margin:0; font-size:16px; font-weight:700; letter-spacing:.3px;}
+  .page-banner .route{font-size:11px; color:#bbb; margin-left:auto; font-family:monospace;}
+  body.mobile .page-banner .route{display:none;}
+  .canvas.attached{margin-top:0; border-top:0;}
+
+  .tpl-callout{
+    border:2px solid #555; border-radius:6px; padding:10px 14px;
+    font-size:12px; color:#333; margin-bottom:16px; background:#f4f4f4;
+  }
+  .tpl-callout strong{text-transform:uppercase; font-size:11px; letter-spacing:.5px;}
+
+  /* NEW: revision callout (annotation chrome — not part of grayscale canvas) */
+  .changed{
+    background:#eef7f0; border:2px solid #6fae86; border-radius:6px;
+    padding:12px 16px; font-size:12px; color:#2f5d42; line-height:1.55; margin-top:16px;
+  }
+  .changed h4{margin:0 0 6px; font-size:12px; text-transform:uppercase; letter-spacing:.5px; color:#2f5d42;}
+  .changed ul{margin:6px 0 0; padding-left:18px;}
+  .changed li{margin:3px 0;}
+  .chgtag{display:inline-block; background:#3f7a58; color:#fff; font-size:10px; font-weight:700; padding:2px 8px; border-radius:3px; letter-spacing:.5px; margin-right:8px; text-transform:uppercase;}
+
+  .open-q{
+    background:#fff3f3; border:2px dashed #c98; border-radius:6px;
+    padding:10px 14px; font-size:12px; color:#7a4a3a; margin:14px 0; line-height:1.5;
+  }
+  .open-q .qtag{
+    display:inline-block; background:#b5654a; color:#fff; font-size:10px; font-weight:700;
+    padding:2px 8px; border-radius:3px; letter-spacing:.5px; margin-right:8px; text-transform:uppercase;
+  }
+
+  .xlink{
+    display:inline-block; font-size:11px; color:#33e; background:#eef;
+    border:1px solid #aac; border-radius:4px; padding:4px 9px; margin:2px 4px 2px 0;
+    text-decoration:none; cursor:pointer;
+  }
+  .xlink::before{content:"→ "; color:#66a;}
+
+  .intro{
+    max-width:1180px; margin:24px auto 0; background:#fff; border:2px solid #555;
+    border-radius:6px; padding:20px 22px;
+  }
+  body.mobile .intro{max-width:390px;}
+  .intro h1{margin:0 0 4px; font-size:20px;}
+  .intro .sub{color:#666; font-size:13px; margin-bottom:16px;}
+  .intro .legend{display:flex; gap:18px; flex-wrap:wrap; font-size:11px; color:#666; margin-top:14px;}
+  .intro .legend .k{display:flex; align-items:center; gap:6px;}
+  .swatch{width:22px; height:12px; border-radius:2px; border:1px solid #bbb;}
+
+  .tree{font-family:monospace; font-size:12px; line-height:1.7; color:#444; background:#f6f6f6; border:1px solid #ddd; border-radius:5px; padding:14px 16px; overflow-x:auto; margin-top:14px;}
+  .tree a{color:#33e; text-decoration:none;}
+  .tree .muted{color:#999;}
+  .tree .strike{text-decoration:line-through; color:#c0c0c0;}
+  .tree .collapse-note{color:#3f7a58; font-style:italic;}
+
+  .flowbar{display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:14px; font-size:11px; color:#444;}
+  .flowbar .fstep{background:#e8e8e8; border:1.5px solid #bbb; border-radius:4px; padding:6px 10px;}
+  .flowbar .arr{color:#999; font-weight:700;}
+
+  /* grouped-results section headers (② results grouped by system) */
+  .sysgroup{
+    margin:20px 0 10px; padding-bottom:5px; font-weight:700; font-size:13px; color:#444;
+    border-bottom:1.5px solid var(--line-soft); display:flex; align-items:baseline; gap:8px;
+  }
+  .sysgroup:first-of-type{margin-top:6px;}
+  .sysgroup .cnt{font-size:10px; color:#999; font-weight:400; letter-spacing:.3px;}
+  .veh-chip{
+    display:inline-block; background:#555; color:#fff; border:1.5px solid #555;
+    border-radius:20px; padding:4px 12px; font-size:11px; font-weight:600;
+  }
+  .veh-change{color:#33e; font-size:11px; margin-left:6px; cursor:pointer;}
+</style>
+</head>
+<body class="desktop">
+
+<!-- ============ FIXED TOOLBAR ============ -->
+<div class="toolbar">
+  <strong>OrganizeYourNuts — Lo-Fi Wireframe</strong>
+  <span style="color:#999;font-size:11px;">rev: vehicle filter on Kits overview · systems collapsed</span>
+  <div class="spacer"></div>
+  <label style="color:#bbb;">Jump to:</label>
+  <select onchange="if(this.value)location.hash=this.value">
+    <option value="">— page template —</option>
+    <option value="#home">① Home</option>
+    <option value="#kits-overview">② Hardware Kits — Overview & Shop</option>
+    <option value="#storage-overview">③ Hardware Storage — Overview</option>
+    <option value="#storage-sub">④ Storage Sub-category Template (Bins)</option>
+    <option value="#cart">⑤ Cart</option>
+    <option value="#checkout">⑥ Checkout Flow</option>
+    <option value="#about">⑦ About / Contact</option>
+  </select>
+  <div class="toggle-group">
+    <button id="btn-desktop" class="active" onclick="setView('desktop')">🖥 Desktop</button>
+    <button id="btn-mobile" onclick="setView('mobile')">📱 Mobile</button>
+  </div>
+</div>
+
+<!-- ============ INTRO / SITEMAP ============ -->
+<div class="intro">
+  <h1>Restructured Site — Wireframe Set <span style="font-size:13px;color:#999;font-weight:400;">(revised)</span></h1>
+  <div class="sub">Seven page templates below, numbered ①–⑦. Toggle Desktop / Mobile above; every section is annotated.</div>
+
+  <div class="changed">
+    <h4><span class="chgtag">What changed</span> vehicle selection moved up → system pages collapsed</h4>
+    The customer now sets <em>Make / Model / Year / Engine</em> on the <strong>Hardware Kits overview</strong> page itself, instead of on individual system pages. Consequences reflected below:
+    <ul>
+      <li><strong>The 5 system pages are gone as pages.</strong> Engines, Transmissions, Steering &amp; Suspension, Diff/Axle, Body &amp; Trim are no longer separate URLs. The old "System page template" is removed — its filter + results grid are now the Hardware Kits overview.</li>
+      <li><strong>Systems survive as a results facet,</strong> not sitemap nodes — an optional chip row to narrow the filtered kits to one category.</li>
+      <li><strong>Template count 8 → 7.</strong> Storage (overview + sub-category), Cart, Checkout, and About/Contact are unchanged.</li>
+      <li><strong>The old open question is resolved:</strong> "does Make/Model/Year persist across system pages?" no longer applies — the filter is set once, on one page.</li>
+    </ul>
+  </div>
+
+  <div class="tree">
+Home ─────────────────────────────── <a href="#home">① wireframe</a>
+├─ Hardware Kits  (overview + shop) ─ <a href="#kits-overview">② wireframe</a>  <span class="collapse-note">← filter by Make/Model/Year/Engine lives here now</span>
+│   <span class="strike">├─ Engines</span>            <span class="collapse-note">collapsed — now a results facet on ②, not a page</span>
+│   <span class="strike">├─ Transmissions</span>      <span class="collapse-note">collapsed</span>
+│   <span class="strike">├─ Steering &amp; Suspension</span> <span class="collapse-note">collapsed</span>
+│   <span class="strike">├─ Diff / Axle Kits</span>    <span class="collapse-note">collapsed</span>
+│   <span class="strike">└─ Body &amp; Interior Trim</span> <span class="collapse-note">collapsed</span>
+├─ Hardware Storage  (overview page) <a href="#storage-overview">③ wireframe</a>
+│   ├─ Bins ─────────────────────── <a href="#storage-sub">④ storage template</a>
+│   ├─ Organizers ────────────────── <span class="muted">reuses ④</span>
+│   └─ Cases ───────────────────────<span class="muted">reuses ④</span>
+├─ About / Contact ───────────────── <a href="#about">⑦ wireframe</a>
+├─ Cart ──────────────────────────── <a href="#cart">⑤ wireframe</a>
+└─ Checkout Flow  (separate from Cart) <a href="#checkout">⑥ wireframe</a>
+  </div>
+
+  <div class="flowbar">
+    <span style="font-weight:700;">Purchase path (shortened):</span>
+    <span class="fstep">Hardware Kits overview</span><span class="arr">→</span>
+    <span class="fstep">set Make/Model/Year/Engine</span><span class="arr">→</span>
+    <span class="fstep">matching kits appear</span><span class="arr">→</span>
+    <span class="fstep">(optional) narrow by system</span><span class="arr">→</span>
+    <span class="fstep">Add to cart</span><span class="arr">→</span>
+    <span class="fstep">Cart</span><span class="arr">→</span>
+    <span class="fstep">Checkout</span>
+  </div>
+  <div style="font-size:11px;color:#999;margin-top:6px;">The old "pick a system → land on its page → filter there" hop is removed — one page does filter + results.</div>
+
+  <div class="legend">
+    <div class="k"><span class="swatch" style="background:#e8e8e8;"></span> content box / placeholder</div>
+    <div class="k"><span class="swatch" style="background:repeating-linear-gradient(45deg,#e0e0e0,#e0e0e0 6px,#d6d6d6 6px,#d6d6d6 12px);"></span> image slot</div>
+    <div class="k"><span class="swatch" style="background:#cfcfcf;"></span> greeked text</div>
+    <div class="k"><span class="swatch" style="background:#fffef0;border-color:#d9d4a0;"></span> section note</div>
+    <div class="k"><span class="swatch" style="background:#eef7f0;border-color:#6fae86;"></span> what changed</div>
+    <div class="k"><span class="swatch" style="background:#fff3f3;border-color:#c98;"></span> open question</div>
+  </div>
+</div>
+
+
+<!-- =================================================================
+     ① HOME
+     ================================================================= -->
+<div class="page-banner" id="home">
+  <span class="tpl-badge">TEMPLATE ①</span>
+  <h2>Home — Restructured Landing Page</h2>
+  <span class="route">/</span>
+</div>
+<div class="canvas attached">
+  <div class="device-label">Home</div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">1</span><span class="sec-title">Nav</span></div>
+    <div class="sec-note">Global top nav, present on every page: <em>Home · Hardware Kits · Hardware Storage · About/Contact · Cart</em>. Collapses to a hamburger on mobile. Note the "Hardware Kits" dropdown no longer lists 5 system sub-pages — they're collapsed.</div>
+    <div class="navbar">
+      <div class="logo">LOGO</div>
+      <div class="navlinks"><span>Home</span><span>Hardware Kits</span><span>Hardware Storage ▾</span><span>About / Contact</span></div>
+      <span class="btn desktop-cta">🛒 Cart</span><span class="hamburger">☰</span>
+    </div>
+    <div style="margin-top:8px;">
+      <a class="xlink" href="#kits-overview">Hardware Kits overview ②</a>
+      <a class="xlink" href="#storage-overview">Hardware Storage overview ③</a>
+      <a class="xlink" href="#cart">Cart ⑤</a>
+      <a class="xlink" href="#about">About/Contact ⑦</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">2</span><span class="sec-title">Quick Vehicle Entry</span></div>
+    <div class="sec-note">Placed directly under the nav — mirrors auto-parts retailers (AutoZone, Advance) where fitment comes before any marketing, since nothing on the site is usable until it knows the car. Compact Make/Model/Year/Engine picker that submits straight into the Hardware Kits results (②). Same filter component as the header of ②. <em>Decided:</em> Home-only placement (no global nav bar), and the vehicle selected here <em>carries as state into ② and the Cart</em> (arrives pre-filled on ②, editable there).</div>
+    <div class="filterwrap">
+      <div class="filter-layer">
+        <div class="layer-label"><span class="layer-tag">VEHICLE</span> Find kits that fit — Make / Model / Year / Engine</div>
+        <div class="grid c4">
+          <div class="selectbox">Make</div>
+          <div class="selectbox">Model</div>
+          <div class="selectbox">Year</div>
+          <div class="selectbox">Engine</div>
+        </div>
+        <div style="margin-top:10px;"><span class="btn solid" style="flex:0;">Show my kits →</span> <a class="xlink" href="#kits-overview">submits into Hardware Kits results ②</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">3</span><span class="sec-title">Hero</span></div>
+    <div class="sec-note">Positioning headline + subhead + dual CTAs. Primary CTA → <em>Hardware Kits</em> (where you set your vehicle); secondary → <em>Hardware Storage</em>.</div>
+    <div class="row">
+      <div style="flex:1.4;">
+        <span class="label">Headline</span>
+        <div class="greek w90" style="height:16px;"></div>
+        <div class="greek w70" style="height:16px;"></div>
+        <div class="greek w80" style="margin-top:12px;"></div>
+        <div class="greek w60"></div>
+        <div class="row" style="margin-top:14px;">
+          <span class="btn solid" style="flex:0;">Shop Hardware Kits</span>
+          <span class="btn" style="flex:0;">Shop Storage</span>
+        </div>
+      </div>
+      <div class="box img" style="flex:1; min-height:150px;"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">4</span><span class="sec-title">Two Pillars — Kits vs. Storage</span></div>
+    <div class="sec-note">Two shopping pillars as large entry cards. Kits card → the overview where the customer sets their vehicle; Storage card → the storage overview.</div>
+    <div class="grid c2">
+      <div class="card">
+        <div class="thumb" style="min-height:110px;">Hardware Kits</div>
+        <div class="cardtitle">Hardware Kits →</div>
+        <div class="greek w90"></div><div class="greek w60"></div>
+        <a class="xlink" href="#kits-overview">set your vehicle, see kits ②</a>
+      </div>
+      <div class="card">
+        <div class="thumb" style="min-height:110px;">Hardware Storage</div>
+        <div class="cardtitle">Hardware Storage →</div>
+        <div class="greek w90"></div><div class="greek w60"></div>
+        <a class="xlink" href="#storage-overview">Hardware Storage overview ③</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">5</span><span class="sec-title">CTA Banner</span></div>
+    <div class="sec-note">Full-width conversion prompt into both pillars / bulk pricing.</div>
+    <div class="box tall" style="flex-direction:column; gap:10px;">
+      <div class="greek w50" style="height:14px;"></div>
+      <div class="row" style="width:auto;">
+        <span class="btn solid" style="flex:0;">Shop Kits</span>
+        <span class="btn" style="flex:0;">Shop Storage</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">6</span><span class="sec-title">Footer</span></div>
+    <div class="sec-note">Global footer: logo, site map (both pillars), About/Contact, legal. Present on every page.</div>
+    <div class="row">
+      <div><div class="logo" style="margin-bottom:8px;">LOGO</div><div class="greek w70"></div></div>
+      <div><span class="label">Hardware Kits</span><div class="greek w60"></div><div class="greek w50"></div></div>
+      <div><span class="label">Hardware Storage</span><div class="greek w60"></div><div class="greek w50"></div></div>
+      <div><span class="label">Company</span><div class="greek w50"></div><div class="greek w60"></div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- =================================================================
+     ② HARDWARE KITS — OVERVIEW & SHOP  (absorbs old system template)
+     ================================================================= -->
+<div class="page-banner" id="kits-overview">
+  <span class="tpl-badge">TEMPLATE ②</span>
+  <h2>Hardware Kits — Overview &amp; Shop</h2>
+  <span class="route">/hardware-kits</span>
+</div>
+<div class="canvas attached">
+  <div class="device-label">Hardware Kits — Overview & Shop (filter + results)</div>
+
+  <div class="tpl-callout" style="margin:18px 20px 0;">
+    <strong>This page absorbed the old system-page template.</strong> &nbsp;It's now a single shop page: set your vehicle → matching kits across <em>all</em> systems appear here. There is no longer a separate page per system. Built on the old live <code>engine-hardware-kits.html</code> filter + results grid.
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">1</span><span class="sec-title">Nav</span></div>
+    <div class="sec-note">Global nav. "Hardware Kits" active. Breadcrumb is now just <em>Home / Hardware Kits</em> — there's no deeper system level to sit under.</div>
+    <div class="navbar">
+      <div class="logo">LOGO</div>
+      <div class="navlinks"><span>Home</span><span style="font-weight:700;border-bottom:2px solid #555;">Hardware Kits</span><span>Hardware Storage ▾</span><span>About / Contact</span></div>
+      <span class="btn desktop-cta">🛒 Cart</span><span class="hamburger">☰</span>
+    </div>
+    <div style="font-family:monospace;font-size:11px;color:#888;margin-top:8px;">Home / <b>Hardware Kits</b></div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">2</span><span class="sec-title">Overview Header</span></div>
+    <div class="sec-note">H1 + short intro that frames the page as "find kits for your vehicle." Sets up the filter below as the primary action.</div>
+    <div class="greek w40" style="height:18px;"></div>
+    <div class="greek w80"></div><div class="greek w60"></div>
+  </div>
+
+  <div class="section" style="background:#f4f4f4;">
+    <div class="sec-head"><span class="sec-num">3</span><span class="sec-title">Vehicle Filter — Make / Model / Year / Engine</span></div>
+    <div class="sec-note"><em>The relocated filter — the heart of this change.</em> Previously this lived on each system page (as a shared Make/Model/Year layer + a per-system layer). It now sits once, here, on the overview. A single vehicle identification (down to the engine) is enough to pull every fitting kit — which is what collapsed the per-system pages. <em>State carry:</em> if the customer set a vehicle in the Home entry block it arrives here <em>pre-filled</em> (editable); the selected vehicle also carries forward into the Cart.</div>
+    <div class="filterwrap">
+      <div style="margin-bottom:12px;">
+        <span class="label" style="display:inline;margin:0 8px 0 0;">Your Vehicle</span>
+        <span class="veh-chip">✓ selected vehicle</span>
+        <span class="veh-change">✎ change</span>
+        <span style="color:#999;font-size:11px;margin-left:6px;">(pre-filled if set on Home · carries to Cart)</span>
+      </div>
+      <div class="filter-layer">
+        <div class="layer-label"><span class="layer-tag">VEHICLE</span> Identify your vehicle — set once, applies to all results</div>
+        <div class="grid c4">
+          <div class="selectbox">Make</div>
+          <div class="selectbox">Model</div>
+          <div class="selectbox">Year</div>
+          <div class="selectbox">Engine <span class="sublabel">e.g. 5.0L V8</span></div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:#888;padding-top:4px;">Once set: results below populate with every kit that fits — engine, transmission, steering, diff/axle, body &amp; trim.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">4</span><span class="sec-title">Results — Grouped by System</span></div>
+    <div class="sec-note"><em>Decided:</em> matching kits are <em>grouped into labeled system sections</em> (not a flat grid + facet row). Each system with fitting kits gets its own header + card grid; systems with no fit for the vehicle are omitted. A "jump to system" row anchors down the page. <em>Naming note:</em> the <em>"Engine"</em> filter field above identifies the car's motor; the <em>"Engines"</em> section header here is the engine-hardware kit category — different axes. Before a vehicle is set, this shows an empty/prompt state ("Set your vehicle to see kits").</div>
+
+    <div style="margin-bottom:8px;">
+      <span class="label" style="display:inline;margin:0 8px 0 0;">Jump to:</span>
+      <span class="pill">Engines</span><span class="pill">Transmissions</span><span class="pill">Steering</span><span class="pill">Diff / Axle</span><span class="pill">Body & Trim</span>
+    </div>
+
+    <div class="sysgroup">Engines <span class="cnt">· kits that fit your vehicle</span></div>
+    <div class="grid c3">
+      <div class="card"><div class="thumb">kit image</div><div class="cardtitle">Kit name</div><div class="greek w60"></div><div class="row" style="align-items:center;"><span class="label" style="margin:0;">$ price</span><span class="btn solid" style="flex:0;">Add to Cart</span></div></div>
+      <div class="card"><div class="thumb">kit image</div><div class="cardtitle">Kit name</div><div class="greek w60"></div><div class="row" style="align-items:center;"><span class="label" style="margin:0;">$ price</span><span class="btn solid" style="flex:0;">Add to Cart</span></div></div>
+      <div class="card"><div class="thumb">kit image</div><div class="cardtitle">Kit name</div><div class="greek w60"></div><div class="row" style="align-items:center;"><span class="label" style="margin:0;">$ price</span><span class="btn solid" style="flex:0;">Add to Cart</span></div></div>
+    </div>
+
+    <div class="sysgroup">Transmissions <span class="cnt">· kits that fit your vehicle</span></div>
+    <div class="grid c3">
+      <div class="card"><div class="thumb">kit image</div><div class="cardtitle">Kit name</div><div class="greek w60"></div><div class="row" style="align-items:center;"><span class="label" style="margin:0;">$ price</span><span class="btn solid" style="flex:0;">Add to Cart</span></div></div>
+      <div class="card"><div class="thumb">kit image</div><div class="cardtitle">Kit name</div><div class="greek w60"></div><div class="row" style="align-items:center;"><span class="label" style="margin:0;">$ price</span><span class="btn solid" style="flex:0;">Add to Cart</span></div></div>
+    </div>
+
+    <div class="sysgroup">Steering &amp; Suspension <span class="cnt">· kits that fit your vehicle</span></div>
+    <div class="grid c3">
+      <div class="card"><div class="thumb">kit image</div><div class="cardtitle">Kit name</div><div class="greek w60"></div><div class="row" style="align-items:center;"><span class="label" style="margin:0;">$ price</span><span class="btn solid" style="flex:0;">Add to Cart</span></div></div>
+      <div class="card"><div class="thumb">kit image</div><div class="cardtitle">Kit name</div><div class="greek w60"></div><div class="row" style="align-items:center;"><span class="label" style="margin:0;">$ price</span><span class="btn solid" style="flex:0;">Add to Cart</span></div></div>
+    </div>
+
+    <div class="sysgroup">Diff / Axle <span class="cnt">· kits that fit your vehicle</span></div>
+    <div class="grid c3">
+      <div class="card"><div class="thumb">kit image</div><div class="cardtitle">Kit name</div><div class="greek w60"></div><div class="row" style="align-items:center;"><span class="label" style="margin:0;">$ price</span><span class="btn solid" style="flex:0;">Add to Cart</span></div></div>
+      <div class="card"><div class="thumb">kit image</div><div class="cardtitle">Kit name</div><div class="greek w60"></div><div class="row" style="align-items:center;"><span class="label" style="margin:0;">$ price</span><span class="btn solid" style="flex:0;">Add to Cart</span></div></div>
+    </div>
+
+    <div class="sysgroup">Body &amp; Interior Trim <span class="cnt">· kits that fit your vehicle</span></div>
+    <div class="grid c3">
+      <div class="card"><div class="thumb">kit image</div><div class="cardtitle">Kit name</div><div class="greek w60"></div><div class="row" style="align-items:center;"><span class="label" style="margin:0;">$ price</span><span class="btn solid" style="flex:0;">Add to Cart</span></div></div>
+      <div class="card"><div class="thumb">kit image</div><div class="cardtitle">Kit name</div><div class="greek w60"></div><div class="row" style="align-items:center;"><span class="label" style="margin:0;">$ price</span><span class="btn solid" style="flex:0;">Add to Cart</span></div></div>
+    </div>
+
+    <div style="margin-top:12px;"><a class="xlink" href="#cart">added items → Cart ⑤</a></div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">5</span><span class="sec-title">CTA Banner</span></div>
+    <div class="sec-note">"Can't find your vehicle / not sure which kit?" → About/Contact for help.</div>
+    <div class="box tall" style="flex-direction:column;gap:10px;"><div class="greek w50"></div><span class="btn" style="flex:0;">Contact Us</span></div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">6</span><span class="sec-title">Footer</span></div>
+    <div class="sec-note">Global footer (see ①).</div>
+    <div class="greek w90"></div><div class="greek w70"></div>
+  </div>
+</div>
+
+
+<!-- =================================================================
+     ③ HARDWARE STORAGE — OVERVIEW  (unchanged)
+     ================================================================= -->
+<div class="page-banner" id="storage-overview">
+  <span class="tpl-badge">TEMPLATE ③</span>
+  <h2>Hardware Storage — Overview <span style="font-weight:400;font-size:12px;color:#bbb;">(unchanged by this revision)</span></h2>
+  <span class="route">/hardware-storage</span>
+</div>
+<div class="canvas attached">
+  <div class="device-label">Hardware Storage — Overview</div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">1</span><span class="sec-title">Nav</span></div>
+    <div class="sec-note">Same global nav. "Hardware Storage" active. Storage is not vehicle-specific, so the vehicle-filter change does not touch this pillar.</div>
+    <div class="navbar">
+      <div class="logo">LOGO</div>
+      <div class="navlinks"><span>Home</span><span>Hardware Kits</span><span style="font-weight:700;border-bottom:2px solid #555;">Hardware Storage ▾</span><span>About / Contact</span></div>
+      <span class="btn desktop-cta">🛒 Cart</span><span class="hamburger">☰</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">2</span><span class="sec-title">Overview Header</span></div>
+    <div class="sec-note">Breadcrumb (<em>Home / Hardware Storage</em>) + H1 + intro. A real page laying out its storage types.</div>
+    <div style="font-family:monospace;font-size:11px;color:#888;margin-bottom:8px;">Home / Hardware Storage</div>
+    <div class="greek w40" style="height:18px;"></div>
+    <div class="greek w80"></div><div class="greek w60"></div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">3</span><span class="sec-title">Storage Types Grid — 3 Cards</span></div>
+    <div class="sec-note">The 3 storage types as cards — <em>Bins · Organizers · Cases</em>. Each → its sub-category page (all reuse template ④). These remain real pages — unlike the kit systems, storage types keep their own filtered listings.</div>
+    <div class="grid c3">
+      <div class="card"><div class="thumb">Bins</div><div class="cardtitle">Bins →</div><div class="greek w70"></div><a class="xlink" href="#storage-sub">storage sub-page ④</a></div>
+      <div class="card"><div class="thumb">Organizers</div><div class="cardtitle">Organizers →</div><div class="greek w70"></div><a class="xlink" href="#storage-sub">reuses ④</a></div>
+      <div class="card"><div class="thumb">Cases</div><div class="cardtitle">Cases →</div><div class="greek w70"></div><a class="xlink" href="#storage-sub">reuses ④</a></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">4</span><span class="sec-title">Footer</span></div>
+    <div class="sec-note">Global footer (see ①).</div>
+    <div class="greek w90"></div><div class="greek w70"></div>
+  </div>
+</div>
+
+
+<!-- =================================================================
+     ④ STORAGE SUB-CATEGORY TEMPLATE (Bins)  (unchanged)
+     ================================================================= -->
+<div class="page-banner" id="storage-sub">
+  <span class="tpl-badge">TEMPLATE ④</span>
+  <h2>Storage Sub-category — Bins <span style="font-weight:400;font-size:12px;color:#bbb;">(reusable template for Bins / Organizers / Cases)</span></h2>
+  <span class="route">/hardware-storage/bins</span>
+</div>
+<div class="canvas attached">
+  <div class="device-label">Storage Sub-category — Bins (template)</div>
+
+  <div class="tpl-callout" style="margin:18px 20px 0;">
+    <strong>Reusable pattern.</strong> &nbsp;Represents all 3 storage sub-pages — <em>Bins, Organizers, Cases</em>. Storage keeps its own sub-pages (this revision only collapsed the <em>kit</em> systems). Lighter single-layer filter — no vehicle filter, since storage isn't vehicle-specific.
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">1</span><span class="sec-title">Nav</span></div>
+    <div class="sec-note">Global nav + breadcrumb up to Hardware Storage overview.</div>
+    <div class="navbar">
+      <div class="logo">LOGO</div>
+      <div class="navlinks"><span>Home</span><span>Hardware Kits</span><span style="font-weight:700;">Hardware Storage ▾</span><span>About / Contact</span></div>
+      <span class="btn desktop-cta">🛒 Cart</span><span class="hamburger">☰</span>
+    </div>
+    <div style="font-family:monospace;font-size:11px;color:#888;margin-top:8px;">Home / Hardware Storage / <b>Bins</b></div>
+    <div style="margin-top:6px;"><a class="xlink" href="#storage-overview">← back to Hardware Storage overview ③</a></div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">2</span><span class="sec-title">Sub-category Hero</span></div>
+    <div class="sec-note">Type name (Bins) + short intro. Copy swaps per storage type.</div>
+    <div class="greek w40" style="height:18px;"></div>
+    <div class="greek w70"></div>
+  </div>
+
+  <div class="section" style="background:#f4f4f4;">
+    <div class="sec-head"><span class="sec-num">3</span><span class="sec-title">Filter — Single Layer (product attributes)</span></div>
+    <div class="sec-note">Storage isn't vehicle-specific, so <em>no Make/Model/Year</em> — just product attributes (size, material, compartments, etc.).</div>
+    <div class="filterwrap">
+      <div class="filter-layer">
+        <div class="layer-label"><span class="layer-tag alt">PRODUCT</span> Attributes — size / material / compartments</div>
+        <div class="grid c4">
+          <div class="selectbox">Size</div>
+          <div class="selectbox">Material</div>
+          <div class="selectbox">Compartments</div>
+          <div class="selectbox">Sort by</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">4</span><span class="sec-title">Results Grid — Product Cards + Add to Cart</span></div>
+    <div class="sec-note">Storage product results with Add to Cart. Same buy affordance as the kit cards → feeds Cart.</div>
+    <div class="grid c4">
+      <div class="card"><div class="thumb">product</div><div class="cardtitle">Bin name</div><div class="row" style="align-items:center;"><span class="label" style="margin:0;">$</span><span class="btn solid" style="flex:0;">Add</span></div></div>
+      <div class="card"><div class="thumb">product</div><div class="cardtitle">Bin name</div><div class="row" style="align-items:center;"><span class="label" style="margin:0;">$</span><span class="btn solid" style="flex:0;">Add</span></div></div>
+      <div class="card"><div class="thumb">product</div><div class="cardtitle">Bin name</div><div class="row" style="align-items:center;"><span class="label" style="margin:0;">$</span><span class="btn solid" style="flex:0;">Add</span></div></div>
+      <div class="card"><div class="thumb">product</div><div class="cardtitle">Bin name</div><div class="row" style="align-items:center;"><span class="label" style="margin:0;">$</span><span class="btn solid" style="flex:0;">Add</span></div></div>
+    </div>
+    <div style="margin-top:10px;"><a class="xlink" href="#cart">added items → Cart ⑤</a></div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">5</span><span class="sec-title">Footer</span></div>
+    <div class="sec-note">Global footer (see ①).</div>
+    <div class="greek w90"></div><div class="greek w70"></div>
+  </div>
+</div>
+
+
+<!-- =================================================================
+     ⑤ CART  (unchanged)
+     ================================================================= -->
+<div class="page-banner" id="cart">
+  <span class="tpl-badge">TEMPLATE ⑤</span>
+  <h2>Cart <span style="font-weight:400;font-size:12px;color:#bbb;">(review items — separate from Checkout)</span></h2>
+  <span class="route">/cart</span>
+</div>
+<div class="canvas attached">
+  <div class="device-label">Cart</div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">1</span><span class="sec-title">Nav</span></div>
+    <div class="sec-note">Global nav. Cart is a distinct page/state — the <em>review</em> step, before Checkout.</div>
+    <div class="navbar">
+      <div class="logo">LOGO</div>
+      <div class="navlinks"><span>Home</span><span>Hardware Kits</span><span>Hardware Storage ▾</span><span>About / Contact</span></div>
+      <span class="btn desktop-cta">🛒 Cart</span><span class="hamburger">☰</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">2</span><span class="sec-title">Cart Header</span></div>
+    <div class="sec-note">"Your Cart" + item count. Review only — no shipping/payment here (that's Checkout). Shows the <em>carried vehicle</em> context so kit fitment stays visible during review (carried from the Home/② selection; applies to kit line items — storage items aren't vehicle-specific).</div>
+    <div class="greek w40" style="height:18px;"></div>
+    <div style="margin-top:8px;">
+      <span class="label" style="display:inline;margin:0 8px 0 0;">Your Vehicle</span>
+      <span class="veh-chip">✓ selected vehicle</span>
+      <span style="color:#999;font-size:11px;margin-left:6px;">(carried from selection)</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">3</span><span class="sec-title">Line Items + Order Summary</span></div>
+    <div class="sec-note">Left: editable line items (qty, remove). Right: order summary (subtotal, est. shipping, total) + the single CTA into Checkout. On mobile, summary stacks below items.</div>
+    <div class="row">
+      <div style="flex:1.8;">
+        <div class="card" style="flex-direction:row;align-items:center;gap:12px;">
+          <div class="box img noicon" style="width:70px;min-height:56px;flex:none;"></div>
+          <div style="flex:1;"><div class="cardtitle">Item name</div><div class="greek w60"></div></div>
+          <div class="selectbox" style="width:70px;flex:none;">Qty</div>
+          <span class="label" style="margin:0;">$ price</span>
+          <span style="color:#999;font-size:16px;">✕</span>
+        </div>
+        <div class="card" style="flex-direction:row;align-items:center;gap:12px;margin-top:12px;">
+          <div class="box img noicon" style="width:70px;min-height:56px;flex:none;"></div>
+          <div style="flex:1;"><div class="cardtitle">Item name</div><div class="greek w60"></div></div>
+          <div class="selectbox" style="width:70px;flex:none;">Qty</div>
+          <span class="label" style="margin:0;">$ price</span>
+          <span style="color:#999;font-size:16px;">✕</span>
+        </div>
+        <div style="margin-top:12px;"><a class="xlink" href="#kits-overview">← keep shopping (Hardware Kits ②)</a><a class="xlink" href="#storage-overview">Hardware Storage ③</a></div>
+      </div>
+      <div style="flex:1;">
+        <div class="card">
+          <span class="label">Order Summary</span>
+          <div class="row" style="justify-content:space-between;"><span class="greek w40" style="flex:none;"></span><span class="greek w30" style="flex:none;"></span></div>
+          <div class="row" style="justify-content:space-between;"><span class="greek w40" style="flex:none;"></span><span class="greek w30" style="flex:none;"></span></div>
+          <div class="row" style="justify-content:space-between;"><span class="greek w50" style="flex:none;height:12px;"></span><span class="greek w30" style="flex:none;height:12px;"></span></div>
+          <span class="btn solid block">Proceed to Checkout →</span>
+          <a class="xlink" href="#checkout">go to Checkout flow ⑥</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">4</span><span class="sec-title">Footer</span></div>
+    <div class="sec-note">Global footer (see ①).</div>
+    <div class="greek w90"></div><div class="greek w70"></div>
+  </div>
+</div>
+
+
+<!-- =================================================================
+     ⑥ CHECKOUT FLOW (multi-step)  (unchanged)
+     ================================================================= -->
+<div class="page-banner" id="checkout">
+  <span class="tpl-badge">TEMPLATE ⑥</span>
+  <h2>Checkout Flow <span style="font-weight:400;font-size:12px;color:#bbb;">(multi-step — separate from Cart)</span></h2>
+  <span class="route">/checkout</span>
+</div>
+<div class="canvas attached">
+  <div class="device-label">Checkout Flow — multi-step</div>
+
+  <div class="tpl-callout" style="margin:18px 20px 0;">
+    <strong>Multi-step, not one screen.</strong> &nbsp;Checkout is its own flow, separate from Cart: <em>Step 1 Shipping → Step 2 Payment → Step 3 Review → Confirmation</em>. A persistent step indicator sits at the top of every step.
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">1</span><span class="sec-title">Minimal Nav + Step Indicator</span></div>
+    <div class="sec-note">Checkout uses a <em>stripped nav</em> (logo + secure marker only) to reduce exit points. The step indicator is persistent across all steps.</div>
+    <div class="navbar" style="justify-content:space-between;">
+      <div class="logo">LOGO</div>
+      <span style="font-size:11px;color:#777;">🔒 Secure checkout</span>
+    </div>
+    <div class="steps" style="margin-top:16px;">
+      <div class="step-dot done"><span class="n">1</span> Shipping</div>
+      <div class="step-line"></div>
+      <div class="step-dot"><span class="n">2</span> Payment</div>
+      <div class="step-line"></div>
+      <div class="step-dot"><span class="n">3</span> Review</div>
+      <div class="step-line"></div>
+      <div class="step-dot"><span class="n">✓</span> Confirmation</div>
+    </div>
+    <div style="margin-top:6px;"><a class="xlink" href="#cart">← back to Cart ⑤</a></div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">2</span><span class="sec-title">Step 1 — Shipping</span></div>
+    <div class="sec-note">Address form + delivery method. On completion, advance to Payment. Order summary rail persists on the right (desktop).</div>
+    <div class="row">
+      <div style="flex:1.8;">
+        <div class="grid c2">
+          <div><span class="label">Full name</span><div class="box" style="min-height:38px;"></div></div>
+          <div><span class="label">Email</span><div class="box" style="min-height:38px;"></div></div>
+          <div style="grid-column:1/-1;"><span class="label">Address</span><div class="box" style="min-height:38px;"></div></div>
+          <div><span class="label">City</span><div class="box" style="min-height:38px;"></div></div>
+          <div><span class="label">ZIP</span><div class="box" style="min-height:38px;"></div></div>
+        </div>
+        <div style="margin-top:12px;"><span class="label">Delivery method</span>
+          <div class="row"><div class="selectbox">Standard</div><div class="selectbox">Expedited</div></div>
+        </div>
+        <span class="btn solid block" style="margin-top:14px;">Continue to Payment →</span>
+      </div>
+      <div style="flex:1;"><div class="card"><span class="label">Order Summary (persistent)</span><div class="greek w80"></div><div class="greek w60"></div><div class="greek w50"></div></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">3</span><span class="sec-title">Step 2 — Payment</span></div>
+    <div class="sec-note">Payment details + billing address ("same as shipping" toggle). <em>Sensitive step</em> — real payment fields belong here, not in the wireframe. Advance to Review.</div>
+    <div class="row">
+      <div style="flex:1.8;">
+        <div class="grid c2">
+          <div style="grid-column:1/-1;"><span class="label">Card number</span><div class="box" style="min-height:38px;">•••• •••• •••• ••••</div></div>
+          <div><span class="label">Expiry</span><div class="box" style="min-height:38px;">MM / YY</div></div>
+          <div><span class="label">CVC</span><div class="box" style="min-height:38px;">•••</div></div>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:#777;">☐ Billing address same as shipping</div>
+        <span class="btn solid block" style="margin-top:14px;">Continue to Review →</span>
+      </div>
+      <div style="flex:1;"><div class="card"><span class="label">Order Summary (persistent)</span><div class="greek w80"></div><div class="greek w60"></div></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">4</span><span class="sec-title">Step 3 — Review & Place Order</span></div>
+    <div class="sec-note">Read-only recap of items + shipping + payment, with edit links back to each step. Final "Place Order" commits the purchase → Confirmation.</div>
+    <div class="row">
+      <div style="flex:1.8;">
+        <div class="card"><span class="label">Items</span><div class="greek w80"></div><div class="greek w60"></div></div>
+        <div class="row" style="margin-top:12px;">
+          <div class="card"><span class="label">Ship to <span style="color:#33e;">edit</span></span><div class="greek w70"></div></div>
+          <div class="card"><span class="label">Payment <span style="color:#33e;">edit</span></span><div class="greek w70"></div></div>
+        </div>
+        <span class="btn solid block" style="margin-top:14px;">Place Order</span>
+      </div>
+      <div style="flex:1;"><div class="card"><span class="label">Totals</span><div class="greek w80"></div><div class="greek w60"></div><div class="greek w50" style="height:12px;"></div></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">5</span><span class="sec-title">Confirmation</span></div>
+    <div class="sec-note">Success state: order number, summary, next steps. Terminal screen. CTA back to shopping.</div>
+    <div class="box tall" style="flex-direction:column;gap:10px;">
+      <div style="font-size:22px;color:#888;">✓</div>
+      <div class="greek w50" style="height:14px;"></div>
+      <div class="greek w40"></div>
+      <div class="row" style="width:auto;"><a class="xlink" href="#home">back to Home ①</a><a class="xlink" href="#kits-overview">Hardware Kits ②</a></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">6</span><span class="sec-title">Footer</span></div>
+    <div class="sec-note">Minimal footer during checkout (legal / support only).</div>
+    <div class="greek w70"></div>
+  </div>
+</div>
+
+
+<!-- =================================================================
+     ⑦ ABOUT / CONTACT  (unchanged)
+     ================================================================= -->
+<div class="page-banner" id="about">
+  <span class="tpl-badge">TEMPLATE ⑦</span>
+  <h2>About / Contact</h2>
+  <span class="route">/about</span>
+</div>
+<div class="canvas attached">
+  <div class="device-label">About / Contact</div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">1</span><span class="sec-title">Nav</span></div>
+    <div class="sec-note">Global nav. "About / Contact" active.</div>
+    <div class="navbar">
+      <div class="logo">LOGO</div>
+      <div class="navlinks"><span>Home</span><span>Hardware Kits</span><span>Hardware Storage ▾</span><span style="font-weight:700;border-bottom:2px solid #555;">About / Contact</span></div>
+      <span class="btn desktop-cta">🛒 Cart</span><span class="hamburger">☰</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">2</span><span class="sec-title">About Header</span></div>
+    <div class="sec-note">Company intro / story. Establishes trust. Combined About + Contact on one page per the sitemap.</div>
+    <div class="greek w40" style="height:18px;"></div>
+    <div class="greek w90"></div><div class="greek w80"></div><div class="greek w60"></div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">3</span><span class="sec-title">Story / Value Content</span></div>
+    <div class="sec-note">Supporting content blocks (who we are, why fasteners, guarantees). Text + optional image slots.</div>
+    <div class="row">
+      <div class="box img" style="flex:1;min-height:120px;"></div>
+      <div style="flex:1.4;"><div class="greek w90"></div><div class="greek w80"></div><div class="greek w70"></div><div class="greek w60"></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">4</span><span class="sec-title">Contact Block — Form + Details</span></div>
+    <div class="sec-note">Left: contact form (name / email / message). Right: direct contact details + hours. Where the "not sure which kit?" CTA from the Kits overview lands.</div>
+    <div class="row">
+      <div style="flex:1.6;">
+        <div><span class="label">Name</span><div class="box" style="min-height:38px;"></div></div>
+        <div style="margin-top:10px;"><span class="label">Email</span><div class="box" style="min-height:38px;"></div></div>
+        <div style="margin-top:10px;"><span class="label">Message</span><div class="box tall"></div></div>
+        <span class="btn solid block" style="margin-top:12px;">Send Message</span>
+      </div>
+      <div style="flex:1;">
+        <div class="card"><span class="label">Reach us</span><div class="greek w70"></div><div class="greek w60"></div><div class="greek w80"></div><div class="greek w50"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head"><span class="sec-num">5</span><span class="sec-title">Footer</span></div>
+    <div class="sec-note">Global footer (see ①).</div>
+    <div class="greek w90"></div><div class="greek w70"></div>
+  </div>
+</div>
+
+<div style="max-width:1180px;margin:30px auto 60px;color:#eee;font-size:12px;text-align:center;line-height:1.6;">
+  End of wireframe set — 7 templates (was 8). &nbsp;The 5 kit systems collapsed into the Hardware Kits overview (② ) as a results facet. Storage sub-pages (Organizers, Cases) still reuse template ④.<br>
+  Grayscale + structure only. Design system (orange palette, Inter, frosted nav) is applied later at the high-fidelity stage.
+</div>
+
+<script>
+  function setView(mode){
+    document.body.classList.remove('desktop','mobile');
+    document.body.classList.add(mode);
+    document.getElementById('btn-desktop').classList.toggle('active', mode==='desktop');
+    document.getElementById('btn-mobile').classList.toggle('active', mode==='mobile');
+  }
+</script>
+</body>
+</html>

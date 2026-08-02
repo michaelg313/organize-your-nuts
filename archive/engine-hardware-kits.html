@@ -237,29 +237,76 @@
 
     /* PRODUCT GRID */
     .products-section { background: var(--bg-deep); }
-    .filter-bar {
+    /* FITMENT SEARCH */
+    .fitment-search {
+      position: relative;
+      max-width: 480px;
+      margin-bottom: 1.5rem;
+    }
+    .fitment-search-box {
       display: flex;
       align-items: center;
       gap: 0.6rem;
-      flex-wrap: wrap;
-      margin-bottom: 2rem;
-    }
-    .filter-btn {
-      padding: 0.4rem 1rem;
-      border-radius: 100px;
-      font-size: 0.82rem;
-      font-weight: 600;
+      background: var(--bg-card);
       border: 1px solid rgba(255,255,255,0.1);
-      background: transparent;
+      border-radius: 10px;
+      padding: 0.7rem 1rem;
+      transition: border-color 0.2s;
+    }
+    .fitment-search-box:focus-within { border-color: var(--orange-border); }
+    .fitment-search-box svg { color: var(--text-muted); flex-shrink: 0; }
+    .fitment-search-box input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+    }
+    .fitment-search-box input::placeholder { color: var(--text-muted); }
+    .fitment-clear {
+      background: none;
+      border: none;
       color: var(--text-muted);
       cursor: pointer;
-      transition: all 0.15s;
+      display: none;
+      padding: 0.1rem;
+      line-height: 0;
     }
-    .filter-btn:hover, .filter-btn.active {
-      background: var(--orange-dim);
-      border-color: var(--orange-border);
-      color: var(--orange);
+    .fitment-clear:hover { color: var(--text-primary); }
+    .fitment-clear.show { display: flex; }
+    .fitment-suggestions {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      z-index: 20;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.45);
+      display: none;
     }
+    .fitment-suggestions.show { display: block; }
+    .fitment-suggestion {
+      padding: 0.65rem 1rem;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      transition: background 0.12s;
+    }
+    .fitment-suggestion:hover, .fitment-suggestion.active-suggestion { background: var(--orange-dim); }
+    .fitment-suggestion span.years { color: var(--text-muted); font-size: 0.78rem; }
+    .fitment-no-results { padding: 1.5rem 1rem; text-align: center; color: var(--text-muted); font-size: 0.88rem; }
+    .results-count { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.25rem; }
+    .results-count strong { color: var(--text-primary); }
+
     .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -333,23 +380,20 @@
 
     /* CTA BANNER */
     .cta-banner {
-      background: linear-gradient(135deg, #7a3a00 0%, #c96800 40%, #FF8C00 70%, #FF9F1C 100%);
-      padding: clamp(3rem, 7vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+      padding: clamp(2rem, 5vw, 3rem) clamp(1.5rem, 5vw, 4rem);
       text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.06);
     }
-    .cta-banner h2 { color: #fff; }
-    .cta-banner .section-sub { color: rgba(255,255,255,0.8); margin: 0 auto 2rem; }
-    .cta-actions { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
-    .btn-white { background: #fff; color: #c96800; font-weight: 700; font-size: 1rem; padding: 0.85rem 2.2rem; }
-    .btn-white:hover { background: #fff8f0; }
-    .btn-outline-white {
-      background: transparent;
-      color: #fff;
-      border: 2px solid rgba(255,255,255,0.6);
-      font-size: 1rem;
-      padding: 0.85rem 2.2rem;
+    .cta-banner p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
     }
-    .btn-outline-white:hover { border-color: #fff; }
+    .cta-banner a {
+      color: var(--orange);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .cta-banner a:hover { text-decoration: underline; }
 
     /* FOOTER */
     footer {
@@ -441,98 +485,6 @@
     </div>
   </div>
 
-  <!-- WHAT'S INCLUDED -->
-  <section class="included">
-    <div class="section-inner">
-      <p class="section-label">What's Inside</p>
-      <h2>Every Kit Includes the Essentials</h2>
-      <p class="section-sub">No guessing, no hunting for stragglers. Our kits are built around complete engine reassembly from the bottom end up.</p>
-      <div class="included-grid">
-
-        <div class="included-card">
-          <div class="included-icon">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-          </div>
-          <div>
-            <h3>Head Bolts / Head Studs</h3>
-            <p>High-tensile cylinder head fasteners for a proper, leak-free seal. Available in OEM-replacement or performance stud kits.</p>
-          </div>
-        </div>
-
-        <div class="included-card">
-          <div class="included-icon">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
-          </div>
-          <div>
-            <h3>Main Cap Bolts</h3>
-            <p>Precision main bearing cap fasteners to keep your crankshaft properly clamped under high-load conditions.</p>
-          </div>
-        </div>
-
-        <div class="included-card">
-          <div class="included-icon">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><path d="M5 12h14"/></svg>
-          </div>
-          <div>
-            <h3>Connecting Rod Bolts</h3>
-            <p>Critical bottom-end hardware for securing rod caps. Stretch-type bolts with recommended torque and angle specs included.</p>
-          </div>
-        </div>
-
-        <div class="included-card">
-          <div class="included-icon">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          </div>
-          <div>
-            <h3>Intake Manifold Studs &amp; Bolts</h3>
-            <p>Stainless or black oxide intake hardware in the correct thread pitch for your application, with washers included.</p>
-          </div>
-        </div>
-
-        <div class="included-card">
-          <div class="included-icon">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 7 13 17 8 12 1 19"/><polyline points="17 7 23 7 23 13"/></svg>
-          </div>
-          <div>
-            <h3>Exhaust Header Bolts</h3>
-            <p>High-temp rated exhaust fasteners with anti-seize coating to survive heat cycling without galling or breaking on removal.</p>
-          </div>
-        </div>
-
-        <div class="included-card">
-          <div class="included-icon">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-          </div>
-          <div>
-            <h3>Cam Retaining &amp; Timing Hardware</h3>
-            <p>Camshaft thrust plate bolts, timing cover fasteners, and cam gear bolts -- the small stuff that always goes missing.</p>
-          </div>
-        </div>
-
-        <div class="included-card">
-          <div class="included-icon">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-          </div>
-          <div>
-            <h3>Oil Pan &amp; Valley Cover Bolts</h3>
-            <p>Full sets of oil pan rail bolts and valley/valley pan fasteners with replacement crush washers where applicable.</p>
-          </div>
-        </div>
-
-        <div class="included-card">
-          <div class="included-icon">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          </div>
-          <div>
-            <h3>Accessory &amp; Dress Fasteners</h3>
-            <p>Alternator bracket, water pump, and front accessory bolts so your engine bay looks as clean as it runs.</p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
   <!-- PRODUCT KITS -->
   <section class="products-section" id="order">
     <div class="section-inner">
@@ -540,18 +492,22 @@
       <h2>Find Your Application</h2>
       <p class="section-sub">Kits built for specific platforms so you know every fastener fits before you open the bag.</p>
 
-      <div class="filter-bar">
-        <button class="filter-btn active">All Kits</button>
-        <button class="filter-btn">Small Block V8</button>
-        <button class="filter-btn">Big Block V8</button>
-        <button class="filter-btn">4-Cylinder</button>
-        <button class="filter-btn">Import / Euro</button>
-        <button class="filter-btn">Diesel</button>
+      <div class="fitment-search">
+        <div class="fitment-search-box">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="fitmentInput" placeholder="Search your make, model, or years (e.g. BMW E36 1995)" autocomplete="off" />
+          <button class="fitment-clear" id="fitmentClear" aria-label="Clear search">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="fitment-suggestions" id="fitmentSuggestions"></div>
       </div>
 
-      <div class="products-grid">
+      <p class="results-count" id="resultsCount"></p>
 
-        <div class="product-card">
+      <div class="products-grid" id="productsGrid">
+
+        <div class="product-card" data-fitment="chevrolet chevy small block sbc 283 305 327 350 400 1955-2003">
           <div class="product-thumb">
             <div class="product-badge-tag">Best Seller</div>
             <svg width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24" opacity="0.6"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
@@ -566,7 +522,7 @@
           </div>
         </div>
 
-        <div class="product-card">
+        <div class="product-card" data-fitment="chevrolet chevy big block bbc 396 427 454 1965-2000">
           <div class="product-thumb">
             <div class="product-badge-tag">New</div>
             <svg width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24" opacity="0.6"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -581,7 +537,7 @@
           </div>
         </div>
 
-        <div class="product-card">
+        <div class="product-card" data-fitment="ford small block sbf 289 302 351w windsor mustang f-100 1962-1996">
           <div class="product-thumb">
             <svg width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24" opacity="0.6"><line x1="12" y1="2" x2="12" y2="22"/><path d="M5 12h14"/><rect x="8" y="2" width="8" height="5" rx="1"/></svg>
           </div>
@@ -595,7 +551,7 @@
           </div>
         </div>
 
-        <div class="product-card">
+        <div class="product-card" data-fitment="import 4-cylinder honda toyota nissan euro 1985-2010">
           <div class="product-thumb">
             <svg width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24" opacity="0.6"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
           </div>
@@ -609,7 +565,7 @@
           </div>
         </div>
 
-        <div class="product-card">
+        <div class="product-card" data-fitment="bmw e36 m50 m52 s50 3 series 1992-1999">
           <div class="product-thumb">
             <div class="product-badge-tag">Sourcing Guide</div>
             <svg width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24" opacity="0.6"><circle cx="12" cy="12" r="10"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M19.07 4.93l-2.12 2.12M7.05 16.95l-2.12 2.12"/></svg>
@@ -624,7 +580,7 @@
           </div>
         </div>
 
-        <div class="product-card">
+        <div class="product-card" data-fitment="diesel cummins powerstroke duramax 1989-2020">
           <div class="product-thumb">
             <div class="product-badge-tag">Heavy Duty</div>
             <svg width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.25" viewBox="0 0 24 24" opacity="0.6"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h5l2 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
@@ -646,12 +602,7 @@
   <!-- CTA BANNER -->
   <section class="cta-banner">
     <div class="section-inner">
-      <h2>Not Sure Which Kit You Need?</h2>
-      <p class="section-sub">Tell us your engine and we'll point you to the right kit -- or build a custom one.</p>
-      <div class="cta-actions">
-        <a href="#" class="btn btn-white">Contact Us</a>
-        <a href="index.html" class="btn btn-outline-white">Back to Store</a>
-      </div>
+      <p>Not sure which kit you need? <a href="#">Contact us</a> and we'll point you to the right one — or build a custom kit.</p>
     </div>
   </section>
 
@@ -678,13 +629,112 @@
       nav.classList.toggle('scrolled', window.scrollY > 20);
     }, { passive: true });
 
-    // Filter buttons (UI only — no backend yet)
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    // FITMENT SEARCH (single combobox — type or pick a suggestion, no cascading clicks)
+    const fitmentInput = document.getElementById('fitmentInput');
+    const fitmentClear = document.getElementById('fitmentClear');
+    const fitmentSuggestions = document.getElementById('fitmentSuggestions');
+    const resultsCount = document.getElementById('resultsCount');
+    const productCards = Array.from(document.querySelectorAll('.product-card'));
+
+    // Known fitments for autocomplete — extend this list as new kits are added.
+    const FITMENTS = [
+      { label: 'BMW E36', years: '1992–1999', match: 'bmw e36 m50 m52 s50 3 series 1992-1999' },
+      { label: 'Chevrolet Small Block', years: '1955–2003', match: 'chevrolet chevy small block sbc 283 305 327 350 400 1955-2003' },
+      { label: 'Chevrolet Big Block', years: '1965–2000', match: 'chevrolet chevy big block bbc 396 427 454 1965-2000' },
+      { label: 'Ford Small Block', years: '1962–1996', match: 'ford small block sbf 289 302 351w windsor mustang f-100 1962-1996' },
+      { label: 'Import 4-Cylinder', years: '1985–2010', match: 'import 4-cylinder honda toyota nissan euro 1985-2010' },
+      { label: 'Diesel (Cummins / Powerstroke / Duramax)', years: '1989–2020', match: 'diesel cummins powerstroke duramax 1989-2020' },
+    ];
+
+    let activeSuggestionIndex = -1;
+
+    function renderSuggestions(query) {
+      const q = query.trim().toLowerCase();
+      activeSuggestionIndex = -1;
+      if (!q) { fitmentSuggestions.classList.remove('show'); fitmentSuggestions.innerHTML = ''; return; }
+
+      const matches = FITMENTS.filter(f => f.match.includes(q) || f.label.toLowerCase().includes(q));
+      if (matches.length === 0) {
+        fitmentSuggestions.innerHTML = '<div class="fitment-no-results">No matching fitments — try a make, model, or year</div>';
+        fitmentSuggestions.classList.add('show');
+        return;
+      }
+      fitmentSuggestions.innerHTML = matches.map((f, i) =>
+        `<div class="fitment-suggestion" data-index="${i}" data-match="${f.match}">
+           <span>${f.label}</span><span class="years">${f.years}</span>
+         </div>`
+      ).join('');
+      fitmentSuggestions.classList.add('show');
+
+      fitmentSuggestions.querySelectorAll('.fitment-suggestion').forEach(el => {
+        el.addEventListener('click', () => {
+          fitmentInput.value = el.querySelector('span').textContent;
+          fitmentSuggestions.classList.remove('show');
+          filterProducts(el.dataset.match);
+          fitmentClear.classList.add('show');
+        });
       });
+    }
+
+    function filterProducts(rawQuery) {
+      const q = rawQuery.trim().toLowerCase();
+      let visibleCount = 0;
+      productCards.forEach(card => {
+        const haystack = (card.dataset.fitment + ' ' + card.querySelector('h3').textContent).toLowerCase();
+        const visible = !q || haystack.includes(q);
+        card.style.display = visible ? '' : 'none';
+        if (visible) visibleCount++;
+      });
+      resultsCount.innerHTML = q
+        ? `Showing <strong>${visibleCount}</strong> kit${visibleCount === 1 ? '' : 's'} matching "<strong>${rawQuery.trim()}</strong>"`
+        : `Showing <strong>${productCards.length}</strong> kits`;
+    }
+
+    fitmentInput.addEventListener('input', () => {
+      const val = fitmentInput.value;
+      fitmentClear.classList.toggle('show', val.length > 0);
+      renderSuggestions(val);
+      filterProducts(val);
     });
+
+    fitmentInput.addEventListener('keydown', (e) => {
+      const items = fitmentSuggestions.querySelectorAll('.fitment-suggestion');
+      if (!items.length) return;
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        activeSuggestionIndex = (activeSuggestionIndex + 1) % items.length;
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeSuggestionIndex = (activeSuggestionIndex - 1 + items.length) % items.length;
+      } else if (e.key === 'Enter') {
+        if (activeSuggestionIndex >= 0) {
+          items[activeSuggestionIndex].click();
+        }
+        fitmentSuggestions.classList.remove('show');
+        return;
+      } else if (e.key === 'Escape') {
+        fitmentSuggestions.classList.remove('show');
+        return;
+      } else {
+        return;
+      }
+      items.forEach(i => i.classList.remove('active-suggestion'));
+      items[activeSuggestionIndex].classList.add('active-suggestion');
+    });
+
+    fitmentClear.addEventListener('click', () => {
+      fitmentInput.value = '';
+      fitmentClear.classList.remove('show');
+      fitmentSuggestions.classList.remove('show');
+      filterProducts('');
+      fitmentInput.focus();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.fitment-search')) fitmentSuggestions.classList.remove('show');
+    });
+
+    filterProducts('');
   </script>
 
 </body>

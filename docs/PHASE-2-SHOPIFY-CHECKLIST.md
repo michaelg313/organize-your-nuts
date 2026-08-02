@@ -1,0 +1,158 @@
+# Phase 2 — Shopify Data Model, Click by Click
+
+Per [ADR-001](../ADR-001-production-stack.md) §5 Phase 2. This is all done in the Shopify admin in
+a browser — **no code, no deploy**. Budget roughly an hour the first time.
+
+Menu names below match Shopify's current admin (verified against Shopify's help docs). If a label
+differs slightly, it's the same screen — Shopify renames "Custom data" / "Metafields and
+metaobjects" from time to time.
+
+**Before you start:** you need a Shopify store (the trial from Phase 0 is fine). Log in at
+https://admin.shopify.com. Stay on the trial or monthly billing — per ADR-001, don't commit to
+annual until the front end proves out.
+
+---
+
+## Part A — Create the `platform` metaobject definition (once)
+
+This is the "what is a platform" template. The entries (SBC Gen I, LS Gen III…) come in Part B.
+
+- [ ] 1. In the admin's left sidebar, click **Settings** (gear icon, bottom-left).
+- [ ] 2. Click **Metafields and metaobjects** (may be labelled **Custom data**).
+- [ ] 3. Under **Metaobjects**, click **Add definition**.
+- [ ] 4. In the *Name* box type exactly: `Platform`
+      Shopify auto-generates the type identifier `platform` — **check it says `platform`**,
+      lowercase, no extra characters. This exact string is what the code will query later.
+- [ ] 5. Add the fields, one at a time, by clicking **Add field**:
+
+  | # | Field label | Type to pick | Settings |
+  |---|---|---|---|
+  | 1 | `Name` | Single line text | Mark **required** (the asterisk). Shopify uses the first text field as the entry's display name — this is it. |
+  | 2 | `Description` | Multi-line text | Shopper-facing description of the platform. |
+  | 3 | `SEO title` | Single line text | Page title for the future `/hardware-kits/<platform>` page. |
+  | 4 | `SEO description` | Single line text | Meta description for that page. |
+  | 5 | `Notes` | Multi-line text | Internal only — "which years/engines this covers," reminders to yourself. |
+
+- [ ] 6. In the **Access** section, make sure **Storefronts** is toggled **on**. This is what lets
+      the future Astro front end read platforms through the Storefront API. (ADR-001: "Mark
+      *Storefronts*.")
+- [ ] 7. Ignore the **Web pages** feature (publishing entries as standalone Shopify pages) — our
+      platform pages come from the Astro front end, not Shopify.
+- [ ] 8. Click **Save**.
+
+---
+
+## Part B — Create the platform entries (3–4 of them)
+
+- [ ] 1. Left sidebar → **Content** → **Metaobjects** → click **Platform**.
+- [ ] 2. Click **Add entry**. Fill in the fields, then — **the part that matters most** — set the
+      entry's **handle** so it *exactly* matches [`fitment/platforms.json`](../fitment/platforms.json):
+      lowercase, hyphens, no spaces. The handle is usually shown near the top of the entry (often
+      behind a small edit/pencil control). Shopify auto-generates it from the name; fix it if it
+      differs.
+
+  | Name to enter | Handle — must be exactly | 
+  |---|---|
+  | `Small-Block Chevy — Gen I` | `sbc-gen1` |
+  | `GM LS — Gen III` | `ls-gen3` |
+  | `Toyota 3RZ-FE 2.7L I4` | `toyota-3rz` |
+
+  (If you'd rather launch with different platforms, that's fine — but then update
+  `fitment/platforms.json` and `fitment/vehicle-map.json` to match, and run
+  `npm run validate-fitment`. The two lists must agree, character for character.)
+
+- [ ] 3. Write a sentence or two of Description, the SEO title/description, any Notes.
+- [ ] 4. Set the entry's status to **Active** (not Draft), then **Save**.
+- [ ] 5. Repeat for each platform.
+
+> **Why handles are sacred:** the repo's vehicle-map rules point at these handles, and the CI
+> validator refuses anything that doesn't match. `ls-gen3` with a trailing space or `LS-Gen3`
+> is a different string and will (correctly) fail the build.
+
+---
+
+## Part C — Product metafield: `Fits platforms` (once)
+
+This is what makes SKU→platform links *picked from a list* instead of typed — a typo becomes
+structurally impossible (ADR-001 §2.4).
+
+- [ ] 1. **Settings** → **Metafields and metaobjects**.
+- [ ] 2. This time, under **Metafields**, choose **Products** → **Add definition**.
+- [ ] 3. Name: `Fits platforms`. Shopify generates a namespace/key like `custom.fits_platforms` —
+      the default is fine; just note down what it says (the front end will need it in Phase 4).
+- [ ] 4. For the content type, pick **Metaobject** from the type list, then choose **Platform**
+      as the referenced metaobject.
+- [ ] 5. Click **One value** and change it to **List of values** — a kit can fit several platforms.
+- [ ] 6. In **Access**, enable **Storefronts**.
+- [ ] 7. **Save**.
+
+---
+
+## Part D — Product metafield: `System` (once)
+
+The five result groupings on the Kits page (never URLs — ADR-001 §5 Phase 2). ADR-001 allowed
+"metafield or tag"; use a metafield with preset choices — same typo-proofing logic as Part C.
+
+- [ ] 1. **Settings** → **Metafields and metaobjects** → **Products** → **Add definition**.
+- [ ] 2. Name: `System` (namespace/key will be like `custom.system` — note it down).
+- [ ] 3. Content type: **Single line text**, and keep it **One value** — a kit belongs to one system.
+- [ ] 4. In the **Validation** section, choose the option to **limit to preset choices** and enter
+      exactly these five values, one per line:
+      ```
+      engine
+      transmission
+      steering-suspension
+      diff-axle
+      body-trim
+      ```
+- [ ] 5. In **Access**, enable **Storefronts**.
+- [ ] 6. **Save**.
+
+> Storage products (bins, organizers, cases) get **neither** metafield — they aren't
+> vehicle-specific (ADR-001 §7.11). Leave both blank on those.
+
+---
+
+## Part E — Create ~10 products
+
+Enough to build against, not a data-entry project. Skip photos for now (they're Phase "photography
+is the critical path" — ADR-001 §6). Prices below are the hi-fi's placeholder prices; change any
+you already know are wrong.
+
+For each: left sidebar → **Products** → **Add product** → enter title, a short description, and
+price → set status **Active** → then scroll to the **Metafields** section at the bottom of the
+product page and set `Fits platforms` (pick from the list) and `System` (pick a preset) → **Save**.
+
+| # | Product title | Price | Fits platforms | System |
+|---|---|---|---|---|
+| 1 | LS Complete Engine Hardware Kit | $109.99 | `ls-gen3` | `engine` |
+| 2 | Small Block Chevy Engine Kit | $89.99 | `sbc-gen1` | `engine` |
+| 3 | Import 4-Cylinder Engine Kit | $74.99 | `toyota-3rz` | `engine` |
+| 4 | Cam & Timing Cover Hardware Set | $34.99 | `sbc-gen1` | `engine` |
+| 5 | 6L80 Transmission Bolt Kit | $59.99 | `ls-gen3` | `transmission` |
+| 6 | Steering Rack Mounting Kit | $32.99 | `ls-gen3` + `toyota-3rz` | `steering-suspension` |
+| 7 | Shock & Sway Bar Bolt Set | $41.99 | `ls-gen3` + `toyota-3rz` | `steering-suspension` |
+| 8 | Differential Cover Bolt Kit | $22.99 | `ls-gen3` | `diff-axle` |
+| 9 | Interior Trim Clip Assortment | $19.99 | `ls-gen3` + `toyota-3rz` | `body-trim` |
+| 10 | Wall-Mount Bin Rack — 12 Bins | $46.99 | *(leave blank — storage)* | *(leave blank)* |
+
+Product #6/#7/#9 fitting multiple platforms is deliberate — it exercises the list metafield.
+Product #10 is deliberate too — it proves the storage path (no fitment) works.
+
+---
+
+## Part F — Sanity checks when done
+
+- [ ] Every platform entry has at least one product pointing at it (ADR-001 wants CI to catch
+      zero-SKU platforms eventually; for now, eyeball it).
+- [ ] Every handle in Shopify matches `fitment/platforms.json` exactly. If you changed anything,
+      update the JSON and run:
+      ```bash
+      npm run validate-fitment
+      ```
+- [ ] All platform entries are **Active**, all products are **Active**.
+- [ ] Both metafields and the metaobject show **Storefronts** access enabled.
+
+**Explicitly NOT in Phase 2:** no Storefront API token, no API calls, no Astro scaffolding, no
+theme work. Creating the API credential happens at the start of Phase 4, when there's code to
+use it.

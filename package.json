@@ -1,0 +1,11 @@
+{
+  "name": "organizeyournuts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "OrganizeYourNuts.com storefront — Phase 1: CSS split + fitment data scaffolding. No framework chosen yet (deliberate; see ADR-001).",
+  "type": "module",
+  "scripts": {
+    "validate-fitment": "node scripts/validate-fitment.mjs",
+    "serve": "npx serve -p 3000 ."
+  }
+}

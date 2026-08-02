@@ -140,8 +140,8 @@ partial, and error states — is `docs/organizeyournuts-hifi.html`.
 ---
 
 ## What's Next (per ADR §5)
-- [ ] **Decide the front-end framework** — Hydrogen+Oxygen vs Astro+static host. Deliberately
-      not chosen in Phase 1; take it back to the architecture discussion.
+- [x] **Front-end framework decided: Astro** (static-first, Vercel hosting) — see
+      [ADR-002-frontend-framework.md](ADR-002-frontend-framework.md). Not scaffolded yet.
 - [ ] Phase 2 — model platforms + SKUs in Shopify (metaobjects, metafields, 3–4 platforms, ~10 SKUs)
 - [ ] Phase 3 — author the real vehicle map (validator is ready for it)
 - [ ] Phase 4 — first production page: `/hardware-kits/<platform>`

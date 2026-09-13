@@ -106,11 +106,14 @@ structurally impossible (ADR-001 §2.4).
 The five result groupings on the Kits page (never URLs — ADR-001 §5 Phase 2). ADR-001 allowed
 "metafield or tag"; use a metafield with preset choices — same typo-proofing logic as Part C.
 
-- [ ] 1. **Settings** → **Metafields and metaobjects** → **Products** → **Add definition**.
-- [ ] 2. Name: `System` (namespace/key will be like `custom.system` — note it down).
-- [ ] 3. Content type: **Single line text**, and keep it **One value** — a kit belongs to one system.
-- [ ] 4. In the **Validation** section, choose the option to **limit to preset choices** and enter
-      exactly these five values, one per line:
+- [x] 1. **Settings** → **Metafields and metaobjects** → **Products** → **Add definition**.
+- [x] 2. Name: `System` (namespace/key will be like `custom.system` — note it down).
+- [x] 3. Content type: open the type picker and, directly beneath **Single line text**, pick
+      **Choice list (Single line text)**. Keep it **One value** — a kit belongs to one system.
+      (Older admin versions had this as a *Limit to preset choices* checkbox under Validation;
+      the current admin exposes it as this type variant instead. Same underlying type.)
+- [x] 4. The **Validation** section now shows a list of choice rows. Use **Add item** to enter
+      exactly these five values, one per row:
       ```
       engine
       transmission
@@ -118,8 +121,17 @@ The five result groupings on the Kits page (never URLs — ADR-001 §5 Phase 2).
       diff-axle
       body-trim
       ```
-- [ ] 5. In **Access**, enable **Storefronts**.
-- [ ] 6. **Save**.
+- [x] 5. Under **Options**, turn on **Storefront API access** (this is the *Storefronts* access
+      toggle). Leave *Filter on the product list*, *Use as a condition in collections*, and
+      *Filter or group data in Analytics* off.
+- [x] 6. **Save**.
+
+> **Done 2026-09-12 — recorded for Phase 4:** namespace and key are exactly
+> **`custom.system`**. Type is *One* value, **Choice list (Single line text)** — i.e. a
+> single-line text field limited to preset choices. The five choices, verified character for
+> character against ADR-001 §5 Phase 2: `engine`, `transmission`, `steering-suspension`,
+> `diff-axle`, `body-trim`. Storefront API access is on; the other three Options toggles are
+> off, deliberately. Definition is pinned so it shows on the product page in Part E.
 
 > Storage products (bins, organizers, cases) get **neither** metafield — they aren't
 > vehicle-specific (ADR-001 §7.11). Leave both blank on those.

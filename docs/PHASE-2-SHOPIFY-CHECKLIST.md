@@ -17,13 +17,13 @@ annual until the front end proves out.
 
 This is the "what is a platform" template. The entries (SBC Gen I, LS Gen III…) come in Part B.
 
-- [ ] 1. In the admin's left sidebar, click **Settings** (gear icon, bottom-left).
-- [ ] 2. Click **Metafields and metaobjects** (may be labelled **Custom data**).
-- [ ] 3. Under **Metaobjects**, click **Add definition**.
-- [ ] 4. In the *Name* box type exactly: `Platform`
+- [x] 1. In the admin's left sidebar, click **Settings** (gear icon, bottom-left).
+- [x] 2. Click **Metafields and metaobjects** (may be labelled **Custom data**).
+- [x] 3. Under **Metaobjects**, click **Add definition**.
+- [x] 4. In the *Name* box type exactly: `Platform`
       Shopify auto-generates the type identifier `platform` — **check it says `platform`**,
       lowercase, no extra characters. This exact string is what the code will query later.
-- [ ] 5. Add the fields, one at a time, by clicking **Add field**:
+- [x] 5. Add the fields, one at a time, by clicking **Add field**:
 
   | # | Field label | Type to pick | Settings |
   |---|---|---|---|
@@ -33,19 +33,21 @@ This is the "what is a platform" template. The entries (SBC Gen I, LS Gen III…
   | 4 | `SEO description` | Single line text | Meta description for that page. |
   | 5 | `Notes` | Multi-line text | Internal only — "which years/engines this covers," reminders to yourself. |
 
-- [ ] 6. In the **Access** section, make sure **Storefronts** is toggled **on**. This is what lets
+- [x] 6. In the **Access** section, make sure **Storefronts** is toggled **on**. This is what lets
       the future Astro front end read platforms through the Storefront API. (ADR-001: "Mark
       *Storefronts*.")
-- [ ] 7. Ignore the **Web pages** feature (publishing entries as standalone Shopify pages) — our
+- [x] 7. Ignore the **Web pages** feature (publishing entries as standalone Shopify pages) — our
       platform pages come from the Astro front end, not Shopify.
-- [ ] 8. Click **Save**.
+- [x] 8. Click **Save**.
+
+> **Done 2026-08 — recorded for Phase 4:** metaobject type identifier is `platform`.
 
 ---
 
 ## Part B — Create the platform entries (3–4 of them)
 
-- [ ] 1. Left sidebar → **Content** → **Metaobjects** → click **Platform**.
-- [ ] 2. Click **Add entry**. Fill in the fields, then — **the part that matters most** — set the
+- [x] 1. Left sidebar → **Content** → **Metaobjects** → click **Platform**.
+- [x] 2. Click **Add entry**. Fill in the fields, then — **the part that matters most** — set the
       entry's **handle** so it *exactly* matches [`fitment/platforms.json`](../fitment/platforms.json):
       lowercase, hyphens, no spaces. The handle is usually shown near the top of the entry (often
       behind a small edit/pencil control). Shopify auto-generates it from the name; fix it if it
@@ -61,9 +63,12 @@ This is the "what is a platform" template. The entries (SBC Gen I, LS Gen III…
   `fitment/platforms.json` and `fitment/vehicle-map.json` to match, and run
   `npm run validate-fitment`. The two lists must agree, character for character.)
 
-- [ ] 3. Write a sentence or two of Description, the SEO title/description, any Notes.
-- [ ] 4. Set the entry's status to **Active** (not Draft), then **Save**.
-- [ ] 5. Repeat for each platform.
+- [x] 3. Write a sentence or two of Description, the SEO title/description, any Notes.
+- [x] 4. Set the entry's status to **Active** (not Draft), then **Save**.
+- [x] 5. Repeat for each platform.
+
+> **Done 2026-08:** all three entries exist, Active, handles verified against
+> `fitment/platforms.json` character for character.
 
 > **Why handles are sacred:** the repo's vehicle-map rules point at these handles, and the CI
 > validator refuses anything that doesn't match. `ls-gen3` with a trailing space or `LS-Gen3`
@@ -76,15 +81,23 @@ This is the "what is a platform" template. The entries (SBC Gen I, LS Gen III…
 This is what makes SKU→platform links *picked from a list* instead of typed — a typo becomes
 structurally impossible (ADR-001 §2.4).
 
-- [ ] 1. **Settings** → **Metafields and metaobjects**.
-- [ ] 2. This time, under **Metafields**, choose **Products** → **Add definition**.
-- [ ] 3. Name: `Fits platforms`. Shopify generates a namespace/key like `custom.fits_platforms` —
+- [x] 1. **Settings** → **Metafields and metaobjects**.
+- [x] 2. This time, under **Metafields**, choose **Products** → **Add definition**.
+- [x] 3. Name: `Fits platforms`. Shopify generates a namespace/key like `custom.fits_platforms` —
       the default is fine; just note down what it says (the front end will need it in Phase 4).
-- [ ] 4. For the content type, pick **Metaobject** from the type list, then choose **Platform**
+- [x] 4. For the content type, pick **Metaobject** from the type list, then choose **Platform**
       as the referenced metaobject.
-- [ ] 5. Click **One value** and change it to **List of values** — a kit can fit several platforms.
-- [ ] 6. In **Access**, enable **Storefronts**.
-- [ ] 7. **Save**.
+- [x] 5. Click **One value** and change it to **List of values** — a kit can fit several platforms.
+      **This cannot be changed after Save** — if it's saved as one value, delete the definition
+      and recreate it.
+- [x] 6. In **Access**, enable **Storefronts**. (On the saved definition's page this toggle is
+      labelled **Storefront API access** — same setting.)
+- [x] 7. **Save**.
+
+> **Done 2026-09-12 — recorded for Phase 4:** namespace and key are exactly
+> **`custom.fits_platforms`**. Type is *List* of `platform` metaobject references. Storefront API
+> access is on. The "Filter on the product list" and "Use as a condition in collections" options
+> are off, deliberately — platform pages come from Astro, not Shopify collections.
 
 ---
 

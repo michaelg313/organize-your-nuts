@@ -145,8 +145,10 @@ is the critical path" — ADR-001 §6). Prices below are the hi-fi's placeholder
 you already know are wrong.
 
 For each: left sidebar → **Products** → **Add product** → enter title, a short description, and
-price → set status **Active** → then scroll to the **Metafields** section at the bottom of the
-product page and set `Fits platforms` (pick from the list) and `System` (pick a preset) → **Save**.
+price → set status **Active** → then scroll to the **Product metafields** section at the bottom
+of the product page and set `Fits platforms` (pick from the list) and `System` (pick a preset)
+→ **Save**. (If the sidebar shows General / Plan / Billing… you're inside **Settings**; click the
+store name top-left to get back to the main sidebar, where **Products** lives.)
 
 | # | Product title | Price | Fits platforms | System |
 |---|---|---|---|---|
@@ -163,6 +165,25 @@ product page and set `Fits platforms` (pick from the list) and `System` (pick a 
 
 Product #6/#7/#9 fitting multiple platforms is deliberate — it exercises the list metafield.
 Product #10 is deliberate too — it proves the storage path (no fitment) works.
+
+- [x] All ten products created, titles and placeholder prices exactly as in the table.
+- [x] All ten set to **Active**.
+- [x] `Fits platforms` and `System` set per the table; #6/#7/#9 carry two platform chips,
+      #10 carries neither metafield.
+
+> **Done 2026-09-13:** ten products exist, all Active, titles verified against the table
+> character for character (em dash in #10 included). Both pinned metafields appeared under
+> **Product metafields** at the bottom of every product page as expected; the platform picker
+> shows the Part B display names (e.g. "GM LS — Gen III"), with the handle stored underneath.
+>
+> Things seen in the admin that are **not** ours and need no action: a **Category metafields**
+> block (Color, Engine design, Fuel system type…) — Shopify's standard product-taxonomy
+> attributes, left empty; the default **Home page** collection; a "13 metafields" badge on the
+> auto-suggested product category. None of these are read by the front end.
+>
+> **Carry-over, not Phase 2:** every product was saved with *Inventory tracked* on and 0 on hand,
+> so Shopify will show them as out of stock until quantities are entered. Harmless for building
+> against; must be addressed before checkout is live (Phase 5 at the latest).
 
 ---
 

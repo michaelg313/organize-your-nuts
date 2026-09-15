@@ -189,15 +189,60 @@ Product #10 is deliberate too — it proves the storage path (no fitment) works.
 
 ## Part F — Sanity checks when done
 
-- [ ] Every platform entry has at least one product pointing at it (ADR-001 wants CI to catch
+- [x] Every platform entry has at least one product pointing at it (ADR-001 wants CI to catch
       zero-SKU platforms eventually; for now, eyeball it).
-- [ ] Every handle in Shopify matches `fitment/platforms.json` exactly. If you changed anything,
+- [x] Every handle in Shopify matches `fitment/platforms.json` exactly. If you changed anything,
       update the JSON and run:
       ```bash
       npm run validate-fitment
       ```
-- [ ] All platform entries are **Active**, all products are **Active**.
-- [ ] Both metafields and the metaobject show **Storefronts** access enabled.
+- [x] All platform entries are **Active**, all products are **Active**.
+- [x] Both metafields and the metaobject show **Storefronts** access enabled.
+
+> **Done 2026-09-13 — all four checks pass; nothing in Shopify needed changing and the repo
+> needed no fitment change.** How each was verified:
+>
+> - **≥1 product per platform:** the Platform entries list (Content → Metaobjects → Platform)
+>   has a **References** column — Shopify's own count of products pointing at each entry. It
+>   read `ls-gen3` **6**, `toyota-3rz` **4**, `sbc-gen1` **2**, exactly what the Part E table
+>   predicts (12 links in total). Cross-checked by opening all ten products and reading back
+>   *Fits platforms* and *System* — every one matches the Part E table, #6/#7/#9 carry two
+>   platforms, #10 carries neither. This is the screenshot-level verification Part E lacked.
+> - **Handles:** the same list's **Handle** column shows `ls-gen3`, `toyota-3rz`, `sbc-gen1`
+>   — character for character against `fitment/platforms.json`. Display names match
+>   `display_name` too. Exactly three entries, no strays.
+> - **Active:** a **Status** column can be added to the entries list via the column picker
+>   (▥ icon, top right of the table) — all three Active. Products list: ten rows, ten Active.
+> - **Storefronts access:** metaobject definition → *Metaobject options* → **Storefronts API
+>   access** on (*Publish entries as web pages* off, as intended). Both product metafield
+>   definitions → *Options* → **Storefront API access** on; the filter/collection/analytics
+>   toggles off. Both definitions still pinned.
+>
+> Seen and flagged, **not** fixed (none affect Phase 2): the metaobject definition's *Name*
+> reads lowercase `platform` (the type identifier is what code reads, and it is correct);
+> product #1 auto-picked the Shopify taxonomy **Category** *Motor Vehicle Engines* while the
+> other nine are *Uncategorized* — that is Shopify's own product taxonomy, not our `System`
+> metafield, and the front end never reads it. Clear it whenever convenient. The inventory
+> carry-over from Part E still stands (0 on hand everywhere; Phase 5 at the latest).
+
+---
+
+## Phase 2 — complete (2026-09-13)
+
+Parts A–F all recorded above. What Phase 4 will need, in one place:
+
+| Thing | Exact value |
+|---|---|
+| Metaobject type | `platform` |
+| Platform handles | `sbc-gen1`, `ls-gen3`, `toyota-3rz` (= `fitment/platforms.json`) |
+| Product metafield — platforms | `custom.fits_platforms`, list of `platform` references |
+| Product metafield — system | `custom.system`, one of `engine` / `transmission` / `steering-suspension` / `diff-axle` / `body-trim` |
+| Storefront API access | on for all three definitions |
+
+**Before Phase 3 can start:** ADR-001 §7.1 (partial-match behavior — what happens when a kit
+fits a platform but not every year in it) is still undecided, and the ADR says to decide it
+*before authoring the second platform*. Phase 3 is where real rules get authored, so it comes
+due first.
 
 **Explicitly NOT in Phase 2:** no Storefront API token, no API calls, no Astro scaffolding, no
 theme work. Creating the API credential happens at the start of Phase 4, when there's code to

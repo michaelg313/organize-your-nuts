@@ -244,6 +244,29 @@ fits a platform but not every year in it) is still undecided, and the ADR says t
 *before authoring the second platform*. Phase 3 is where real rules get authored, so it comes
 due first.
 
+> **Decided 2026-09-20 —** [ADR-003](../ADR-003-partial-match-fitment.md): split the platform
+> when the vehicle picker can tell the difference; a fitment note on the kit when it can't. One
+> consequence is a new product metafield, recorded as Part G below. Phase 3 may proceed.
+
+---
+
+## Part G — Product metafield: `Fitment note` (once; needed before Phase 4, not Phase 3)
+
+Per [ADR-003](../ADR-003-partial-match-fitment.md) §5.2. The shopper-facing note for kits that
+don't fit every vehicle on their platform page *and* where the difference isn't something the
+year/make/model/engine picker can resolve (e.g. "Center-bolt valve covers only — check yours
+before ordering"). Optional at the definition level; set only on kits that need it. Storage
+products never get one.
+
+- [ ] 1. **Settings** → **Metafields and metaobjects** → **Products** → **Add definition**.
+- [ ] 2. Name: `Fitment note`. Note the generated namespace/key — expected `custom.fitment_note`.
+- [ ] 3. Content type: **Multi-line text**. Keep it **One value**.
+- [ ] 4. Under **Options**, turn on **Storefront API access**. Leave the filter / collection /
+      analytics toggles off.
+- [ ] 5. **Save**. Pin it so it shows on the product page alongside the other two.
+
+> Record the exact namespace/key here when done, as Parts C and D do.
+
 **Explicitly NOT in Phase 2:** no Storefront API token, no API calls, no Astro scaffolding, no
 theme work. Creating the API credential happens at the start of Phase 4, when there's code to
 use it.

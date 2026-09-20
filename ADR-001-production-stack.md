@@ -205,12 +205,14 @@ About/Contact. All straightforward once Phases 4–5 hold.
 1. **Partial-match behavior.** The largest remaining open question. What happens when a kit fits a platform
    but not every year in it (mid-year engine changes, running production changes, regional variants)? Options:
    platform sub-generations, per-SKU year overrides, or a fitment note surfaced on the card. Decide before
-   authoring the second platform.
+   authoring the second platform. **Decided 2026-09-20 in
+   [ADR-003](ADR-003-partial-match-fitment.md):** sub-generations where the vehicle picker can tell the
+   difference, a fitment note on the kit where it cannot; per-SKU overrides rejected.
 2. **The "we don't cover this yet" capture.** Agreed in principle for covered-vehicle / no-kit-in-system
    cases. Copy, whether it captures an email, and whether it feeds a build-next queue — undecided.
 3. **Product photography.** Not started. Likely the real critical path.
 4. **PA registration and sales tax specifics.** Prerequisite, not designed. Requires an accountant.
-5. **Returns policy for fitment errors.** Directly downstream of item 1.
+5. **Returns policy for fitment errors.** Directly downstream of item 1. Still open after ADR-003.
 6. **Customer accounts.** Guest checkout only at launch, unless a reason appears.
 7. **Search.** No site search at launch; the platform pages are the navigation.
 8. **Analytics.** Nothing chosen. Needs to exist before judging whether the SEO thesis is working.

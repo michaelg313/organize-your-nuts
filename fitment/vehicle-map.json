@@ -1,36 +1,78 @@
 {
   "_comment": [
-    "EXAMPLE DATA ONLY — these three rules exist to show the shape and to prove the validator works.",
-    "Replace with real, verified fitment data before anything ships. A wrong rule here is somebody's disassembled engine (ADR-001 §2.4).",
-    "Rule shape: make + model + year_start..year_end + engine  →  platform.",
-    "Every field is required and must not be blank. Years are plain numbers. 'platform' must exactly match a handle in fitment/platforms.json.",
-    "Note rules 1 and 2: same truck, same years overlap in 1999 — the engine field is what decides the platform. That is why engine is required.",
-    "Check with:  npm run validate-fitment"
+    "Vehicle → platform rules. Authored Phase 3 (2026-09-20) under ADR-001 §5 Phase 3 and ADR-003. A wrong rule here is somebody's disassembled engine — every change goes on a branch, gets reviewed, and must pass  npm run validate-fitment.",
+    "Rule shape: make + model + year_start..year_end + engine  →  platform. Every field is required and must not be blank. Years are plain numbers. 'platform' must exactly match a handle in fitment/platforms.json.",
+    "The engine string is what resolves a platform when the same make/model/year has more than one — e.g. a 1999 GMC Sierra 1500 is sbc-gen1-vortec with the 5.7L Vortec and ls-gen3-early with the 4.8L or 5.3L. Spell each engine exactly the same way everywhere; these strings become the Engine dropdown.",
+    "LS Gen III is split at 2003/2004 (head-bolt length change) per ADR-003 — a vehicle that spans the line gets two rules. The Small-Block Chevy platform covers the Vortec-head (8-bolt intake) engines only; earlier Gen I engines are deliberately not mapped.",
+    "Deliberately NOT covered (they look similar and are not): 1992–1997 LT1/LT4 (Gen II, not Gen I); 2005+ LS2 Corvette/GTO/SSR, 2007 new-body Silverado/Sierra/Tahoe/Yukon/Avalanche/Escalade, Trailblazer/Envoy 5.3L (all Gen IV); Tacoma 2.4L 2RZ-FE (not a 3RZ).",
+    "Scope note: launch coverage is the set of vehicles confirmed on 2026-09-20. Vehicles are added as they come up, one rule at a time, same review."
   ],
   "rules": [
-    {
-      "make": "Chevrolet",
-      "model": "Silverado 1500",
-      "year_start": 1999,
-      "year_end": 2006,
-      "engine": "4.8L V8",
-      "platform": "ls-gen3"
-    },
-    {
-      "make": "Chevrolet",
-      "model": "Silverado 1500",
-      "year_start": 1996,
-      "year_end": 1999,
-      "engine": "5.7L V8 Vortec",
-      "platform": "sbc-gen1"
-    },
-    {
-      "make": "Toyota",
-      "model": "Tacoma",
-      "year_start": 1995,
-      "year_end": 2004,
-      "engine": "2.7L I4",
-      "platform": "toyota-3rz"
-    }
+    { "make": "Toyota", "model": "Tacoma", "year_start": 1995, "year_end": 2004, "engine": "2.7L I4", "platform": "toyota-3rz" },
+    { "make": "Toyota", "model": "4Runner", "year_start": 1996, "year_end": 2000, "engine": "2.7L I4", "platform": "toyota-3rz" },
+    { "make": "Toyota", "model": "T100", "year_start": 1994, "year_end": 1998, "engine": "2.7L I4", "platform": "toyota-3rz" },
+
+    { "make": "Chevrolet", "model": "Silverado 1500", "year_start": 1999, "year_end": 2003, "engine": "4.8L V8", "platform": "ls-gen3-early" },
+    { "make": "Chevrolet", "model": "Silverado 1500", "year_start": 2004, "year_end": 2006, "engine": "4.8L V8", "platform": "ls-gen3-late" },
+    { "make": "Chevrolet", "model": "Silverado 1500", "year_start": 1999, "year_end": 2003, "engine": "5.3L V8", "platform": "ls-gen3-early" },
+    { "make": "Chevrolet", "model": "Silverado 1500", "year_start": 2004, "year_end": 2006, "engine": "5.3L V8", "platform": "ls-gen3-late" },
+    { "make": "Chevrolet", "model": "Silverado 1500 Classic", "year_start": 2007, "year_end": 2007, "engine": "4.8L V8", "platform": "ls-gen3-late" },
+    { "make": "Chevrolet", "model": "Silverado 1500 Classic", "year_start": 2007, "year_end": 2007, "engine": "5.3L V8", "platform": "ls-gen3-late" },
+    { "make": "Chevrolet", "model": "Silverado 2500HD", "year_start": 2001, "year_end": 2003, "engine": "6.0L V8", "platform": "ls-gen3-early" },
+    { "make": "Chevrolet", "model": "Silverado 2500HD", "year_start": 2004, "year_end": 2006, "engine": "6.0L V8", "platform": "ls-gen3-late" },
+
+    { "make": "GMC", "model": "Sierra 1500", "year_start": 1999, "year_end": 2003, "engine": "4.8L V8", "platform": "ls-gen3-early" },
+    { "make": "GMC", "model": "Sierra 1500", "year_start": 2004, "year_end": 2006, "engine": "4.8L V8", "platform": "ls-gen3-late" },
+    { "make": "GMC", "model": "Sierra 1500", "year_start": 1999, "year_end": 2003, "engine": "5.3L V8", "platform": "ls-gen3-early" },
+    { "make": "GMC", "model": "Sierra 1500", "year_start": 2004, "year_end": 2006, "engine": "5.3L V8", "platform": "ls-gen3-late" },
+    { "make": "GMC", "model": "Sierra 1500 Classic", "year_start": 2007, "year_end": 2007, "engine": "4.8L V8", "platform": "ls-gen3-late" },
+    { "make": "GMC", "model": "Sierra 1500 Classic", "year_start": 2007, "year_end": 2007, "engine": "5.3L V8", "platform": "ls-gen3-late" },
+    { "make": "GMC", "model": "Sierra 2500HD", "year_start": 2001, "year_end": 2003, "engine": "6.0L V8", "platform": "ls-gen3-early" },
+    { "make": "GMC", "model": "Sierra 2500HD", "year_start": 2004, "year_end": 2006, "engine": "6.0L V8", "platform": "ls-gen3-late" },
+
+    { "make": "Chevrolet", "model": "Tahoe", "year_start": 2000, "year_end": 2003, "engine": "4.8L V8", "platform": "ls-gen3-early" },
+    { "make": "Chevrolet", "model": "Tahoe", "year_start": 2004, "year_end": 2006, "engine": "4.8L V8", "platform": "ls-gen3-late" },
+    { "make": "Chevrolet", "model": "Tahoe", "year_start": 2000, "year_end": 2003, "engine": "5.3L V8", "platform": "ls-gen3-early" },
+    { "make": "Chevrolet", "model": "Tahoe", "year_start": 2004, "year_end": 2006, "engine": "5.3L V8", "platform": "ls-gen3-late" },
+    { "make": "Chevrolet", "model": "Suburban", "year_start": 2000, "year_end": 2003, "engine": "5.3L V8", "platform": "ls-gen3-early" },
+    { "make": "Chevrolet", "model": "Suburban", "year_start": 2004, "year_end": 2006, "engine": "5.3L V8", "platform": "ls-gen3-late" },
+    { "make": "Chevrolet", "model": "Avalanche", "year_start": 2002, "year_end": 2003, "engine": "5.3L V8", "platform": "ls-gen3-early" },
+    { "make": "Chevrolet", "model": "Avalanche", "year_start": 2004, "year_end": 2006, "engine": "5.3L V8", "platform": "ls-gen3-late" },
+
+    { "make": "GMC", "model": "Yukon", "year_start": 2000, "year_end": 2003, "engine": "4.8L V8", "platform": "ls-gen3-early" },
+    { "make": "GMC", "model": "Yukon", "year_start": 2004, "year_end": 2006, "engine": "4.8L V8", "platform": "ls-gen3-late" },
+    { "make": "GMC", "model": "Yukon", "year_start": 2000, "year_end": 2003, "engine": "5.3L V8", "platform": "ls-gen3-early" },
+    { "make": "GMC", "model": "Yukon", "year_start": 2004, "year_end": 2006, "engine": "5.3L V8", "platform": "ls-gen3-late" },
+    { "make": "GMC", "model": "Yukon XL", "year_start": 2000, "year_end": 2003, "engine": "5.3L V8", "platform": "ls-gen3-early" },
+    { "make": "GMC", "model": "Yukon XL", "year_start": 2004, "year_end": 2006, "engine": "5.3L V8", "platform": "ls-gen3-late" },
+    { "make": "GMC", "model": "Yukon XL", "year_start": 2000, "year_end": 2003, "engine": "6.0L V8", "platform": "ls-gen3-early" },
+    { "make": "GMC", "model": "Yukon XL", "year_start": 2004, "year_end": 2006, "engine": "6.0L V8", "platform": "ls-gen3-late" },
+
+    { "make": "Cadillac", "model": "Escalade", "year_start": 2002, "year_end": 2003, "engine": "6.0L V8", "platform": "ls-gen3-early" },
+    { "make": "Cadillac", "model": "Escalade", "year_start": 2004, "year_end": 2006, "engine": "6.0L V8", "platform": "ls-gen3-late" },
+    { "make": "Cadillac", "model": "CTS-V", "year_start": 2004, "year_end": 2005, "engine": "5.7L V8", "platform": "ls-gen3-late" },
+
+    { "make": "Chevrolet", "model": "Camaro", "year_start": 1998, "year_end": 2002, "engine": "5.7L V8", "platform": "ls-gen3-early" },
+    { "make": "Pontiac", "model": "Firebird", "year_start": 1998, "year_end": 2002, "engine": "5.7L V8", "platform": "ls-gen3-early" },
+    { "make": "Chevrolet", "model": "Corvette", "year_start": 1997, "year_end": 2003, "engine": "5.7L V8", "platform": "ls-gen3-early" },
+    { "make": "Chevrolet", "model": "Corvette", "year_start": 2004, "year_end": 2004, "engine": "5.7L V8", "platform": "ls-gen3-late" },
+    { "make": "Pontiac", "model": "GTO", "year_start": 2004, "year_end": 2004, "engine": "5.7L V8", "platform": "ls-gen3-late" },
+
+    { "make": "Chevrolet", "model": "C/K 1500", "year_start": 1996, "year_end": 1999, "engine": "5.7L V8 Vortec", "platform": "sbc-gen1-vortec" },
+    { "make": "Chevrolet", "model": "C/K 1500", "year_start": 1996, "year_end": 1999, "engine": "5.0L V8 Vortec", "platform": "sbc-gen1-vortec" },
+    { "make": "Chevrolet", "model": "C/K 2500", "year_start": 1996, "year_end": 2000, "engine": "5.7L V8 Vortec", "platform": "sbc-gen1-vortec" },
+    { "make": "Chevrolet", "model": "C/K 3500", "year_start": 1996, "year_end": 2000, "engine": "5.7L V8 Vortec", "platform": "sbc-gen1-vortec" },
+    { "make": "GMC", "model": "Sierra 1500", "year_start": 1996, "year_end": 1999, "engine": "5.7L V8 Vortec", "platform": "sbc-gen1-vortec" },
+    { "make": "GMC", "model": "Sierra 1500", "year_start": 1996, "year_end": 1999, "engine": "5.0L V8 Vortec", "platform": "sbc-gen1-vortec" },
+    { "make": "GMC", "model": "Sierra 2500", "year_start": 1996, "year_end": 2000, "engine": "5.7L V8 Vortec", "platform": "sbc-gen1-vortec" },
+    { "make": "GMC", "model": "Sierra 3500", "year_start": 1996, "year_end": 2000, "engine": "5.7L V8 Vortec", "platform": "sbc-gen1-vortec" },
+    { "make": "Chevrolet", "model": "Tahoe", "year_start": 1996, "year_end": 1999, "engine": "5.7L V8 Vortec", "platform": "sbc-gen1-vortec" },
+    { "make": "Chevrolet", "model": "Suburban", "year_start": 1996, "year_end": 1999, "engine": "5.7L V8 Vortec", "platform": "sbc-gen1-vortec" },
+    { "make": "GMC", "model": "Yukon", "year_start": 1996, "year_end": 1999, "engine": "5.7L V8 Vortec", "platform": "sbc-gen1-vortec" },
+    { "make": "GMC", "model": "Suburban", "year_start": 1996, "year_end": 1999, "engine": "5.7L V8 Vortec", "platform": "sbc-gen1-vortec" },
+    { "make": "Chevrolet", "model": "Express", "year_start": 1996, "year_end": 2002, "engine": "5.7L V8 Vortec", "platform": "sbc-gen1-vortec" },
+    { "make": "Chevrolet", "model": "Express", "year_start": 1996, "year_end": 2002, "engine": "5.0L V8 Vortec", "platform": "sbc-gen1-vortec" },
+    { "make": "GMC", "model": "Savana", "year_start": 1996, "year_end": 2002, "engine": "5.7L V8 Vortec", "platform": "sbc-gen1-vortec" },
+    { "make": "GMC", "model": "Savana", "year_start": 1996, "year_end": 2002, "engine": "5.0L V8 Vortec", "platform": "sbc-gen1-vortec" }
   ]
 }

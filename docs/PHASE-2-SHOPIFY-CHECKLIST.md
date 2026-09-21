@@ -69,6 +69,8 @@ This is the "what is a platform" template. The entries (SBC Gen I, LS Gen III…
 
 > **Done 2026-08:** all three entries exist, Active, handles verified against
 > `fitment/platforms.json` character for character.
+> **Superseded 2026-09-20:** two of these handles were renamed and a fourth added — see Part H.
+> `fitment/platforms.json` is always the current list.
 
 > **Why handles are sacred:** the repo's vehicle-map rules point at these handles, and the CI
 > validator refuses anything that doesn't match. `ls-gen3` with a trailing space or `LS-Gen3`
@@ -234,7 +236,7 @@ Parts A–F all recorded above. What Phase 4 will need, in one place:
 | Thing | Exact value |
 |---|---|
 | Metaobject type | `platform` |
-| Platform handles | `sbc-gen1`, `ls-gen3`, `toyota-3rz` (= `fitment/platforms.json`) |
+| Platform handles | ~~`sbc-gen1`, `ls-gen3`, `toyota-3rz`~~ → since Part H (2026-09-20): `sbc-gen1-vortec`, `ls-gen3-early`, `ls-gen3-late`, `toyota-3rz` (= `fitment/platforms.json`) |
 | Product metafield — platforms | `custom.fits_platforms`, list of `platform` references |
 | Product metafield — system | `custom.system`, one of `engine` / `transmission` / `steering-suspension` / `diff-axle` / `body-trim` |
 | Storefront API access | on for all three definitions |
@@ -266,6 +268,37 @@ products never get one.
 - [ ] 5. **Save**. Pin it so it shows on the product page alongside the other two.
 
 > Record the exact namespace/key here when done, as Parts C and D do.
+
+---
+
+## Part H — Platform split per ADR-003 (done 2026-09-20, Phase 3)
+
+The first real vehicle rules needed two of the Phase 2 platforms changed — both are ADR-003
+rule-1 cases (the year/make/model/engine picker can tell the difference, and a kit on the shelf
+fits one side only). Done through the Shopify connector in the Phase 3 session, then read back and
+compared to `fitment/platforms.json` mechanically.
+
+| Was | Now | Why |
+|---|---|---|
+| `sbc-gen1` "Small-Block Chevy — Gen I" | **renamed** `sbc-gen1-vortec` "Small-Block Chevy — Gen I Vortec, 1996–2002" | the SBC engine kit's intake hardware is 8-bolt (Vortec heads); pre-1996 12-bolt heads are not covered. Not split — no 12-bolt kit is sold. |
+| `ls-gen3` "GM LS — Gen III" | **renamed** `ls-gen3-early` "GM LS — Gen III, 1997–2003" | head-bolt length changed for 2004; the LS engine kit (with head bolts) is the long-bolt version |
+| — | **new** `ls-gen3-late` "GM LS — Gen III, 2004–2007" | the short-head-bolt half; includes the 2007 old-body "Classic" trucks |
+| `toyota-3rz` | unchanged | |
+
+Products, after the change (Shopify's own `References` should read `ls-gen3-early` **6**,
+`ls-gen3-late` **4**, `toyota-3rz` **4**, `sbc-gen1-vortec` **2**):
+
+- #1 LS Complete Engine Hardware Kit → `ls-gen3-early` only (carried by the rename; has head bolts).
+- #2 SBC Engine Kit, #4 Cam & Timing Cover → `sbc-gen1-vortec` (carried by the rename).
+- #6 Steering Rack, #7 Shock & Sway Bar, #9 Trim Clips → `ls-gen3-early` + `ls-gen3-late` + `toyota-3rz`
+  (chassis hardware; unaffected by the head-bolt change).
+- #8 Differential Cover → `ls-gen3-early` + `ls-gen3-late`.
+- #5 6L80 Transmission Bolt Kit → `ls-gen3-early` (carried by the rename) — **flagged, see below**.
+- #3, #10 unchanged.
+
+All four platform entries Active. Each renamed/new entry's internal **Notes** field says what it
+covers and why. SEO title/description on the two *renamed* entries were **not** touched (they are
+copy, and still say "Gen I" / "Gen III" without the qualifier) — see the flags in the Phase 3 PR.
 
 **Explicitly NOT in Phase 2:** no Storefront API token, no API calls, no Astro scaffolding, no
 theme work. Creating the API credential happens at the start of Phase 4, when there's code to

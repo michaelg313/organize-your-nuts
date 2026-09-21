@@ -14,12 +14,20 @@
  *   4. No two rules claim the same make/model/engine for overlapping
  *      years but point at DIFFERENT platforms.
  *
+ * Warnings (printed, but do not fail the build) — per ADR-003 §5.1:
+ *   5. A platform in platforms.json that no rule points at. The picker
+ *      can never land on that page. A warning, not a failure, because a
+ *      platform may legitimately exist a day before its rules do.
+ *   6. Two engine names that differ only in capitalisation or spacing
+ *      ("5.3L V8" vs "5.3l v8"). They would show up as two options in the
+ *      Engine dropdown.
+ *
  * Error messages are written for a person, not a stack trace. The script
  * exits with code 1 if anything fails, which is what makes the CI check red.
  *
- * TODO (Phase 2/3): read the platform handle list from the live Shopify
+ * TODO (Phase 4+): read the platform handle list from the live Shopify
  * platform metaobjects instead of fitment/platforms.json. Deliberately not
- * built yet — no Shopify API code in Phase 1.
+ * built yet — no Shopify API code in the repo before Phase 4.
  */
 
 import { readFileSync } from "node:fs";
@@ -202,6 +210,37 @@ for (let i = 0; i < rules.length; i++) {
   }
 }
 
+// ---------- unreachable platforms (ADR-003 §5.1) ----------------------
+
+const used = new Set(rules.map((r) => (typeof r.platform === "string" ? r.platform : "")));
+for (const h of handles) {
+  if (!used.has(h)) {
+    warnings.push(
+      `platform '${h}' is in ${PLATFORMS_FILE} but no rule in ${MAP_FILE} points at it — ` +
+      `no vehicle in the picker can reach its page. Fine if its rules are still being written; otherwise add one.`,
+    );
+  }
+}
+
+// ---------- engine names that differ only by spelling -----------------
+
+const engineSpellings = new Map(); // normalised → Set of raw spellings
+for (const r of rules) {
+  if (typeof r.engine !== "string" || !r.engine.trim()) continue;
+  const key = norm(r.engine).replace(/\s+/g, " ");
+  if (!engineSpellings.has(key)) engineSpellings.set(key, new Set());
+  engineSpellings.get(key).add(r.engine);
+}
+for (const spellings of engineSpellings.values()) {
+  if (spellings.size > 1) {
+    const list = [...spellings].map((s) => `'${s}'`).join(", ");
+    warnings.push(
+      `these engine names are the same engine spelled differently: ${list}. ` +
+      `They would appear as separate choices in the Engine dropdown — pick one spelling and use it everywhere.`,
+    );
+  }
+}
+
 // ---------- report -----------------------------------------------------
 
 for (const w of warnings) console.warn(`⚠ ${w}`);
@@ -211,4 +250,7 @@ if (problems.length) {
   console.error(`\nFix the entries above and run "npm run validate-fitment" again.`);
   process.exit(1);
 }
-console.log(`✓ ${MAP_FILE} — ${rules.length} rule${rules.length === 1 ? "" : "s"} checked against ${handles.length} known platforms, no problems found.`);
+const tail = warnings.length
+  ? `no problems, but ${warnings.length} warning${warnings.length === 1 ? "" : "s"} above worth a look.`
+  : "no problems found.";
+console.log(`✓ ${MAP_FILE} — ${rules.length} rule${rules.length === 1 ? "" : "s"} checked against ${handles.length} known platforms, ${tail}`);

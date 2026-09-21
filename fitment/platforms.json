@@ -1,13 +1,15 @@
 {
-  "_TODO": [
-    "STUB — this hand-maintained list stands in for the platform metaobjects that will live in Shopify (ADR-001 §5 Phases 2–3).",
-    "Once the Shopify metaobjects exist, the validator should read the live handle list from the Storefront/Admin API instead of this file.",
-    "Deliberately NOT built in Phase 1 — no Shopify API code yet.",
-    "Until then: when a platform is added in Shopify, add its handle here too, or the validator will reject rules that use it."
+  "_comment": [
+    "This list MUST match the Shopify 'platform' metaobject entries character for character (handles and display names).",
+    "The validator checks vehicle-map.json against this file. Reading the live list from Shopify instead is deferred to Phase 4+ (no API code in the repo yet).",
+    "When a platform is added, split, or renamed: change it here AND in Shopify in the same piece of work, on a branch, and run  npm run validate-fitment  before committing.",
+    "Sub-generations (ADR-003) are ordinary entries named <parent>-<qualifier>. There is no parent/child structure — every entry is a peer with its own page.",
+    "Last verified against Shopify (read-only, via the connector): 2026-09-20."
   ],
   "platforms": [
-    { "handle": "sbc-gen1", "display_name": "Small-Block Chevy — Gen I" },
-    { "handle": "ls-gen3", "display_name": "GM LS — Gen III" },
+    { "handle": "sbc-gen1-vortec", "display_name": "Small-Block Chevy — Gen I Vortec, 1996–2002" },
+    { "handle": "ls-gen3-early", "display_name": "GM LS — Gen III, 1997–2003" },
+    { "handle": "ls-gen3-late", "display_name": "GM LS — Gen III, 2004–2007" },
     { "handle": "toyota-3rz", "display_name": "Toyota 3RZ-FE 2.7L I4" }
   ]
 }

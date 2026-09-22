@@ -260,14 +260,19 @@ year/make/model/engine picker can resolve (e.g. "Center-bolt valve covers only �
 before ordering"). Optional at the definition level; set only on kits that need it. Storage
 products never get one.
 
-- [ ] 1. **Settings** → **Metafields and metaobjects** → **Products** → **Add definition**.
-- [ ] 2. Name: `Fitment note`. Note the generated namespace/key — expected `custom.fitment_note`.
-- [ ] 3. Content type: **Multi-line text**. Keep it **One value**.
-- [ ] 4. Under **Options**, turn on **Storefront API access**. Leave the filter / collection /
+- [x] 1. **Settings** → **Metafields and metaobjects** → **Products** → **Add definition**.
+- [x] 2. Name: `Fitment note`. Note the generated namespace/key — expected `custom.fitment_note`.
+- [x] 3. Content type: **Multi-line text**. Keep it **One value**.
+- [x] 4. Under **Options**, turn on **Storefront API access**. Leave the filter / collection /
       analytics toggles off.
-- [ ] 5. **Save**. Pin it so it shows on the product page alongside the other two.
+- [x] 5. **Save**. Pin it so it shows on the product page alongside the other two.
 
-> Record the exact namespace/key here when done, as Parts C and D do.
+> **Done 2026-09-20 (start of Phase 4) — recorded for Phase 4:** namespace and key are exactly
+> **`custom.fitment_note`**. Type is *One* value, **Multi-line text** (`multi_line_text_field`).
+> Storefront API access is on; the filter and collection toggles are off. Pinned in position 3,
+> after `Fits platforms` and `System`. Created through the Shopify connector with explicit
+> approval, then read back: the store now has exactly three product metafield definitions.
+> No product carries a value yet — none of the ten launch kits needs one under ADR-003 rule 2.
 
 ---
 

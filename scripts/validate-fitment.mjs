@@ -25,9 +25,11 @@
  * Error messages are written for a person, not a stack trace. The script
  * exits with code 1 if anything fails, which is what makes the CI check red.
  *
- * TODO (Phase 4+): read the platform handle list from the live Shopify
- * platform metaobjects instead of fitment/platforms.json. Deliberately not
- * built yet — no Shopify API code in the repo before Phase 4.
+ * This script needs no network and no token, so it runs on every pull request.
+ * The live cross-check against Shopify (every handle in platforms.json exists
+ * there; every platform has at least one kit) happens at BUILD time instead,
+ * in src/lib/shopify.js — it needs the Storefront API token, which only the
+ * build environment has. `npm run build` runs this script first, then that.
  */
 
 import { readFileSync } from "node:fs";

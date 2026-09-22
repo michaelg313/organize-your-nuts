@@ -1,0 +1,25 @@
+/* OrganizeYourNuts — shared component: .cta-banner ("Can't find your vehicle?")
+   The hi-fi's own comment says "shared by Home and Kits"; Phase 1 filed it under
+   pages/home.css and flagged the reuse in README.md. Phase 4 resolves that flag by
+   moving the rules here VERBATIM so each route loads only what it uses.
+   Requires site.css loaded first. Import from home.css and hardware-kits.css. */
+
+/* cta banner — shared by Home and Kits */
+.cta-banner{
+  background:
+    radial-gradient(70% 160% at 100% 0%,rgba(255,140,0,.14),transparent 62%),
+    var(--bg-card);
+  border:1px solid var(--orange-border);
+  border-radius:var(--r-card); padding:36px 38px;
+  display:flex; align-items:center; gap:30px; justify-content:space-between;
+  flex-wrap:wrap; box-shadow:var(--sh-2);
+}
+.cta-banner h2{margin-bottom:8px;}
+
+@container (max-width:768px){
+  .cta-banner{padding:26px 22px; flex-direction:column; align-items:flex-start; gap:20px;}
+  .cta-banner .btn-row{width:100%;}
+}
+@container (max-width:400px){
+  .cta-banner{padding:22px 18px;}
+}

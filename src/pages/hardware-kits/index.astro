@@ -1,0 +1,71 @@
+---
+/**
+ * /hardware-kits — the hi-fi's "no vehicle set" state (frame #kits-empty).
+ *
+ * The picker here has no platform of its own: choosing a vehicle sends the
+ * shopper to /hardware-kits/<platform>?year=…&make=…&model=…&engine=…. The
+ * platform list at the bottom is what lets search engines reach the platform
+ * pages from a link — without it they would be orphan pages.
+ *
+ * Nothing on this page needs Shopify; it is built from the fitment data alone.
+ */
+import Site from "../../layouts/Site.astro";
+import VehiclePicker from "../../components/VehiclePicker.astro";
+import { platforms } from "../../lib/fitment.js";
+import "../../styles/pages/hardware-kits.css";
+
+const canonical = new URL("/hardware-kits", Astro.site).href;
+---
+<Site
+  title="Hardware Kits by Vehicle | OrganizeYourNuts"
+  description="Pick your year, make, model and engine and see every fastener kit that fits — engine, transmission, steering, axle and trim — grouped by system."
+  {canonical}
+  current="kits"
+>
+  <Fragment slot="footer-kits">
+    {platforms.map((p) => <li><a href={`/hardware-kits/${p.handle}`}>{p.display_name}</a></li>)}
+  </Fragment>
+
+  <section class="sec tight">
+    <div class="wrap">
+      <div class="crumb"><a href="/">Home</a><span>/</span><b>Hardware Kits</b></div>
+      <p class="eyebrow">Shop by vehicle</p>
+      <h1 class="h1-page">Hardware kits that fit your vehicle</h1>
+      <p class="lede">Tell us what you’re working on. We’ll show every kit that fits it — engine, transmission, steering, axle and trim — all on this page.</p>
+    </div>
+  </section>
+
+  <VehiclePicker platform={null} headingId="filter-h" />
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="state">
+        <div class="badge-lg" aria-hidden="true">&#11041;</div>
+        <h2>Set your vehicle to see kits</h2>
+        <p class="lede">Pick a make, model, year and engine above. We’ll show every kit that fits — engine, transmission, steering, axle and trim — grouped by system.</p>
+        <div class="btn-row"><a class="btn btn-outline" href="/about">Ask us to look it up</a></div>
+      </div>
+
+      <nav class="jump" aria-label="Browse by platform" style="margin-top:34px;">
+        <span class="chip-label">Or browse by platform</span>
+        {platforms.map((p) => <a class="chip" href={`/hardware-kits/${p.handle}`}>{p.display_name}</a>)}
+      </nav>
+    </div>
+  </section>
+
+  <section class="sec tight alt">
+    <div class="wrap">
+      <div class="cta-banner">
+        <div>
+          <h2>Can’t find your vehicle?</h2>
+          <p class="muted">Send us the year, model and engine and we’ll build the kit list for you.</p>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/about">Contact us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Site>
+
+<script src="../../scripts/kits-picker.js"></script>

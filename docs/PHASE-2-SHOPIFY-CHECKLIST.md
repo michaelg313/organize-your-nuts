@@ -302,8 +302,16 @@ Products, after the change (Shopify's own `References` should read `ls-gen3-earl
 - #3, #10 unchanged.
 
 All four platform entries Active. Each renamed/new entry's internal **Notes** field says what it
-covers and why. SEO title/description on the two *renamed* entries were **not** touched (they are
-copy, and still say "Gen I" / "Gen III" without the qualifier) — see the flags in the Phase 3 PR.
+covers and why. SEO title/description on the two *renamed* entries were **not** touched in Phase 3
+(they are copy, and still said "Gen I" / "Gen III" without the qualifier).
+
+> **Done 2026-09-21 (Phase 4 session), through the connector with the exact text approved first:**
+> `ls-gen3-early` → *GM LS Gen III (1997–2003) Engine Hardware Kits | OrganizeYourNuts* /
+> *Complete bolt and hardware kits for 1997–2003 LS Gen III engines — engine, transmission, and
+> chassis hardware in one place.* `sbc-gen1-vortec` → *Small-Block Chevy Vortec (1996–2002) Engine
+> Hardware Kits | OrganizeYourNuts* / *Bolt kits and hardware sets for 1996–2002 Vortec-head Gen I
+> small-block Chevy engines. Organized, labeled, and matched to your build.* Handles, names and
+> Notes unchanged. All four pages now carry a qualified title; verified in a rebuild.
 
 **Explicitly NOT in Phase 2:** no Storefront API token, no API calls, no Astro scaffolding, no
 theme work. Creating the API credential happens at the start of Phase 4, when there's code to

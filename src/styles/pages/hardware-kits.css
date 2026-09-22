@@ -2,9 +2,12 @@
    §5 "PAGE: Hardware Kits" from organizeyournuts-hifi.html, moved verbatim,
    plus this page's selectors from the combined @container blocks.
    Requires site.css loaded first.
-   NOTE: the hi-fi Kits page also uses .cta-banner (defined in home.css) —
-   see the cross-page reuse list in README.md. .filter-panel/.filter-grid
-   and .prod defined here are also used by the Storage sub-category page. */
+   .cta-banner comes from ../shared/cta-banner.css (imported below; Phase 4
+   resolved the README's cross-page flag). .filter-panel/.filter-grid and
+   .prod defined here are also used by the Storage sub-category page.
+   Phase 4 additions for elements the hi-fi had no data for (fitment note,
+   verify line, not-covered notice) are appended at the end, clearly marked. */
+@import "../shared/cta-banner.css";
 
 /* ─────────── PAGE: Hardware Kits ─────────── */
 .filter-panel{
@@ -71,3 +74,53 @@
 @container (max-width:400px){
   .prod{padding:14px;}
 }
+
+/* ═══════════════════ PHASE 4 ADDITIONS ═══════════════════
+   New elements, not in the hi-fi. Built only from existing tokens. */
+
+/* fitment note (ADR-003 rule 2) — the kit fits the platform but not every
+   vehicle on it and the picker can't tell the difference. Rendered
+   prominently: orange plate, not fine print. */
+.prod .fit-note{
+  display:flex; gap:10px; align-items:flex-start;
+  background:var(--orange-dim); border:1px solid var(--orange-border);
+  border-radius:var(--r-btn); padding:11px 13px;
+  font-size:13px; line-height:1.5; color:var(--text-primary); font-weight:500;
+}
+.prod .fit-note .fmark{
+  flex:none; width:18px; height:18px; border-radius:50%; margin-top:1px;
+  background:var(--orange); color:var(--orange-ink);
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:900;
+}
+.prod .fit-note b{display:block; font-size:10.5px; font-weight:800; letter-spacing:1.1px; text-transform:uppercase; color:var(--orange); margin-bottom:3px;}
+
+/* the general "verify fitment before ordering" line — on every kit card (ADR-001 §6) */
+.prod .fit-verify{font-size:11.5px; line-height:1.5; color:var(--text-muted);}
+.prod .fit-verify a{text-decoration:underline; text-underline-offset:2px;}
+
+/* a real product photo in the card takes the spec plate's slot and ratio */
+.prod img.kit-photo{
+  display:block; width:100%; aspect-ratio:4/3; object-fit:cover;
+  border-radius:var(--r-in); border:1px solid var(--hairline-2); background:var(--bg-sunken);
+}
+
+/* "we don't cover that vehicle yet" — shown above the results when the URL names
+   a vehicle no rule matches. Same shape as .alert, coloured as information (orange),
+   not error (red): nothing went wrong, we just don't have it. */
+.notice{
+  display:flex; gap:11px; align-items:flex-start;
+  border:1px solid var(--orange-border); background:var(--orange-dim);
+  border-radius:var(--r-in); padding:13px 15px; margin-bottom:22px;
+}
+.notice .nmark{
+  flex:none; width:20px; height:20px; border-radius:50%;
+  background:var(--orange); color:var(--orange-ink);
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:900;
+}
+.notice p{font-size:13.5px; line-height:1.5;}
+.notice a{text-decoration:underline;}
+
+/* the results heading changes wording when a vehicle is set; both live in the HTML */
+[hidden]{display:none!important;}

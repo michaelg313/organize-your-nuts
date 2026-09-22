@@ -2,8 +2,9 @@
    §5 "PAGE: Home" from organizeyournuts-hifi.html, moved verbatim, plus
    this page's selectors from the combined @container blocks and the Home
    hero entrance motion. Requires site.css loaded first.
-   NOTE: .cta-banner is defined here but the hi-fi also uses it on the
-   Hardware Kits page — see the cross-page reuse list in README.md. */
+   .cta-banner moved to ../shared/cta-banner.css in Phase 4 (it is used by
+   Home and Hardware Kits); imported below so this file still styles Home fully. */
+@import "../shared/cta-banner.css";
 
 /* ─────────── PAGE: Home ─────────── */
 /* quick vehicle entry — the on-ramp, Home only */
@@ -59,18 +60,6 @@
 .pillar .go .arw{transition:transform var(--dur-2) var(--ease); display:inline-block;}
 .card-lift:hover .go .arw{transform:translateX(4px);}
 
-/* cta banner — shared by Home and Kits */
-.cta-banner{
-  background:
-    radial-gradient(70% 160% at 100% 0%,rgba(255,140,0,.14),transparent 62%),
-    var(--bg-card);
-  border:1px solid var(--orange-border);
-  border-radius:var(--r-card); padding:36px 38px;
-  display:flex; align-items:center; gap:30px; justify-content:space-between;
-  flex-wrap:wrap; box-shadow:var(--sh-2);
-}
-.cta-banner h2{margin-bottom:8px;}
-
 /* ═══════════════════ MOTION ═══════════════════
    One orchestrated moment: the Home hero entrance. Everything else is a
    state transition on a control the person is touching. */
@@ -97,10 +86,7 @@
   .hero{padding:40px 0 44px;}
   .hero-grid{grid-template-columns:1fr; gap:26px;}
   .readout{gap:18px; flex-direction:column;}
-  .cta-banner{padding:26px 22px; flex-direction:column; align-items:flex-start; gap:20px;}
-  .cta-banner .btn-row{width:100%;}
 }
 @container (max-width:400px){
   .veh-head{gap:6px;}
-  .cta-banner{padding:22px 18px;}
 }

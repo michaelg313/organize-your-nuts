@@ -1,0 +1,35 @@
+---
+/**
+ * KitCard.astro — one kit, as the hi-fi's `.card.card-lift.prod`, plus the two
+ * fitment lines ADR-003 §5.3 requires:
+ *   - `custom.fitment_note`, rendered prominently when the kit has one
+ *   - the general "verify fitment before ordering" line, on every kit card
+ *
+ * "Add to cart" is disabled: the cart is Phase 5. The markup stays a <button>
+ * because on the live site it will post to the cart rather than navigate.
+ */
+import { formatPrice } from "../lib/shopify.js";
+
+interface Props {
+  kit: import("../lib/shopify.js").Kit;
+}
+const { kit } = Astro.props;
+---
+<article class="card card-lift prod">
+  {kit.image
+    ? <img class="kit-photo" src={kit.image.url} alt={kit.image.alt} width={kit.image.width} height={kit.image.height} loading="lazy" decoding="async" />
+    : <div class="ph ph-kit" role="img" aria-label="Placeholder: Kit photo" data-label="Kit photo · 4:3"></div>}
+  <h4 class="name">{kit.title}</h4>
+  {kit.description && <p class="desc">{kit.description}</p>}
+  {kit.fitmentNote && (
+    <div class="fit-note">
+      <span class="fmark" aria-hidden="true">!</span>
+      <div><b>Check before ordering</b>{kit.fitmentNote}</div>
+    </div>
+  )}
+  <p class="fit-verify">Verify fitment before ordering — kits fit the platform, not every option ever built on it. Not sure? <a href="/about">Ask us</a>.</p>
+  <div class="buy">
+    <span class="price">{formatPrice(kit.price)}</span>
+    <button class="btn btn-primary btn-sm" type="button" disabled aria-disabled="true">Add to cart</button>
+  </div>
+</article>

@@ -1,11 +1,17 @@
 {
   "name": "organizeyournuts",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "private": true,
-  "description": "OrganizeYourNuts.com storefront — Phase 1: CSS split + fitment data scaffolding. No framework chosen yet (deliberate; see ADR-001).",
+  "description": "OrganizeYourNuts.com storefront — Astro, fully pre-rendered, on Vercel (ADR-002). Phase 4: /hardware-kits/<platform>.",
   "type": "module",
   "scripts": {
+    "dev": "astro dev",
+    "build": "node scripts/validate-fitment.mjs && astro build",
+    "preview": "astro preview",
     "validate-fitment": "node scripts/validate-fitment.mjs",
     "serve": "npx serve -p 3000 ."
+  },
+  "dependencies": {
+    "astro": "7.3.3"
   }
 }

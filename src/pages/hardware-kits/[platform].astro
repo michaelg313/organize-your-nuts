@@ -1,0 +1,112 @@
+---
+/**
+ * /hardware-kits/<platform> — the first production page (ADR-001 §5 Phase 4).
+ *
+ * One static page per entry in fitment/platforms.json, generated at build time.
+ * Sub-generations (ADR-003) are ordinary entries; nothing special-cases them.
+ *
+ * What is fixed at build time: the platform, its kits grouped into the five
+ * systems (empty systems omitted), the SEO title/description from the Shopify
+ * Platform entry, and the canonical URL (always the bare platform URL).
+ *
+ * What the browser fills in: the vehicle. The URL is authoritative
+ * (?year=&make=&model=&engine=); localStorage only re-fills the form on return
+ * visits. See src/scripts/kits-picker.js. The kit list is the same for every
+ * vehicle on the platform — that is the whole point of ADR-003.
+ */
+import Site from "../../layouts/Site.astro";
+import VehiclePicker from "../../components/VehiclePicker.astro";
+import KitCard from "../../components/KitCard.astro";
+import { platforms } from "../../lib/fitment.js";
+import { loadCatalog, groupForPlatform } from "../../lib/shopify.js";
+import "../../styles/pages/hardware-kits.css";
+
+export async function getStaticPaths() {
+  // Fetch (and validate) the catalog once; every page shares the result.
+  await loadCatalog();
+  return platforms.map((p) => ({ params: { platform: p.handle }, props: { displayName: p.display_name } }));
+}
+
+const { platform } = Astro.params;
+const { displayName } = Astro.props;
+const { kits, platformRecords } = await loadCatalog();
+const record = platformRecords.get(platform);
+const groups = groupForPlatform(kits, platform);
+
+const canonical = new URL(`/hardware-kits/${platform}`, Astro.site).href;
+const title = record?.seoTitle ?? `${displayName} Hardware Kits | OrganizeYourNuts`;
+const description =
+  record?.seoDescription ??
+  `Every hardware kit that fits the ${displayName} — engine, transmission, steering, axle and trim — grouped by system.`;
+const lede =
+  record?.description ??
+  "Tell us what you’re working on. We’ll show every kit that fits it — engine, transmission, steering, axle and trim — all on this page.";
+const omittedNames = groups.omitted.map((g) => g.title).join(", ");
+---
+<Site {title} {description} {canonical} current="kits">
+  <Fragment slot="footer-kits">
+    {platforms.map((p) => <li><a href={`/hardware-kits/${p.handle}`}>{p.display_name}</a></li>)}
+  </Fragment>
+
+  <section class="sec tight">
+    <div class="wrap">
+      <div class="crumb"><a href="/">Home</a><span>/</span><a href="/hardware-kits">Hardware Kits</a><span>/</span><b>{displayName}</b></div>
+      <p class="eyebrow">Shop by vehicle</p>
+      <h1 class="h1-page">Hardware kits for the {displayName}</h1>
+      <p class="lede">{lede}</p>
+    </div>
+  </section>
+
+  <VehiclePicker platform={platform} headingId="filter-h" />
+
+  <section class="sec">
+    <div class="wrap">
+      <!-- shown by the script when the URL names a vehicle no rule covers -->
+      <div class="notice" data-not-covered hidden role="status">
+        <span class="nmark" aria-hidden="true">?</span>
+        <p>We don’t have fitment rules for <b data-not-covered-text>that vehicle</b> yet, so we can’t confirm these kits fit it. The kits below are for the {displayName}. <a href="/about">Ask us to look it up</a> and we’ll add it.</p>
+      </div>
+
+      <div class="sec-head" style="margin-bottom:8px;">
+        <h2 data-heading-platform>{groups.total} {groups.total === 1 ? "kit fits" : "kits fit"} the {displayName}</h2>
+        <h2 data-heading-vehicle hidden>{groups.total} {groups.total === 1 ? "kit fits" : "kits fit"} your <span data-vehicle-model></span></h2>
+        <p class="lede">Grouped by the system they belong to. Systems with no fitting kits aren’t shown.</p>
+        {groups.omitted.length > 0 && <p class="spec" style="margin-top:14px;">No fit for this platform: {omittedNames}</p>}
+      </div>
+
+      <nav class="jump" aria-label="Jump to system">
+        <span class="chip-label">Jump to</span>
+        {groups.shown.map((g) => <a class="chip" href={`#kits-${g.id}`}>{g.title}</a>)}
+      </nav>
+
+      {groups.shown.map((g) => (
+        <section class="sysgroup" id={`kits-${g.id}`} aria-labelledby={`kits-${g.id}-h`}>
+          <div class="sysgroup-head">
+            <h3 id={`kits-${g.id}-h`}>{g.title}</h3>
+            <span class="cnt">{g.kits.length} {g.kits.length === 1 ? "kit" : "kits"} &middot; {g.blurb}</span>
+          </div>
+          <div class="grid g3">
+            {g.kits.map((kit) => <KitCard {kit} />)}
+          </div>
+        </section>
+      ))}
+    </div>
+  </section>
+
+  <section class="sec tight alt">
+    <div class="wrap">
+      <div class="cta-banner">
+        <div>
+          <h2>Can’t find your vehicle?</h2>
+          <p class="muted">Send us the year, model and engine and we’ll build the kit list for you.</p>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/about">Contact us</a>
+          <a class="btn btn-outline" href="/hardware-kits">All platforms</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Site>
+
+<script src="../../scripts/kits-picker.js"></script>

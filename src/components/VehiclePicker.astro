@@ -1,0 +1,54 @@
+---
+/**
+ * VehiclePicker.astro — the filter panel from the hi-fi (Make → Model → Year →
+ * Engine, then "Update results"). The Make list is rendered at build time from
+ * the rules; the other three cascade in the browser (src/scripts/kits-picker.js),
+ * because which models/years/engines to offer depends on the choices made.
+ *
+ * `platform` is the handle of the page this picker sits on, or null on the
+ * /hardware-kits index. The script uses it to decide whether a chosen vehicle
+ * belongs to this page or needs a different platform's page.
+ */
+import { makes } from "../lib/fitment.js";
+
+interface Props {
+  platform: string | null;
+  headingId: string;
+}
+const { platform, headingId } = Astro.props;
+const makeOptions = makes();
+---
+<section class="sec tight alt" aria-labelledby={headingId}>
+  <div class="wrap">
+    <h2 id={headingId} class="vh">Vehicle filter</h2>
+    <form class="filter-panel" data-picker data-platform={platform ?? ""} action="/hardware-kits" method="get" novalidate>
+      <div class="chip-row">
+        <span class="chip-label">Your vehicle</span>
+        <span class="spec" data-chip-empty>Not set yet</span>
+        <span class="veh-chip" data-chip hidden><span class="tick" aria-hidden="true">&#10003;</span> <span data-chip-text></span></span>
+        <a class="link-edit" href={platform ? `/hardware-kits/${platform}` : "/hardware-kits"} data-change hidden>Change vehicle</a>
+      </div>
+      <div class="filter-grid">
+        <label class="field"><span class="lab">Make</span>
+          <select class="ctl" name="make" data-sel="make">
+            <option value="">Select make</option>
+            {makeOptions.map((m) => <option value={m}>{m}</option>)}
+          </select>
+        </label>
+        <label class="field"><span class="lab">Model</span>
+          <select class="ctl" name="model" data-sel="model" disabled><option value="">Select model</option></select>
+        </label>
+        <label class="field"><span class="lab">Year</span>
+          <select class="ctl" name="year" data-sel="year" disabled><option value="">Select year</option></select>
+        </label>
+        <label class="field"><span class="lab">Engine <span class="spec" style="text-transform:none; letter-spacing:0;">(your motor)</span></span>
+          <select class="ctl" name="engine" data-sel="engine" disabled><option value="">Select engine</option></select>
+        </label>
+      </div>
+      <div class="filter-foot">
+        <p class="note">Set your vehicle once and it applies to every result below. It stays with you through the cart.</p>
+        <button class="btn btn-primary" type="submit" data-submit disabled>Update results</button>
+      </div>
+    </form>
+  </div>
+</section>

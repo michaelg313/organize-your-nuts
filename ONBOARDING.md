@@ -7,7 +7,15 @@ payments and checkout; a custom static-first front end owns presentation, fitmen
 indexable per-platform URLs. That decision, and everything downstream of it, is recorded in
 [ADR-001-production-stack.md](ADR-001-production-stack.md) — **the ADR is authoritative**.
 
-**Where the build is right now: Phase 1 complete on branch `phase-1-css-split`** — the signed-off
+> **This document was written at the end of Phase 1 and has not been revised since.** Phases 2–4
+> are complete or in review: Shopify holds the data model (see
+> [docs/PHASE-2-SHOPIFY-CHECKLIST.md](docs/PHASE-2-SHOPIFY-CHECKLIST.md)), `fitment/vehicle-map.json`
+> holds 59 real rules over 4 platforms, and the site is an Astro project with its first route,
+> `/hardware-kits/<platform>`. **For the current state, layout and commands, read
+> [README.md](README.md).** The sections below are accurate as history and as design reference;
+> where they say "not built yet", check the README.
+
+**Where the build was at the end of Phase 1 (branch `phase-1-css-split`, since merged)** — the signed-off
 hi-fi CSS has been split into production stylesheets, and the fitment data layer is scaffolded
 (schema + validator + CI, example data only). No framework, routes, or Shopify API code yet.
 

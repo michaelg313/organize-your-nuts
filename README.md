@@ -1,29 +1,72 @@
 # OrganizeYourNuts.com
 
-Headless-Shopify storefront, in progress. The architecture is decided and recorded in
-[ADR-001-production-stack.md](ADR-001-production-stack.md) — read that first; it is authoritative.
+Headless-Shopify storefront, in progress. The architecture is decided and recorded in three ADRs —
+read them first; they are authoritative:
 
-**Current state: Phase 1 (CSS split) + fitment data scaffolding, on branch `phase-1-css-split`.**
+- [ADR-001 — production stack](ADR-001-production-stack.md): headless Shopify, kits fit *platforms*.
+- [ADR-002 — front-end framework](ADR-002-frontend-framework.md): Astro, fully pre-rendered, on Vercel.
+- [ADR-003 — partial-match fitment](ADR-003-partial-match-fitment.md): sub-generation platforms, fitment note as backstop.
 
-## Run the split-check harness
+**Current state: Phase 4 — the first production page, `/hardware-kits/<platform>`.**
 
-The hi-fi design was split from one review file into `src/styles/site.css` (shared) plus one
-stylesheet per page in `src/styles/pages/`. The harness proves the split renders identically.
+## Run it
+
+You need Node 22+ and a `.env` file (copy `.env.example`; the two values are your store's
+`.myshopify.com` address and the **private** Storefront API token from Sales channels → Headless).
+`.env` is git-ignored and must stay that way — the token is a password.
 
 ```bash
-npx serve -p 3000 .
+npm install
 ```
 
-Then open, in two browser windows side by side:
+```bash
+npm run dev
+```
 
-- **http://localhost:3000/docs/split-check.html** — the same markup styled by the *split* files
-- **http://localhost:3000/docs/organizeyournuts-hifi.html** — the signed-off hi-fi reference
+Then open http://localhost:4321/hardware-kits. Products and platform copy come from Shopify at
+build/dev time; vehicles come from `fitment/vehicle-map.json`.
 
-What to look for: every frame (7 templates + 4 states) should be pixel-identical between the two,
-at full width and when you narrow the window through 768px and 400px. The one intended difference:
-the harness has no review toolbar, so everything sits 52px higher and the sticky nav sticks to the
-very top. `docs/split-check.html` is throwaway scaffolding, not a production page.
-`docs/organizeyournuts-hifi.html` is permanent — it is the visual regression reference.
+```bash
+npm run build
+```
+
+Runs the fitment validator, then fetches from Shopify and writes every page to `dist/`. Vercel runs
+this same command on every push. **If the build fails, read the last lines of the log** — every
+failure this project can produce is written in plain English and says where to fix it.
+
+## What exists
+
+| Route | Generated from | Notes |
+|---|---|---|
+| `/hardware-kits/<platform>` | one page per entry in `fitment/platforms.json`, via `getStaticPaths()` in [`src/pages/hardware-kits/[platform].astro`](src/pages/hardware-kits/[platform].astro) | Kits from Shopify (`custom.fits_platforms`), grouped by `custom.system`; empty systems omitted. SEO title/description from the Shopify Platform entry. Canonical is always the bare URL. |
+| `/hardware-kits` | [`src/pages/hardware-kits/index.astro`](src/pages/hardware-kits/index.astro) | The design's "no vehicle set" state: the picker plus links to every platform page. |
+
+Vehicle state: the URL is authoritative (`?year=&make=&model=&engine=`, slugged); a chosen vehicle
+always lands on *its* platform's page; `localStorage` only re-fills the form on a return visit.
+The dropdowns are **derived** from `fitment/vehicle-map.json` in [`src/lib/fitment.js`](src/lib/fitment.js) —
+never hand-maintained.
+
+Home, Hardware Storage, About, Cart: not built (Phases 5–6). The nav links to them so the chrome
+matches the design; they 404 today.
+
+## Where things live
+
+```
+astro.config.mjs        site URL (for canonicals), static output
+vercel.json             clean URLs, no trailing slash
+fitment/                platforms.json + vehicle-map.json — the fitment data (reviewed, CI-checked)
+scripts/validate-fitment.mjs   the CI check; runs before every build
+src/lib/fitment.js      dropdown derivation, slugs, vehicle → platform resolution (build + browser)
+src/lib/shopify.js      the ONE Storefront API fetch per build, plus the plain-English build checks
+src/layouts/Site.astro  <head>, nav, footer, .page container-query root
+src/components/         VehiclePicker.astro, KitCard.astro
+src/scripts/kits-picker.js     the cascading picker in the browser
+src/styles/site.css     Phase 1 shared stylesheet — ported byte-for-byte
+src/styles/pages/       per-route stylesheets (hardware-kits.css has Phase 4 additions at the end)
+src/styles/shared/      cta-banner.css — used by Home and Kits
+docs/organizeyournuts-hifi.html   the signed-off design; visual regression reference (permanent)
+docs/PHASE-2-SHOPIFY-CHECKLIST.md exact Shopify identifiers (metaobject, metafields, handles)
+```
 
 ## Validate fitment data
 
@@ -31,40 +74,32 @@ very top. `docs/split-check.html` is throwaway scaffolding, not a production pag
 npm run validate-fitment
 ```
 
-Checks `fitment/vehicle-map.json` (vehicle → platform rules; **example data only** right now)
-against `fitment/platforms.json` (known platform handles; a hand-maintained stub until platforms
-live in Shopify metaobjects). It fails loudly, in plain English, on: unknown or misspelled platform
-handles (including stray spaces and wrong capitalisation), missing or blank fields, backwards or
-implausible year ranges, and two rules that claim the same vehicle/engine/years but different
-platforms. The same check runs automatically on every GitHub pull request
-(`.github/workflows/validate-fitment.yml`).
+Checks `fitment/vehicle-map.json` against `fitment/platforms.json`: unknown or misspelled platform
+handles, blank fields, backwards year ranges, two rules claiming the same vehicle for different
+platforms, unreachable platforms, engine names spelled two ways. Runs on every pull request
+(`.github/workflows/validate-fitment.yml`) and at the start of every build. The *live* checks —
+every handle exists in Shopify, every platform has at least one kit — run at build time in
+`src/lib/shopify.js`, because they need the token.
 
-## Deliberately not built yet
+## Storefront API version
 
-- **No front-end scaffolding yet.** The framework is decided — **Astro**, per
-  [ADR-002-frontend-framework.md](ADR-002-frontend-framework.md) — but nothing is scaffolded;
-  dependencies get approved when scaffolding starts.
-- **No front-end routes, no Shopify Storefront API code, no cart or checkout logic.** Phases 2+.
-- **No real fitment data.** The three rules in `fitment/vehicle-map.json` are labelled examples.
-- **No dependencies.** The validator is plain Node; the stylesheet is plain CSS
-  (no framework, no preprocessor).
+Pinned in `src/lib/shopify.js` (`STOREFRONT_API_VERSION`). Bump it and redeploy every ~6 months
+(ADR-001 §6). Shopify releases quarterly and retires versions after a year.
 
-## Known cross-page style reuse (flagged, not fixed)
+## Dependencies
 
-§5 of the hi-fi assigns some classes to one page that its markup also uses on another. The split
-follows §5's own labels, so these work in the harness (which loads every file) but must be resolved
-before routes each load only their own stylesheet — either promote the shared rules to `site.css`
-or have the second page import the first page's file:
+Exactly one: `astro`. No adapter (Vercel detects Astro and serves `dist/` as static files), no
+integrations, no CSS tooling. Per the standing rule, anything new is named and approved first.
 
-| Defined in | Also used by | Classes |
-|---|---|---|
-| `pages/home.css` | Hardware Kits | `.cta-banner` (the hi-fi's own comment says "shared by Home and Kits") |
-| `pages/hardware-kits.css` | Storage sub-category | `.filter-panel`, `.filter-grid`, `.prod` |
-| `pages/cart.css` | Checkout | `.summary`, `.sum-row` |
-| `pages/checkout.css` | About (contact form) | `.form-grid`, `.span2` |
+## Cross-page style reuse
 
-`pages/storage-category.css` is consequently near-empty: the hi-fi has no dedicated §5 block for
-that template.
+Phase 1 flagged classes defined in one page's stylesheet but used by another. Status:
 
-See [ONBOARDING.md](ONBOARDING.md) for the full project reference and
-[docs/](docs/) for the design reference.
+| Defined in | Also used by | Classes | Status |
+|---|---|---|---|
+| `shared/cta-banner.css` | Home, Hardware Kits | `.cta-banner` | **resolved in Phase 4** — moved verbatim to a shared file both routes import |
+| `pages/hardware-kits.css` | Storage sub-category | `.filter-panel`, `.filter-grid`, `.prod` | open — resolve when the Storage pages are built (Phase 6) |
+| `pages/cart.css` | Checkout | `.summary`, `.sum-row` | moot — the designed checkout is replaced by Shopify's (ADR-001 §3.1) |
+| `pages/checkout.css` | About (contact form) | `.form-grid`, `.span2` | open — resolve when About is built (Phase 6) |
+
+See [ONBOARDING.md](ONBOARDING.md) for the full project reference and [docs/](docs/) for the design.

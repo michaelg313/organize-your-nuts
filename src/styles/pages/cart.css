@@ -3,7 +3,10 @@
    this page's selectors from the combined @container blocks.
    Requires site.css loaded first.
    NOTE: .summary/.sum-row defined here are also used by the Checkout
-   page — see the cross-page reuse list in README.md. */
+   page — see the cross-page reuse list in README.md.
+   Phase 5 additions for things the hi-fi had no data for (real photos,
+   out-of-stock lines, busy state) are appended at the end, clearly marked. */
+@import "../shared/notice.css";
 
 /* ─────────── PAGE: Cart ─────────── */
 .cart-grid{display:grid; grid-template-columns:1.75fr 1fr; gap:26px; align-items:start;}
@@ -54,3 +57,25 @@
   .line .rm{justify-self:start; margin-left:-8px;}
   .summary{position:static;}
 }
+
+/* ═══════════════════ PHASE 5 ADDITIONS ═══════════════════
+   New elements, not in the hi-fi. Built only from existing tokens. */
+
+/* the cart page swaps whole states (loading / empty / full / error) with the
+   hidden attribute; several of those elements set their own display */
+[hidden]{display:none!important;}
+
+/* the heading gets the design's 20px gap only when the Fitment row follows it */
+.h1-page.has-fitment{margin-bottom:20px;}
+
+/* a real product photo takes the placeholder's slot and ratio */
+.line img.line-photo{
+  display:block; width:100%; aspect-ratio:1/1; object-fit:cover;
+  border-radius:var(--r-in); border:1px solid var(--hairline-2); background:var(--bg-sunken);
+}
+
+/* a line Shopify can't sell right now — it won't get through checkout */
+.line .err{margin-top:9px;}
+
+/* while Shopify is updating a line, dim it and block double-clicks */
+.line[aria-busy="true"]{opacity:.55; pointer-events:none;}

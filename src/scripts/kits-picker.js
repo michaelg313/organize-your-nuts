@@ -12,6 +12,11 @@
  *
  * The same picker markup is used on /hardware-kits (no platform) and on every
  * /hardware-kits/<platform> page; `data-platform` on the form tells us which.
+ *
+ * Cart hand-off (Phase 5): while the page shows "your vehicle", the form carries
+ * it as `data-vehicle` (JSON). src/scripts/add-to-cart.js reads that at click
+ * time — so a kit only ever goes in the cart with the vehicle the page claims
+ * it fits, and never with one it doesn't.
  */
 import { fromSlugs, resolve, modelsFor, yearsFor, enginesFor, toQuery, describeVehicle } from "../lib/fitment.js";
 
@@ -34,6 +39,7 @@ function init(form) {
   const headingPlatform = document.querySelector("[data-heading-platform]");
   const headingVehicle = document.querySelector("[data-heading-vehicle]");
   const headingModel = document.querySelector("[data-vehicle-model]");
+  const needVehicle = form.querySelector("[data-need-vehicle]");
 
   // ---- form helpers -------------------------------------------------------
 
@@ -75,6 +81,8 @@ function init(form) {
     chip.hidden = false;
     chipEmpty.hidden = true;
     change.hidden = false;
+    form.dataset.vehicle = JSON.stringify({ year: v.year, make: v.make, model: v.model, engine: v.engine });
+    if (needVehicle) needVehicle.hidden = true;
     if (headingVehicle && headingPlatform && headingModel) {
       headingModel.textContent = v.model;
       headingVehicle.hidden = false;
@@ -86,6 +94,7 @@ function init(form) {
     chip.hidden = true;
     chipEmpty.hidden = false;
     change.hidden = true;
+    delete form.dataset.vehicle;
     if (headingVehicle && headingPlatform) {
       headingVehicle.hidden = true;
       headingPlatform.hidden = false;

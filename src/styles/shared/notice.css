@@ -1,0 +1,20 @@
+/* OrganizeYourNuts — shared component: .notice (information, not error)
+   Created in Phase 4 for the kits page's "we don't cover that vehicle yet"
+   message; Phase 5 moved it here unchanged because the cart uses it too.
+   Same shape as .alert (site.css), coloured as information (orange), not
+   error (red): nothing went wrong.
+   Requires site.css loaded first. Import from hardware-kits.css and cart.css. */
+
+.notice{
+  display:flex; gap:11px; align-items:flex-start;
+  border:1px solid var(--orange-border); background:var(--orange-dim);
+  border-radius:var(--r-in); padding:13px 15px; margin-bottom:22px;
+}
+.notice .nmark{
+  flex:none; width:20px; height:20px; border-radius:50%;
+  background:var(--orange); color:var(--orange-ink);
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:900;
+}
+.notice p{font-size:13.5px; line-height:1.5;}
+.notice a{text-decoration:underline;}

@@ -1,0 +1,86 @@
+---
+/**
+ * /cart — hi-fi template ⑤ and its "Cart — empty" state (ADR-001 §5 Phase 5).
+ *
+ * The page is static; everything in it that depends on the shopper's cart is
+ * filled in by src/scripts/cart-page.js from Shopify's Storefront API. The HTML
+ * below holds every state the script can show: loading, empty, the cart, and
+ * a plain-language error. "Proceed to checkout" goes to Shopify's hosted
+ * checkout (cart.checkoutUrl) — ADR-001 §3.1.
+ *
+ * Deviation from the design, approved in Phase 5: Shopify can't estimate
+ * shipping or tax before it has an address, so those rows say "Calculated at
+ * checkout" and the last row is "Estimated total".
+ */
+import Site from "../layouts/Site.astro";
+import "../styles/pages/cart.css";
+
+const canonical = new URL("/cart", Astro.site).href;
+---
+<Site title="Your cart | OrganizeYourNuts" description="Your OrganizeYourNuts cart." {canonical}>
+  <meta slot="head" name="robots" content="noindex" />
+
+  <section class="sec tight">
+    <div class="wrap">
+      <div class="crumb"><a href="/">Home</a><span>/</span><b>Cart</b></div>
+      <h1 class="h1-page" data-cart-heading>Your cart</h1>
+      <div class="chip-row" data-cart-fitment hidden>
+        <!-- one .veh-chip per distinct vehicle on a kit line (usually one) -->
+        <span class="chip-label">Fitment</span>
+        <span data-cart-vehicles class="chip-row"></span>
+        <span class="muted" style="font-size:12.5px;">Applies to kit items. Storage items fit any shop.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:10px;" data-cart-page>
+    <div class="wrap">
+      <div class="alert" data-cart-error hidden role="alert">
+        <span class="amark" aria-hidden="true">!</span>
+        <p data-cart-error-text></p>
+      </div>
+      <div class="notice" data-cart-notice hidden role="status">
+        <span class="nmark" aria-hidden="true">i</span>
+        <p data-cart-notice-text></p>
+      </div>
+
+      <p class="muted" data-cart-loading>Loading your cart…</p>
+      <noscript><p class="muted">The cart needs JavaScript turned on in your browser.</p></noscript>
+
+      <div data-cart-full hidden>
+        <h2 class="vh">Items in your cart</h2>
+        <div class="cart-grid">
+          <div>
+            <div data-cart-lines></div>
+            <div class="btn-row" style="margin-top:22px;">
+              <a class="btn btn-quiet" href="/hardware-kits" data-keep-shopping>&larr; Keep shopping kits</a>
+              <a class="btn btn-quiet" href="/hardware-storage">Browse storage</a>
+            </div>
+          </div>
+
+          <aside class="card summary" aria-labelledby="sum-h">
+            <h3 id="sum-h">Order summary</h3>
+            <div class="sum-row"><span>Subtotal</span><span data-subtotal></span></div>
+            <div class="sum-row"><span>Shipping</span><span>Calculated at checkout</span></div>
+            <div class="sum-row"><span>Tax</span><span>Calculated at checkout</span></div>
+            <div class="sum-row total"><span>Estimated total</span><span data-total></span></div>
+            <a class="btn btn-primary btn-block" href="/cart" data-checkout style="margin-top:20px;">Proceed to checkout</a>
+            <p class="muted" style="font-size:12px; margin-top:13px; text-align:center;">Shipping and tax confirmed at checkout.</p>
+          </aside>
+        </div>
+      </div>
+
+      <div class="state" data-cart-empty hidden>
+        <div class="badge-lg" aria-hidden="true">&#11041;</div>
+        <h2>Your cart is empty</h2>
+        <p class="lede">Nothing in here yet. Start with the kits that fit your vehicle, or pick up storage to sort what you already have.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/hardware-kits">Shop hardware kits</a>
+          <a class="btn btn-outline" href="/hardware-storage">Browse storage</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Site>
+
+<script src="../scripts/cart-page.js"></script>

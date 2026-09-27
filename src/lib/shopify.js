@@ -2,8 +2,10 @@
  * shopify.js — reads products and platforms from the Shopify Storefront API
  * ONCE per build, and refuses to build if the data can't make correct pages.
  *
- * Runs only at build time (inside .astro frontmatter). Nothing here reaches
- * the browser — the token stays in the build environment.
+ * Runs only at build time (inside .astro frontmatter). The PRIVATE token stays
+ * in the build environment. The one thing this file hands to the browser is
+ * storefrontPublicConfig() — the store address and the PUBLIC token, which
+ * Shopify designed to be shipped in web pages (the cart uses them, Phase 5).
  *
  * What makes the build fail, and why (ADR-001 §2.4, ADR-002 §2.2):
  *   - no store domain / token in the environment       → can't fetch anything
@@ -17,6 +19,11 @@
  */
 
 import { platforms as repoPlatforms } from "./fitment.js";
+import { SYSTEMS, formatPrice } from "./display.js";
+
+// The system list and price format moved to display.js in Phase 5 so the cart
+// (in the browser) can share them without importing this build-only file.
+export { SYSTEMS, formatPrice };
 
 // Bump this every ~6 months (ADR-001 §6). Shopify releases quarterly; a retired
 // version "falls forward" to the oldest supported one, but don't rely on that.
@@ -28,28 +35,15 @@ const MF_SYSTEM = { namespace: "custom", key: "system" };
 const MF_FITMENT_NOTE = { namespace: "custom", key: "fitment_note" };
 const METAOBJECT_TYPE = "platform";
 
-/**
- * The five result groupings (ADR-001 §5 Phase 2), in page order. `value` is the
- * exact `custom.system` choice; `blurb` is the sub-line from the hi-fi headings.
- * These are groupings on the page — never URLs.
- */
-export const SYSTEMS = [
-  { value: "engine",              id: "engines", title: "Engines",               blurb: "head, main, rod, manifold and accessory fasteners" },
-  { value: "transmission",        id: "trans",   title: "Transmissions",         blurb: "bellhousing, pan and crossmember hardware" },
-  { value: "steering-suspension", id: "steer",   title: "Steering & Suspension", blurb: "control arm, knuckle and shock hardware" },
-  { value: "diff-axle",           id: "diff",    title: "Diff / Axle",           blurb: "cover, ring gear and axle flange hardware" },
-  { value: "body-trim",           id: "body",    title: "Body & Interior Trim",  blurb: "fender, bed, door and panel fasteners" },
-];
-
-/** @typedef {{ id:string, handle:string, title:string, description:string, image:{url:string,alt:string,width:number,height:number}|null, price:{amount:string,currency:string}, fitsPlatforms:string[], system:string|null, fitmentNote:string|null }} Kit */
+/** @typedef {{ id:string, handle:string, title:string, description:string, image:{url:string,alt:string,width:number,height:number}|null, price:{amount:string,currency:string}, fitsPlatforms:string[], system:string|null, fitmentNote:string|null, variantId:string|null, availableForSale:boolean }} Kit */
 /** @typedef {{ handle:string, name:string, description:string|null, seoTitle:string|null, seoDescription:string|null }} PlatformRecord */
 
 // ---------- failure helper ---------------------------------------------------
 
 class BuildDataError extends Error {}
 
-function fail(lines) {
-  const text = ["", "✗ Can't build the Hardware Kits pages:", "", ...lines.map((l) => `  ${l}`), ""].join("\n");
+function fail(lines, heading = "Can't build the Hardware Kits pages") {
+  const text = ["", `✗ ${heading}:`, "", ...lines.map((l) => `  ${l}`), ""].join("\n");
   throw new BuildDataError(text);
 }
 
@@ -125,6 +119,7 @@ const KITS_QUERY = /* GraphQL */ `
         id handle title description
         featuredImage { url altText width height }
         priceRange { minVariantPrice { amount currencyCode } }
+        variants(first: 1) { nodes { id availableForSale } }
         fits: metafield(namespace: $fitsNs, key: $fitsKey) { references(first: 20) { nodes { ... on Metaobject { handle } } } }
         system: metafield(namespace: $sysNs, key: $sysKey) { value }
         fitmentNote: metafield(namespace: $noteNs, key: $noteKey) { value }
@@ -161,6 +156,10 @@ async function fetchAllProducts() {
 /** @returns {Kit} */
 function toKit(p) {
   const note = p.fitmentNote?.value?.trim() || null;
+  // Every kit is sold as its one variant ("Default Title"); that variant is what
+  // the cart adds. availableForSale is only the build-time snapshot — the kit
+  // page re-asks Shopify in the browser, so restocking needs no redeploy.
+  const variant = p.variants?.nodes?.[0] ?? null;
   return {
     id: p.id,
     handle: p.handle,
@@ -173,6 +172,8 @@ function toKit(p) {
     fitsPlatforms: (p.fits?.references?.nodes ?? []).map((n) => n.handle).filter(Boolean),
     system: p.system?.value?.trim() || null,
     fitmentNote: note,
+    variantId: variant?.id ?? null,
+    availableForSale: Boolean(variant?.availableForSale),
   };
 }
 
@@ -238,6 +239,9 @@ async function doLoad() {
     } else if (!knownSystems.has(k.system)) {
       problems.push(`Product "${k.title}" has System '${k.system}', which isn't one of the five groupings (${[...knownSystems].join(", ")}). Fix it in the admin.`);
     }
+    if (!k.variantId) {
+      problems.push(`Product "${k.title}" came back with no variant, so the cart has nothing to add. Open it in the admin and check it has a price and is published to the Headless channel.`);
+    }
     for (const h of k.fitsPlatforms) {
       if (!repoHandles.has(h)) {
         warnings.push(`Product "${k.title}" is tagged with platform '${h}', which fitment/platforms.json doesn't list — it won't appear on any page for that platform.`);
@@ -279,7 +283,45 @@ export function groupForPlatform(kits, handle) {
   };
 }
 
-/** "$109.99" */
-export function formatPrice(price) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: price.currency }).format(Number(price.amount));
+// ---------- what the browser gets (the cart, Phase 5) -------------------------
+
+/**
+ * The cart runs in the shopper's browser (ADR-002 §1), so the browser needs the
+ * Storefront API address and a token. That token is the PUBLIC one: Shopify
+ * designed it to sit in web pages — it can only do shopper things (read
+ * products, build a cart) and is rate-limited per shopper. Site.astro writes
+ * these two values into every page's <head>.
+ *
+ * The build refuses to continue if the public token is missing (the cart and
+ * the nav count would be dead on every page) or if it is the same value as the
+ * private token (that would publish the private token to the world).
+ *
+ * @returns {{ endpoint:string, token:string }}
+ */
+export function storefrontPublicConfig() {
+  const domain = import.meta.env.SHOPIFY_STORE_DOMAIN;
+  const token = import.meta.env.PUBLIC_SHOPIFY_STOREFRONT_TOKEN;
+  const heading = "Can't build the cart";
+
+  if (!domain || !token) {
+    fail([
+      "The cart needs these environment variables and at least one is missing:",
+      `  SHOPIFY_STORE_DOMAIN             ${domain ? "✓ set" : "✗ missing"}`,
+      `  PUBLIC_SHOPIFY_STOREFRONT_TOKEN  ${token ? "✓ set" : "✗ missing"}`,
+      "",
+      "PUBLIC_SHOPIFY_STOREFRONT_TOKEN is the PUBLIC Storefront API token (not the private one) from",
+      "Sales channels → Headless → your storefront → Storefront API tokens.",
+      "Locally: add it to .env next to package.json (see .env.example).",
+      "On Vercel: Project → Settings → Environment Variables.",
+    ], heading);
+  }
+  if (token === import.meta.env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN) {
+    fail([
+      "PUBLIC_SHOPIFY_STOREFRONT_TOKEN holds the same value as SHOPIFY_STOREFRONT_PRIVATE_TOKEN.",
+      "Anything in a PUBLIC_ variable is written into the web page for anyone to read, so this",
+      "would publish your private token. Put the PUBLIC token from Sales channels → Headless →",
+      "your storefront → Storefront API tokens into PUBLIC_SHOPIFY_STOREFRONT_TOKEN instead.",
+    ], heading);
+  }
+  return { endpoint: `https://${domain}/api/${STOREFRONT_API_VERSION}/graphql.json`, token };
 }

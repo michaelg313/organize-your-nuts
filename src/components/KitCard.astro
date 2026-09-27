@@ -5,8 +5,10 @@
  *   - `custom.fitment_note`, rendered prominently when the kit has one
  *   - the general "verify fitment before ordering" line, on every kit card
  *
- * "Add to cart" is disabled: the cart is Phase 5. The markup stays a <button>
- * because on the live site it will post to the cart rather than navigate.
+ * "Add to cart" (Phase 5) is wired up by src/scripts/add-to-cart.js. The HTML
+ * shows the stock state as of the build ("Out of stock" when Shopify said the
+ * kit can't be sold); the script re-asks Shopify when the page loads, so a
+ * restock in the admin turns the button on without a redeploy.
  */
 import { formatPrice } from "../lib/shopify.js";
 
@@ -30,6 +32,10 @@ const { kit } = Astro.props;
   <p class="fit-verify">Verify fitment before ordering — kits fit the platform, not every option ever built on it. Not sure? <a href="/about">Ask us</a>.</p>
   <div class="buy">
     <span class="price">{formatPrice(kit.price)}</span>
-    <button class="btn btn-primary btn-sm" type="button" disabled aria-disabled="true">Add to cart</button>
+    <button class="btn btn-primary btn-sm" type="button"
+      data-add-to-cart data-variant={kit.variantId} data-title={kit.title}
+      disabled={!kit.availableForSale} aria-disabled={kit.availableForSale ? undefined : "true"}
+    >{kit.availableForSale ? "Add to cart" : "Out of stock"}</button>
   </div>
+  <p class="err" data-add-error hidden></p>
 </article>

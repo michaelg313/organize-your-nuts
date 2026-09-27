@@ -13,6 +13,9 @@
  * (?year=&make=&model=&engine=); localStorage only re-fills the form on return
  * visits. See src/scripts/kits-picker.js. The kit list is the same for every
  * vehicle on the platform — that is the whole point of ADR-003.
+ *
+ * "Add to cart" (Phase 5): src/scripts/add-to-cart.js — live stock check, and
+ * the shown vehicle goes onto the cart line.
  */
 import Site from "../../layouts/Site.astro";
 import VehiclePicker from "../../components/VehiclePicker.astro";
@@ -110,3 +113,4 @@ const omittedNames = groups.omitted.map((g) => g.title).join(", ");
 </Site>
 
 <script src="../../scripts/kits-picker.js"></script>
+<script src="../../scripts/add-to-cart.js"></script>

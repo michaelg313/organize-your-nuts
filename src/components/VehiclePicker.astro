@@ -28,6 +28,11 @@ const makeOptions = makes();
         <span class="veh-chip" data-chip hidden><span class="tick" aria-hidden="true">&#10003;</span> <span data-chip-text></span></span>
         <a class="link-edit" href={platform ? `/hardware-kits/${platform}` : "/hardware-kits"} data-change hidden>Change vehicle</a>
       </div>
+      <!-- shown by add-to-cart.js when "Add to cart" is pressed before a vehicle is set -->
+      <div class="notice" data-need-vehicle hidden role="status" style="margin:16px 0 0;">
+        <span class="nmark" aria-hidden="true">!</span>
+        <p>Choose your vehicle first — we note it on your order.</p>
+      </div>
       <div class="filter-grid">
         <label class="field"><span class="lab">Make</span>
           <select class="ctl" name="make" data-sel="make">

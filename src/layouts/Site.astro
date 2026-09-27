@@ -4,11 +4,16 @@
  * wrapper that is the container-query root for every responsive rule
  * (ADR-001 §5 Phase 1). Markup follows the hi-fi's per-frame chrome.
  *
- * Only the nav's "Hardware Kits" link points at a route that exists today.
- * Home, Hardware Storage, About and Cart are Phases 5–6; the links are here
- * so the chrome matches the design and so the operator can see the gaps.
+ * The nav's "Hardware Kits" and "Cart" point at routes that exist. Home,
+ * Hardware Storage and About are Phase 6; the links are here so the chrome
+ * matches the design and so the operator can see the gaps.
+ *
+ * Every page carries the cart's Storefront settings in <head> (the PUBLIC
+ * token — see storefrontPublicConfig() in shopify.js) because the nav's cart
+ * count is on every page (src/scripts/cart-count.js).
  */
 import "../styles/site.css";
+import { storefrontPublicConfig } from "../lib/shopify.js";
 
 interface Props {
   /** <title> — page-specific, complete. */
@@ -22,6 +27,7 @@ interface Props {
 }
 const { title, description, canonical, current } = Astro.props;
 const on = (key: string) => (current === key ? { class: "on", "aria-current": "page" } : {});
+const storefront = storefrontPublicConfig();
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -31,6 +37,8 @@ const on = (key: string) => (current === key ? { class: "on", "aria-current": "p
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
+  <meta name="oyn-storefront-endpoint" content={storefront.endpoint} />
+  <meta name="oyn-storefront-token" content={storefront.token} />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -49,13 +57,16 @@ const on = (key: string) => (current === key ? { class: "on", "aria-current": "p
         <a href="/about" {...on("about")}>About / Contact</a>
       </nav>
       <div class="nav-right">
-        <a class="cart-btn" href="/cart" aria-label="Cart"><span class="lbl">Cart</span></a>
+        <a class="cart-btn" href="/cart" aria-label="Cart" data-cart-link><span class="lbl">Cart</span> <span class="count" data-cart-count hidden></span></a>
         <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
       </div>
     </div>
   </header>
 
   <slot />
+
+  <!-- announces cart changes ("… added to your cart") to screen readers -->
+  <p class="vh" role="status" data-cart-status></p>
 
   <footer class="footer">
     <div class="wrap">
@@ -105,5 +116,6 @@ const on = (key: string) => (current === key ? { class: "on", "aria-current": "p
     document.querySelectorAll(".nav-sentinel").forEach((s) => io.observe(s));
   })();
 </script>
+<script src="../scripts/cart-count.js"></script>
 </body>
 </html>

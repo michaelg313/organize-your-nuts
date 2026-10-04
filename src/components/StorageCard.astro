@@ -1,0 +1,36 @@
+---
+/**
+ * StorageCard.astro — one storage product, as the hi-fi Bins page's
+ * `.card.card-lift.prod` (template ④). Storage isn't vehicle-specific, so
+ * unlike KitCard there's no fitment note and no "verify fitment" line.
+ *
+ * "Add to cart" is wired up by src/scripts/add-to-cart.js. `data-storage`
+ * tells it this line goes in with no vehicle and no attributes (ADR-001 §5
+ * Phase 5). The HTML shows the stock state as of the build; the script
+ * re-asks Shopify when the page loads, so a restock needs no redeploy.
+ * (The hi-fi's button says "Add"; it says "Add to cart" here to match the kits.)
+ */
+import { formatPrice } from "../lib/shopify.js";
+
+interface Props {
+  product: import("../lib/shopify.js").StorageProduct;
+  /** position in Shopify's list — "Featured" sort puts cards back in this order */
+  order: number;
+}
+const { product, order } = Astro.props;
+---
+<article class="card card-lift prod" data-sort-card data-order={order} data-price={product.price.amount} data-title={product.title}>
+  {product.image
+    ? <img class="prod-photo" src={product.image.url} alt={product.image.alt} width={product.image.width} height={product.image.height} loading="lazy" decoding="async" />
+    : <div class="ph ph-prod" role="img" aria-label="Placeholder: Product photo" data-label="Product · 1:1"></div>}
+  <h3 class="name">{product.title}</h3>
+  {product.description && <p class="desc">{product.description}</p>}
+  <div class="buy">
+    <span class="price">{formatPrice(product.price)}</span>
+    <button class="btn btn-primary btn-sm" type="button"
+      data-add-to-cart data-storage data-variant={product.variantId} data-title={product.title}
+      disabled={!product.availableForSale} aria-disabled={product.availableForSale ? undefined : "true"}
+    >{product.availableForSale ? "Add to cart" : "Out of stock"}</button>
+  </div>
+  <p class="err" data-add-error hidden></p>
+</article>

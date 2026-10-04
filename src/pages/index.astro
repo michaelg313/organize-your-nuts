@@ -1,0 +1,141 @@
+---
+/**
+ * / — Home (hi-fi template ①, ADR-001 §5 Phase 6).
+ *
+ * Quick Vehicle Entry: the same picker script as the Kits pages
+ * (src/scripts/kits-picker.js) on the hi-fi's `.veh-form`. Choosing a vehicle
+ * goes to /hardware-kits/<platform>?year=…&make=…&model=…&engine=… — the same
+ * resolution, the same URL, the same saved-vehicle re-fill as the Kits picker.
+ *
+ * Copy: the hi-fi's numbers ("1,400+ kits in stock") were design filler. Here
+ * every number is counted from the real data at build time, and every other
+ * business fact comes from src/lib/business.js — left off until confirmed.
+ */
+import Site from "../layouts/Site.astro";
+import { makes, platforms, vehicleCount } from "../lib/fitment.js";
+import { loadCatalog, storageIn } from "../lib/shopify.js";
+import { STORAGE_TYPES } from "../lib/storage.js";
+import { SYSTEMS } from "../lib/display.js";
+import { business } from "../lib/business.js";
+import "../styles/pages/home.css";
+
+const { kits, storage } = await loadCatalog();
+const canonical = new URL("/", Astro.site).href;
+const makeOptions = makes();
+
+// The hero's readout strip: true counts first, then confirmed business facts; three at most.
+const readout = [
+  { b: `${kits.length} ${kits.length === 1 ? "kit" : "kits"}`, rest: `for ${platforms.length} engine platforms` },
+  business.sameDayCutoff && { b: "Ships same day", rest: `before ${business.sameDayCutoff}` },
+  business.bulkPricingFrom && { b: "Bulk pricing", rest: `on ${business.bulkPricingFrom}+ kits` },
+  { b: `${vehicleCount().toLocaleString("en-US")} vehicles`, rest: "covered by year, model and engine" },
+].filter(Boolean).slice(0, 3);
+
+const systemNames = SYSTEMS.map((s) => s.title);
+const storageLines = STORAGE_TYPES.map((t) => {
+  const n = storageIn(storage, t.value).length;
+  return n ? t.title : `${t.title} — coming soon`;
+});
+---
+<Site
+  title="Fastener Kits Matched to Your Vehicle | OrganizeYourNuts"
+  description="Hardware kits matched to your year, make, model and engine — engine, transmission, steering, axle and trim — plus storage for the loose hardware."
+  {canonical}
+  current="home"
+>
+  <section class="veh-bar" aria-labelledby="veh-h">
+    <div class="wrap">
+      <div class="veh-head">
+        <strong id="veh-h">Find hardware that fits your vehicle</strong>
+        <span class="hint">Set it once &mdash; it carries through to your kits and your cart.</span>
+      </div>
+      <form class="veh-form" data-picker data-platform="" action="/hardware-kits" method="get" novalidate>
+        <label class="field"><span class="lab">Make</span>
+          <select class="ctl" name="make" data-sel="make">
+            <option value="">Select make</option>
+            {makeOptions.map((m) => <option value={m}>{m}</option>)}
+          </select>
+        </label>
+        <label class="field"><span class="lab">Model</span>
+          <select class="ctl" name="model" data-sel="model" disabled><option value="">Select model</option></select>
+        </label>
+        <label class="field"><span class="lab">Year</span>
+          <select class="ctl" name="year" data-sel="year" disabled><option value="">Select year</option></select>
+        </label>
+        <label class="field"><span class="lab">Engine <span class="spec" style="text-transform:none; letter-spacing:0;">(your motor)</span></span>
+          <select class="ctl" name="engine" data-sel="engine" disabled><option value="">Select engine</option></select>
+        </label>
+        <button class="btn btn-primary" type="submit" data-submit disabled>Show my kits</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="sec hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div class="enter">
+          <p class="eyebrow">Automotive fasteners &amp; storage</p>
+          <h1>Every bolt your build needs, in one kit.</h1>
+          <p class="lede">Fastener kits matched to your make, model, year and engine &mdash; plus storage to keep the hardware sorted once the box is open.</p>
+          <div class="btn-row" style="margin-top:28px;">
+            <a class="btn btn-primary" href="/hardware-kits">Shop hardware kits</a>
+            <a class="btn btn-outline" href="/hardware-storage">Shop storage</a>
+          </div>
+          <div class="readout">
+            {readout.map((r) => <div><b>{r.b}</b> {r.rest}</div>)}
+          </div>
+        </div>
+        <div class="hero-plate enter-plate"><div class="ph ph-hero" role="img" aria-label="Placeholder: Hero image" data-label="Hero image · 16:10"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec alt" aria-labelledby="pillars-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Two ways to shop</p>
+        <h2 id="pillars-h">Kits for the job, storage for the rest</h2>
+        <p class="lede">Start with what fits your vehicle, then sort what&rsquo;s left over.</p>
+      </div>
+      <div class="grid g2">
+        <a class="card card-lift pillar" href="/hardware-kits">
+          <div class="ph ph-pillar" role="img" aria-label="Placeholder: Kits image" data-label="Kits image · 16:9"></div>
+          <h3>Hardware Kits</h3>
+          <p class="muted">Set your vehicle and see every kit that fits it, grouped by system.</p>
+          <ul>
+            <li>{systemNames.slice(0, 3).join(" · ")}</li>
+            <li>{systemNames.slice(3).join(" · ")}</li>
+            {business.kitMaterials && <li>{business.kitMaterials[0].toUpperCase() + business.kitMaterials.slice(1)} options</li>}
+          </ul>
+          <span class="go">Set your vehicle, see kits <span class="arw">&rarr;</span></span>
+        </a>
+        <a class="card card-lift pillar" href="/hardware-storage">
+          <div class="ph ph-pillar" role="img" aria-label="Placeholder: Storage image" data-label="Storage image · 16:9"></div>
+          <h3>Hardware Storage</h3>
+          <p class="muted">Bins, organizers and cases for loose fasteners.</p>
+          <ul>
+            {storageLines.map((line) => <li>{line}</li>)}
+          </ul>
+          <span class="go">Browse storage <span class="arw">&rarr;</span></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec tight">
+    <div class="wrap">
+      <div class="cta-banner">
+        <div>
+          <h2>Not sure which kit you need?</h2>
+          <p class="muted">Tell us the year, engine and what you&rsquo;re rebuilding &mdash; we&rsquo;ll match the hardware.</p>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/hardware-kits">Shop kits</a>
+          <a class="btn btn-outline" href="/about#contact">Contact us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Site>
+
+<script src="../scripts/kits-picker.js"></script>

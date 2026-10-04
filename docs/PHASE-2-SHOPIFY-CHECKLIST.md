@@ -313,6 +313,37 @@ covers and why. SEO title/description on the two *renamed* entries were **not** 
 > small-block Chevy engines. Organized, labeled, and matched to your build.* Handles, names and
 > Notes unchanged. All four pages now carry a qualified title; verified in a rebuild.
 
+---
+
+## Part I — Product metafield: `Storage type` (done 2026-10-04, Phase 6)
+
+Storage products had no category in Shopify, so the three Hardware Storage pages (Bins, Organizers,
+Cases) had nothing to group by. Modelled the same way as `System` (Part D) — a pick-list metafield,
+so a typo is impossible — rather than a tag (free text; "bin" vs "bins" silently hides a product)
+or collections (each must also be published to the Headless channel, or its page is silently
+empty; and Part C already decided pages come from Astro, not collections). The operator approved
+this exact change list before anything was written; done through the Shopify connector, then read
+back.
+
+| # | Change | Exact value |
+|---|---|---|
+| 1 | New product metafield definition | Name **`Storage type`**; namespace/key **`custom.storage_type`**; *One* value, **Choice list (Single line text)** (`single_line_text_field` + `choices` validation); choices exactly `bins`, `organizers`, `cases`; Storefront API access **on** (`PUBLIC_READ`); filter / collection-condition / unique-values **off**; **pinned in position 4**, after Fitment note. Description: which Hardware Storage page the product appears on; leave blank on kits. |
+| 2 | Value on product #10 | "Wall-Mount Bin Rack — 12 Bins" (`wall-mount-bin-rack-12-bins`) → `custom.storage_type` = **`bins`** |
+
+> **Read back 2026-10-04:** the store has exactly four product metafield definitions — Fits
+> platforms (1), System (2), Fitment note (3), Storage type (4) — each with Storefront read access
+> and the three capability toggles off. Storage type's choices are exactly `["bins","organizers","cases"]`.
+> Only product #10 carries a Storage type (`bins`); the nine kits carry none. Inventory unchanged:
+> 0 on all ten products (operator's choice). No collections created or changed.
+
+**Rule from now on:** a kit has *Fits platforms* + *System* and no Storage type; a storage product
+has *Storage type* and neither of the other two. The build refuses anything else, in plain
+English, naming the product (`src/lib/shopify.js`). The three choices must match
+[`src/lib/storage.js`](../src/lib/storage.js) — change both together. Organizers and Cases have no
+products yet; their pages say "Coming soon" (operator's decision, Phase 6).
+
+---
+
 **Explicitly NOT in Phase 2:** no Storefront API token, no API calls, no Astro scaffolding, no
 theme work. Creating the API credential happens at the start of Phase 4, when there's code to
 use it.

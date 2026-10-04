@@ -4,24 +4,22 @@
    Requires site.css loaded first.
    .cta-banner comes from ../shared/cta-banner.css (imported below; Phase 4
    resolved the README's cross-page flag). .filter-panel/.filter-grid and
-   .prod defined here are also used by the Storage sub-category page.
+   .prod moved to ../shared/filter-panel.css and ../shared/prod.css in
+   Phase 6 (the Storage sub-category uses them too); imported below so this
+   file still styles the Kits page fully.
    Phase 4 additions for elements the hi-fi had no data for (fitment note,
    verify line, not-covered notice) are appended at the end, clearly marked. */
 @import "../shared/cta-banner.css";
 @import "../shared/notice.css";
+@import "../shared/filter-panel.css";
+@import "../shared/prod.css";
 
 /* ─────────── PAGE: Hardware Kits ─────────── */
-.filter-panel{
-  background:var(--bg-card); background-image:var(--sheen);
-  border:1px solid var(--hairline-2);
-  border-radius:var(--r-card); padding:24px 26px;
-  box-shadow:var(--sh-2);
-}
+/* .filter-panel and .filter-grid: see ../shared/filter-panel.css */
 .filter-panel .chip-row{
   padding-bottom:18px; margin-bottom:20px;
   border-bottom:1px solid var(--hairline);
 }
-.filter-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
 .filter-foot{
   display:flex; justify-content:space-between; align-items:center; gap:16px;
   margin-top:20px; flex-wrap:wrap;
@@ -52,28 +50,13 @@
 .sysgroup-head h3{font-size:20px; font-weight:800; letter-spacing:-.35px;}
 .sysgroup-head .cnt{font-size:12.5px; color:var(--text-muted);}
 
-/* kit / product card */
-.prod{display:flex; flex-direction:column; gap:12px; padding:16px;}
-.prod .name{font-size:15.5px; font-weight:700; line-height:1.35;}
-.prod .desc{font-size:12.5px; color:var(--text-muted); line-height:1.55; flex:1;}
-.prod .buy{
-  display:flex; align-items:center; justify-content:space-between; gap:12px;
-  padding-top:13px; margin-top:2px; border-top:1px solid var(--hairline);
-}
-.prod .price{font-size:19px; font-weight:800; letter-spacing:-.5px;}
+/* kit / product card (.prod): see ../shared/prod.css */
 
-/* responsive — this page's selectors from the hi-fi @container blocks */
+/* responsive — this page's selectors from the hi-fi @container blocks
+   (.filter-grid/.filter-panel and .prod lines moved with their rules) */
 @container (max-width:768px){
-  .filter-grid{grid-template-columns:1fr;}
-  .filter-panel{padding:18px;}
   .filter-foot .btn{width:100%;}
   .sysgroup{margin-top:34px;}
-  .prod .buy{flex-direction:column; align-items:stretch; gap:12px;}
-  .prod .buy .btn{width:100%;}
-  .prod .price{text-align:center;}
-}
-@container (max-width:400px){
-  .prod{padding:14px;}
 }
 
 /* ═══════════════════ PHASE 4 ADDITIONS ═══════════════════
@@ -113,5 +96,6 @@
    clear of the sticky nav (same offset the hi-fi gives .sysgroup) */
 .filter-panel{scroll-margin-top:calc(var(--tb-h) + 84px);}
 
-/* the results heading changes wording when a vehicle is set; both live in the HTML */
-[hidden]{display:none!important;}
+/* the results heading changes wording when a vehicle is set; both live in the
+   HTML. The [hidden] rule that makes that work moved to
+   ../shared/site-additions.css in Phase 6 (every page needs it). */

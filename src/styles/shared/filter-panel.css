@@ -1,0 +1,22 @@
+/* OrganizeYourNuts — shared component: .filter-panel / .filter-grid
+   §5 assigns these to the Hardware Kits page, but the Storage sub-category
+   uses them too (Phase 1 flagged the reuse in README.md). Phase 6 resolves
+   that flag the way Phase 4 resolved .cta-banner: the rules moved here
+   VERBATIM, with their lines from the hi-fi @container blocks, and both
+   routes import this file. Kits-only parts (.filter-panel .chip-row,
+   .filter-foot) stayed in pages/hardware-kits.css.
+   Requires site.css loaded first. Import from hardware-kits.css and
+   storage-category.css. */
+
+.filter-panel{
+  background:var(--bg-card); background-image:var(--sheen);
+  border:1px solid var(--hairline-2);
+  border-radius:var(--r-card); padding:24px 26px;
+  box-shadow:var(--sh-2);
+}
+.filter-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+
+@container (max-width:768px){
+  .filter-grid{grid-template-columns:1fr;}
+  .filter-panel{padding:18px;}
+}

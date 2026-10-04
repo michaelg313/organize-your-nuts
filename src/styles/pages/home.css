@@ -90,3 +90,11 @@
 @container (max-width:400px){
   .veh-head{gap:6px;}
 }
+
+/* ═══════════════════ PHASE 6 ADDITIONS ═══════════════════
+   A bug in the hi-fi itself, restored to its intent: site.css's
+   `a.card{display:block}` outranks `.pillar{display:flex}` above (an
+   element+class beats a class), so the pillar's column layout — 15px gaps,
+   the "→" line pinned to the bottom — never applied, in the hi-fi or here.
+   Same declaration, one notch more specific. */
+a.card.pillar{display:flex;}

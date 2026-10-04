@@ -2,8 +2,11 @@
    §5 "PAGE: About / Contact" from organizeyournuts-hifi.html, moved
    verbatim, plus this page's selectors from the combined @container blocks.
    Requires site.css loaded first.
-   NOTE: the hi-fi About page's contact form also uses .form-grid/.span2
-   (defined in checkout.css) — see the cross-page reuse list in README.md. */
+   The contact form's .form-grid/.span2 come from ../shared/form-grid.css
+   (moved out of checkout.css in Phase 6); its "sent" message uses .notice.
+   Phase 6 additions are appended at the end, clearly marked. */
+@import "../shared/form-grid.css";
+@import "../shared/notice.css";
 
 /* ─────────── PAGE: About / Contact ─────────── */
 .about-grid{display:grid; grid-template-columns:.85fr 1.15fr; gap:44px; align-items:center;}
@@ -30,3 +33,10 @@
   .about-grid,.contact-grid{grid-template-columns:1fr; gap:26px;}
   .stat-row{gap:12px;}
 }
+
+/* ═══════════════════ PHASE 6 ADDITIONS ═══════════════════
+   New elements, not in the hi-fi. Built only from existing tokens. */
+
+/* No confirmed contact details yet (src/lib/business.js) → no "Reach us
+   directly" card; the form takes a readable width instead of 60%. */
+.contact-grid.solo{grid-template-columns:1fr; max-width:680px;}

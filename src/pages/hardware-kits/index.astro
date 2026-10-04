@@ -22,10 +22,6 @@ const canonical = new URL("/hardware-kits", Astro.site).href;
   {canonical}
   current="kits"
 >
-  <Fragment slot="footer-kits">
-    {platforms.map((p) => <li><a href={`/hardware-kits/${p.handle}`}>{p.display_name}</a></li>)}
-  </Fragment>
-
   <section class="sec tight">
     <div class="wrap">
       <div class="crumb"><a href="/">Home</a><span>/</span><b>Hardware Kits</b></div>

@@ -5,8 +5,10 @@
    NOTE: per ADR-001 §3.1 the designed multi-step checkout is replaced by
    Shopify's hosted checkout; these styles are ported for completeness and
    for the confirmation/summary pieces that may survive.
-   NOTE: .form-grid/.span2 defined here are also used by the About page
-   contact form; .summary comes from cart.css — see README.md. */
+   NOTE: .form-grid/.span2 moved to ../shared/form-grid.css in Phase 6 (the
+   About page's contact form uses them too); imported below. .summary comes
+   from cart.css — see README.md. */
+@import "../shared/form-grid.css";
 
 /* ─────────── PAGE: Checkout ─────────── */
 .steps{
@@ -37,8 +39,7 @@
 }
 .step-line{flex:1; height:1px; background:var(--hairline-2); margin:0 16px; min-width:16px;}
 .co-grid{display:grid; grid-template-columns:1.7fr 1fr; gap:26px; align-items:start;}
-.form-grid{display:grid; grid-template-columns:1fr 1fr; gap:17px;}
-.span2{grid-column:1 / -1;}
+/* .form-grid and .span2: see ../shared/form-grid.css */
 .step-panel{padding:28px;}
 .step-panel > h2{margin-bottom:5px; font-size:20px; font-weight:800;}
 .step-panel > .sub{font-size:13.5px; color:var(--text-muted); margin-bottom:22px;}
@@ -114,7 +115,7 @@
 /* responsive — this page's selectors from the hi-fi @container blocks */
 @container (max-width:768px){
   .steps-inner{--gutter:20px;}
-  .form-grid,.radio-row{grid-template-columns:1fr;}
+  .radio-row{grid-template-columns:1fr;}   /* .form-grid's line moved with it */
   .co-grid{grid-template-columns:1fr; gap:26px;}
   .steps{padding:18px 0;}
   .steps-inner{flex-wrap:wrap; gap:13px;}

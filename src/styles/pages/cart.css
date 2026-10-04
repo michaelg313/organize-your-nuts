@@ -62,8 +62,8 @@
    New elements, not in the hi-fi. Built only from existing tokens. */
 
 /* the cart page swaps whole states (loading / empty / full / error) with the
-   hidden attribute; several of those elements set their own display */
-[hidden]{display:none!important;}
+   hidden attribute; several of those elements set their own display. The
+   [hidden] rule moved to ../shared/site-additions.css in Phase 6. */
 
 /* the heading gets the design's 20px gap only when the Fitment row follows it */
 .h1-page.has-fitment{margin-bottom:20px;}

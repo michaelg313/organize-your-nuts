@@ -13,6 +13,11 @@
  * The same picker markup is used on /hardware-kits (no platform) and on every
  * /hardware-kits/<platform> page; `data-platform` on the form tells us which.
  *
+ * Home's Quick Vehicle Entry (Phase 6) runs this same script, so a vehicle
+ * chosen on Home resolves exactly as it does here. Home's form has no platform,
+ * no "your vehicle" chip and no "Change vehicle" link: choosing a vehicle
+ * always goes to its platform's page, and a saved vehicle only re-fills it.
+ *
  * Cart hand-off (Phase 5): while the page shows "your vehicle", the form carries
  * it as `data-vehicle` (JSON). src/scripts/add-to-cart.js reads that at click
  * time — so a kit only ever goes in the cart with the vehicle the page claims
@@ -144,7 +149,7 @@ function init(form) {
     }
   });
 
-  change.addEventListener("click", (e) => {
+  change?.addEventListener("click", (e) => {   // Home's form has no "Change vehicle" link
     e.preventDefault();
     forget();
     setForm({});

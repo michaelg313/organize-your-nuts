@@ -1,0 +1,57 @@
+---
+/**
+ * /hardware-storage — Hardware Storage overview (hi-fi template ③, ADR-001 §5 Phase 6).
+ *
+ * One card per category in src/lib/storage.js. Each card's count and "from"
+ * price are counted from Shopify at build time (products with that
+ * `custom.storage_type`). A category with no products says "Coming soon"
+ * (operator's decision, Phase 6) and still links to its page, which says the same.
+ */
+import Site from "../../layouts/Site.astro";
+import { loadCatalog, storageIn, fromPrice } from "../../lib/shopify.js";
+import { STORAGE_TYPES, countLabel } from "../../lib/storage.js";
+import "../../styles/pages/storage-overview.css";
+
+const { storage } = await loadCatalog();
+const canonical = new URL("/hardware-storage", Astro.site).href;
+const cards = STORAGE_TYPES.map((t) => {
+  const products = storageIn(storage, t.value);
+  return {
+    ...t,
+    meta: products.length ? `${countLabel(t, products.length)} · from ${fromPrice(products)}` : "Coming soon",
+    go: products.length ? `Shop ${t.many}` : `About ${t.many}`,
+  };
+});
+---
+<Site
+  title="Hardware Storage — Bins, Organizers & Cases | OrganizeYourNuts"
+  description="Bins, organizers and cases for loose nuts, bolts and washers. Storage isn't vehicle-specific — pick by capacity and where it lives."
+  {canonical}
+  current="storage"
+>
+  <section class="sec tight">
+    <div class="wrap">
+      <div class="crumb"><a href="/">Home</a><span>/</span><b>Hardware Storage</b></div>
+      <p class="eyebrow">Keep it sorted</p>
+      <h1 class="h1-page">Storage built for loose hardware</h1>
+      <p class="lede">Bins, organizers and cases for loose fasteners. Storage isn&rsquo;t vehicle-specific &mdash; pick by capacity and where it lives.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="vh">Storage types</h2>
+      <div class="grid g3">
+        {cards.map((c) => (
+          <a class="card card-lift stor-card" href={`/hardware-storage/${c.value}`}>
+            <div class="ph ph-pillar" role="img" aria-label={`Placeholder: ${c.title} image`} data-label={`${c.title} image · 16:9`}></div>
+            <h3>{c.title}</h3>
+            <p class="muted">{c.blurb}</p>
+            <span class="meta">{c.meta}</span>
+            <span class="go">{c.go} <span class="arw">&rarr;</span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Site>

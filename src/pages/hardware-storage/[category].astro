@@ -1,0 +1,103 @@
+---
+/**
+ * /hardware-storage/<category> — Storage sub-category (hi-fi template ④,
+ * "reused for Organizers & Cases"; ADR-001 §5 Phase 6).
+ *
+ * One static page per category in src/lib/storage.js. Products are the
+ * Shopify products whose `custom.storage_type` is this category, in the order
+ * Shopify lists them. "Add to cart" goes in with no vehicle and no attributes;
+ * stock is re-checked live (src/scripts/add-to-cart.js).
+ *
+ * Deviations from the hi-fi, because the data doesn't exist yet:
+ *   - Size / Material / Compartments filters: there's no per-product data to
+ *     filter on (it would need new Shopify fields). Only "Sort by" is built,
+ *     and it only appears when there are 2+ products to sort.
+ *   - "Load more", "Best seller" / "New" tags: no data; omitted.
+ *   - A category with no products shows "Coming soon" and is kept out of
+ *     search engines (noindex) until it has one (operator's decision, Phase 6).
+ */
+import Site from "../../layouts/Site.astro";
+import StorageCard from "../../components/StorageCard.astro";
+import { loadCatalog, storageIn } from "../../lib/shopify.js";
+import { STORAGE_TYPES, countLabel } from "../../lib/storage.js";
+import "../../styles/pages/storage-category.css";
+
+export async function getStaticPaths() {
+  await loadCatalog();   // fetch and validate once; every page shares it
+  return STORAGE_TYPES.map((t) => ({ params: { category: t.value }, props: { type: t } }));
+}
+
+const { type } = Astro.props;
+const { storage } = await loadCatalog();
+const products = storageIn(storage, type.value);
+const empty = products.length === 0;
+const sortable = products.length >= 2;
+
+// Where to send people from an empty category: the first category that has products.
+const stocked = STORAGE_TYPES.find((t) => t.value !== type.value && storageIn(storage, t.value).length > 0) ?? null;
+
+const canonical = new URL(`/hardware-storage/${type.value}`, Astro.site).href;
+const title = `${type.title} — Hardware Storage | OrganizeYourNuts`;
+---
+<Site {title} description={type.blurb} {canonical} current="storage">
+  {empty && <meta slot="head" name="robots" content="noindex" />}
+
+  <section class="sec tight">
+    <div class="wrap">
+      <div class="crumb"><a href="/">Home</a><span>/</span><a href="/hardware-storage">Hardware Storage</a><span>/</span><b>{type.title}</b></div>
+      <p class="eyebrow">Hardware Storage</p>
+      <h1 class="h1-page">{type.title}</h1>
+      <p class="lede">{type.lede}</p>
+    </div>
+  </section>
+
+  {sortable && (
+    <section class="sec tight alt" aria-labelledby="sort-h">
+      <div class="wrap">
+        <h2 id="sort-h" class="vh">Sort {type.many}</h2>
+        <div class="filter-panel">
+          <div class="filter-grid">
+            <label class="field"><span class="lab">Sort by</span>
+              <select class="ctl" data-sort>
+                <option value="featured" selected>Featured</option>
+                <option value="price-asc">Price: low to high</option>
+                <option value="price-desc">Price: high to low</option>
+                <option value="name">Name: A&ndash;Z</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="sec">
+    <div class="wrap">
+      {empty ? (
+        <div class="state">
+          <div class="badge-lg" aria-hidden="true">&#11041;</div>
+          <h2>{type.title} are coming soon</h2>
+          <p class="lede">We&rsquo;re not selling {type.many} yet. {stocked ? `In the meantime, take a look at our ${stocked.many}, or tell us what you need to store.` : "Tell us what you need to store and we’ll let you know when they’re in."}</p>
+          <div class="btn-row">
+            {stocked
+              ? <a class="btn btn-primary" href={`/hardware-storage/${stocked.value}`}>Shop {stocked.many}</a>
+              : <a class="btn btn-primary" href="/hardware-kits">Shop hardware kits</a>}
+            <a class="btn btn-outline" href="/about#contact">Tell us what you need</a>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div class="sec-head" style="margin-bottom:22px;">
+            <h2>{countLabel(type, products.length)}</h2>
+          </div>
+          <div class="grid g4" data-sort-grid>
+            {products.map((product, i) => <StorageCard {product} order={i} />)}
+          </div>
+        </>
+      )}
+    </div>
+  </section>
+</Site>
+
+<script src="../../scripts/add-to-cart.js"></script>
+<script src="../../scripts/storage-sort.js"></script>

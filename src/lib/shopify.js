@@ -13,6 +13,11 @@
  *   - a platform in fitment/platforms.json isn't in Shopify → its page would be empty
  *   - a platform has zero kits                          → a page with nothing to sell
  *   - a kit fits a platform but has no valid `system`   → it can't be grouped on the page
+ *   - a product is neither a kit nor storage, or both   → it would be on no page, or the wrong one
+ *     (Phase 6: a kit has `Fits platforms`; a storage product has `Storage type`)
+ *
+ * A storage category with no products is NOT a failure — its page says
+ * "Coming soon" (operator's decision, Phase 6).
  *
  * Every message below is written for a person. If the build fails, the LAST
  * lines of the build log say what's wrong and where to fix it.
@@ -20,6 +25,7 @@
 
 import { platforms as repoPlatforms } from "./fitment.js";
 import { SYSTEMS, formatPrice } from "./display.js";
+import { STORAGE_TYPES } from "./storage.js";
 
 // The system list and price format moved to display.js in Phase 5 so the cart
 // (in the browser) can share them without importing this build-only file.
@@ -33,16 +39,19 @@ export const STOREFRONT_API_VERSION = "2026-07";
 const MF_FITS_PLATFORMS = { namespace: "custom", key: "fits_platforms" };
 const MF_SYSTEM = { namespace: "custom", key: "system" };
 const MF_FITMENT_NOTE = { namespace: "custom", key: "fitment_note" };
+const MF_STORAGE_TYPE = { namespace: "custom", key: "storage_type" };   // Phase 6 — checklist Part I
 const METAOBJECT_TYPE = "platform";
 
-/** @typedef {{ id:string, handle:string, title:string, description:string, image:{url:string,alt:string,width:number,height:number}|null, price:{amount:string,currency:string}, fitsPlatforms:string[], system:string|null, fitmentNote:string|null, variantId:string|null, availableForSale:boolean }} Kit */
+/** @typedef {{ id:string, handle:string, title:string, description:string, image:{url:string,alt:string,width:number,height:number}|null, price:{amount:string,currency:string}, fitsPlatforms:string[], system:string|null, fitmentNote:string|null, storageType:string|null, variantId:string|null, availableForSale:boolean }} Product */
+/** @typedef {Product} Kit  — a product with at least one platform in `Fits platforms` */
+/** @typedef {Product} StorageProduct  — a product with a `Storage type` */
 /** @typedef {{ handle:string, name:string, description:string|null, seoTitle:string|null, seoDescription:string|null }} PlatformRecord */
 
 // ---------- failure helper ---------------------------------------------------
 
 class BuildDataError extends Error {}
 
-function fail(lines, heading = "Can't build the Hardware Kits pages") {
+function fail(lines, heading = "Can't build the store pages") {
   const text = ["", `✗ ${heading}:`, "", ...lines.map((l) => `  ${l}`), ""].join("\n");
   throw new BuildDataError(text);
 }
@@ -112,7 +121,7 @@ async function storefront(query, variables = {}) {
 // ---------- queries ----------------------------------------------------------
 
 const KITS_QUERY = /* GraphQL */ `
-  query Kits($cursor: String, $fitsNs: String!, $fitsKey: String!, $sysNs: String!, $sysKey: String!, $noteNs: String!, $noteKey: String!) {
+  query Kits($cursor: String, $fitsNs: String!, $fitsKey: String!, $sysNs: String!, $sysKey: String!, $noteNs: String!, $noteKey: String!, $storNs: String!, $storKey: String!) {
     products(first: 100, after: $cursor) {
       pageInfo { hasNextPage endCursor }
       nodes {
@@ -123,6 +132,7 @@ const KITS_QUERY = /* GraphQL */ `
         fits: metafield(namespace: $fitsNs, key: $fitsKey) { references(first: 20) { nodes { ... on Metaobject { handle } } } }
         system: metafield(namespace: $sysNs, key: $sysKey) { value }
         fitmentNote: metafield(namespace: $noteNs, key: $noteKey) { value }
+        storageType: metafield(namespace: $storNs, key: $storKey) { value }
       }
     }
   }
@@ -145,6 +155,7 @@ async function fetchAllProducts() {
       fitsNs: MF_FITS_PLATFORMS.namespace, fitsKey: MF_FITS_PLATFORMS.key,
       sysNs: MF_SYSTEM.namespace, sysKey: MF_SYSTEM.key,
       noteNs: MF_FITMENT_NOTE.namespace, noteKey: MF_FITMENT_NOTE.key,
+      storNs: MF_STORAGE_TYPE.namespace, storKey: MF_STORAGE_TYPE.key,
     });
     out.push(...data.products.nodes);
     if (!data.products.pageInfo.hasNextPage) break;
@@ -153,12 +164,13 @@ async function fetchAllProducts() {
   return out;
 }
 
-/** @returns {Kit} */
-function toKit(p) {
+/** @returns {Product} */
+function toProduct(p) {
   const note = p.fitmentNote?.value?.trim() || null;
-  // Every kit is sold as its one variant ("Default Title"); that variant is what
-  // the cart adds. availableForSale is only the build-time snapshot — the kit
-  // page re-asks Shopify in the browser, so restocking needs no redeploy.
+  // Every product is sold as its one variant ("Default Title"); that variant is
+  // what the cart adds. availableForSale is only the build-time snapshot — the
+  // kit and storage pages re-ask Shopify in the browser, so restocking needs no
+  // redeploy.
   const variant = p.variants?.nodes?.[0] ?? null;
   return {
     id: p.id,
@@ -172,6 +184,7 @@ function toKit(p) {
     fitsPlatforms: (p.fits?.references?.nodes ?? []).map((n) => n.handle).filter(Boolean),
     system: p.system?.value?.trim() || null,
     fitmentNote: note,
+    storageType: p.storageType?.value?.trim() || null,
     variantId: variant?.id ?? null,
     availableForSale: Boolean(variant?.availableForSale),
   };
@@ -191,7 +204,7 @@ function toPlatformRecord(m) {
 
 // ---------- the one build-time load -----------------------------------------
 
-/** @type {Promise<{kits:Kit[], platformRecords:Map<string,PlatformRecord>, warnings:string[]}>|null} */
+/** @type {Promise<{kits:Kit[], storage:StorageProduct[], platformRecords:Map<string,PlatformRecord>, warnings:string[]}>|null} */
 let loaded = null;
 
 /**
@@ -209,13 +222,43 @@ async function doLoad() {
     storefront(PLATFORMS_QUERY, { type: METAOBJECT_TYPE }),
   ]);
 
-  const kits = products.map(toKit).filter((k) => k.fitsPlatforms.length > 0); // storage products carry no platforms
+  const all = products.map(toProduct);
+  const kits = all.filter((p) => p.fitsPlatforms.length > 0);   // a kit fits at least one platform
+  const storage = all.filter((p) => p.storageType);              // storage has a Storage type (and no platforms)
   const platformRecords = new Map(platformData.metaobjects.nodes.map(toPlatformRecord).map((r) => [r.handle, r]));
 
   const problems = [];
   const warnings = [];
   const knownSystems = new Set(SYSTEMS.map((s) => s.value));
+  const knownStorage = new Set(STORAGE_TYPES.map((t) => t.value));
   const repoHandles = new Set(repoPlatforms.map((p) => p.handle));
+
+  // 0. Every product belongs on exactly one kind of page (Phase 6).
+  for (const p of all) {
+    if (p.fitsPlatforms.length > 0 && p.storageType) {
+      problems.push(
+        `Product "${p.title}" has both Fits platforms and Storage type, so the site can't tell whether it's a kit or storage. ` +
+        `Open it in the admin and clear the one that's wrong (kits: Fits platforms + System; storage: Storage type only).`,
+      );
+    } else if (p.fitsPlatforms.length === 0 && !p.storageType) {
+      problems.push(
+        `Product "${p.title}" has neither Fits platforms nor Storage type, so it would appear on no page. ` +
+        `Open it in the admin and set one: a kit gets Fits platforms + System; storage gets Storage type (bins, organizers or cases).`,
+      );
+    }
+  }
+  // 0b. Every storage product must be placeable and buyable.
+  for (const s of storage) {
+    if (!knownStorage.has(s.storageType)) {
+      problems.push(
+        `Product "${s.title}" has Storage type '${s.storageType}', which isn't one of the site's categories (${[...knownStorage].join(", ")}). ` +
+        `Shopify's pick-list and src/lib/storage.js must list the same three values — fix whichever one changed.`,
+      );
+    }
+    if (!s.variantId) {
+      problems.push(`Product "${s.title}" came back with no variant, so the cart has nothing to add. Open it in the admin and check it has a price and is published to the Headless channel.`);
+    }
+  }
 
   // 1. Every platform the repo wants a page for must exist in Shopify.
   for (const p of repoPlatforms) {
@@ -268,8 +311,20 @@ async function doLoad() {
   for (const w of warnings) console.warn(`⚠ ${w}`);
   if (problems.length) fail([`${problems.length} problem${problems.length === 1 ? "" : "s"} with the Shopify data:`, "", ...problems.map((p) => `• ${p}`), "", "Fix the items above in the Shopify admin (or the repo, where it says so) and run the build again."]);
 
-  console.log(`✓ Shopify: ${kits.length} kits across ${platformRecords.size} platforms (Storefront API ${STOREFRONT_API_VERSION}).`);
-  return { kits, platformRecords, warnings };
+  console.log(`✓ Shopify: ${kits.length} kits across ${platformRecords.size} platforms, ${storage.length} storage product${storage.length === 1 ? "" : "s"} (Storefront API ${STOREFRONT_API_VERSION}).`);
+  return { kits, storage, platformRecords, warnings };
+}
+
+/** Storage products in one category, in the order Shopify lists them. */
+export function storageIn(storage, type) {
+  return storage.filter((s) => s.storageType === type);
+}
+
+/** The lowest price among some products, as "$46.99", or null if there are none. */
+export function fromPrice(products) {
+  if (!products.length) return null;
+  const lowest = products.reduce((a, b) => (Number(b.price.amount) < Number(a.price.amount) ? b : a));
+  return formatPrice(lowest.price);
 }
 
 /** Kits for one platform, grouped into the five systems in page order; empty systems omitted. */

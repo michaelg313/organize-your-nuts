@@ -47,10 +47,6 @@ const lede =
 const omittedNames = groups.omitted.map((g) => g.title).join(", ");
 ---
 <Site {title} {description} {canonical} current="kits">
-  <Fragment slot="footer-kits">
-    {platforms.map((p) => <li><a href={`/hardware-kits/${p.handle}`}>{p.display_name}</a></li>)}
-  </Fragment>
-
   <section class="sec tight">
     <div class="wrap">
       <div class="crumb"><a href="/">Home</a><span>/</span><a href="/hardware-kits">Hardware Kits</a><span>/</span><b>{displayName}</b></div>

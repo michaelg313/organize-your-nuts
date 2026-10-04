@@ -10,3 +10,12 @@
   font-size:14px; font-weight:700; color:var(--orange); margin-top:auto;
   display:inline-flex; align-items:center; gap:7px;
 }
+
+/* ═══════════════════ PHASE 6 ADDITIONS ═══════════════════
+   A bug in the hi-fi itself, restored to its intent: site.css's
+   `a.card{display:block}` outranks `.stor-card{display:flex}` above (an
+   element+class beats a class), so the card's column layout — 15px gaps,
+   "Shop …" pinned to the bottom — never applied, in the hi-fi or here; the
+   count and the link ran together on one line. Same declaration, one notch
+   more specific. */
+a.card.stor-card{display:flex;}

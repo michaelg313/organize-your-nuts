@@ -1,0 +1,15 @@
+/* OrganizeYourNuts — shared component: .form-grid / .span2
+   §5 assigns these to the Checkout page, but the About page's contact form
+   uses them too (Phase 1 flagged the reuse in README.md). Phase 6 resolves
+   that flag the way Phase 4 resolved .cta-banner: the rules moved here
+   VERBATIM, with their line from the hi-fi @container block, and both
+   stylesheets import this file. (The designed checkout itself is replaced by
+   Shopify's — ADR-001 §3.1 — so in practice only About uses it.)
+   Requires site.css loaded first. Import from checkout.css and about.css. */
+
+.form-grid{display:grid; grid-template-columns:1fr 1fr; gap:17px;}
+.span2{grid-column:1 / -1;}
+
+@container (max-width:768px){
+  .form-grid{grid-template-columns:1fr;}
+}

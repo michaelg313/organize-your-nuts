@@ -127,6 +127,18 @@ export function toQuery(v) {
   return s ? `?${s}` : "";
 }
 
+/**
+ * How many distinct vehicles (year + make + model + engine) the rules cover —
+ * the honest number behind "vehicles covered" on Home and About (Phase 6).
+ */
+export function vehicleCount() {
+  const seen = new Set();
+  for (const r of rules) {
+    for (let y = r.year_start; y <= r.year_end; y++) seen.add(`${y}|${r.make}|${r.model}|${r.engine}`);
+  }
+  return seen.size;
+}
+
 /** "1997 Toyota Tacoma · 2.7L I4" — the chip text. */
 export function describeVehicle(v) {
   return `${v.year} ${v.make} ${v.model} · ${v.engine}`;

@@ -4,16 +4,22 @@
  * wrapper that is the container-query root for every responsive rule
  * (ADR-001 §5 Phase 1). Markup follows the hi-fi's per-frame chrome.
  *
- * The nav's "Hardware Kits" and "Cart" point at routes that exist. Home,
- * Hardware Storage and About are Phase 6; the links are here so the chrome
- * matches the design and so the operator can see the gaps.
+ * Every route the nav and footer link to exists as of Phase 6.
  *
  * Every page carries the cart's Storefront settings in <head> (the PUBLIC
  * token — see storefrontPublicConfig() in shopify.js) because the nav's cart
  * count is on every page (src/scripts/cart-count.js).
+ *
+ * Phase 6: the ☰ menu works at phone width (src/scripts/nav-menu.js), and the
+ * footer lists every platform page on every page (it was kits-only). Things
+ * the hi-fi didn't design live in shared/site-additions.css, loaded right
+ * after site.css, which stays byte-for-byte the hi-fi.
  */
 import "../styles/site.css";
+import "../styles/shared/site-additions.css";
 import { storefrontPublicConfig } from "../lib/shopify.js";
+import { platforms } from "../lib/fitment.js";
+import { business } from "../lib/business.js";
 
 interface Props {
   /** <title> — page-specific, complete. */
@@ -50,7 +56,7 @@ const storefront = storefrontPublicConfig();
   <header class="nav">
     <div class="nav-inner">
       <a class="logo" href="/"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
-      <nav class="nav-links" aria-label="Main">
+      <nav class="nav-links" id="site-nav" aria-label="Main">
         <a href="/" {...on("home")}>Home</a>
         <a href="/hardware-kits" {...on("kits")}>Hardware Kits</a>
         <a href="/hardware-storage" {...on("storage")}>Hardware Storage</a>
@@ -58,7 +64,7 @@ const storefront = storefrontPublicConfig();
       </nav>
       <div class="nav-right">
         <a class="cart-btn" href="/cart" aria-label="Cart" data-cart-link><span class="lbl">Cart</span> <span class="count" data-cart-count hidden></span></a>
-        <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+        <button class="hamburger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">☰</button>
       </div>
     </div>
   </header>
@@ -74,11 +80,11 @@ const storefront = storefrontPublicConfig();
       <div class="foot-grid">
         <div>
           <a class="logo" href="/" style="margin-bottom:14px;"><span class="mark" aria-hidden="true">O</span><span class="word">OrganizeYour<span>Nuts</span></span></a>
-          <p class="muted" style="max-width:34ch;">Automotive fastener kits and hardware storage, shipped from Georgia.</p>
+          <p class="muted" style="max-width:34ch;">Automotive fastener kits and hardware storage{business.shipsFrom ? `, shipped from ${business.shipsFrom.state}` : ""}.</p>
         </div>
         <div><h3>Hardware Kits</h3><ul>
           <li><a href="/hardware-kits">Shop by vehicle</a></li>
-          <slot name="footer-kits" />
+          {platforms.map((p) => <li><a href={`/hardware-kits/${p.handle}`}>{p.display_name}</a></li>)}
         </ul></div>
         <div><h3>Storage</h3><ul>
           <li><a href="/hardware-storage/bins">Bins</a></li>
@@ -87,7 +93,7 @@ const storefront = storefrontPublicConfig();
         </ul></div>
         <div><h3>Company</h3><ul>
           <li><a href="/about">About us</a></li>
-          <li><a href="/about">Contact</a></li>
+          <li><a href="/about#contact">Contact</a></li>
           <li><a href="/cart">Cart</a></li>
         </ul></div>
       </div>
@@ -117,5 +123,6 @@ const storefront = storefrontPublicConfig();
   })();
 </script>
 <script src="../scripts/cart-count.js"></script>
+<script src="../scripts/nav-menu.js"></script>
 </body>
 </html>

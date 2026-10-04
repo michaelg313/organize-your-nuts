@@ -1,0 +1,28 @@
+/* OrganizeYourNuts — shared component: .prod (the kit / product card)
+   §5 assigns this to the Hardware Kits page, but the Storage sub-category's
+   product grid uses the same card (Phase 1 flagged the reuse in README.md).
+   Phase 6 resolves that flag the way Phase 4 resolved .cta-banner: the rules
+   moved here VERBATIM, with their lines from the hi-fi @container blocks, and
+   both routes import this file. Kit-only additions (fitment note, verify
+   line, kit photo) stayed in pages/hardware-kits.css.
+   Requires site.css loaded first. Import from hardware-kits.css and
+   storage-category.css. */
+
+/* kit / product card */
+.prod{display:flex; flex-direction:column; gap:12px; padding:16px;}
+.prod .name{font-size:15.5px; font-weight:700; line-height:1.35;}
+.prod .desc{font-size:12.5px; color:var(--text-muted); line-height:1.55; flex:1;}
+.prod .buy{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding-top:13px; margin-top:2px; border-top:1px solid var(--hairline);
+}
+.prod .price{font-size:19px; font-weight:800; letter-spacing:-.5px;}
+
+@container (max-width:768px){
+  .prod .buy{flex-direction:column; align-items:stretch; gap:12px;}
+  .prod .buy .btn{width:100%;}
+  .prod .price{text-align:center;}
+}
+@container (max-width:400px){
+  .prod{padding:14px;}
+}

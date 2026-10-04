@@ -2,7 +2,19 @@
    template reused for Organizers & Cases)
    The hi-fi has NO dedicated §5 block for this template. It is built
    entirely from shared components (site.css) plus .filter-panel,
-   .filter-grid and .prod, which §5 assigns to the Hardware Kits page
-   (hardware-kits.css). This file exists so every template has a stylesheet
-   slot; whether those rules get promoted to site.css or this page imports
-   hardware-kits.css is an open decision — see README.md. */
+   .filter-grid and .prod — which Phase 6 moved to shared files that this
+   page and the Hardware Kits page both import (README.md, "Cross-page style
+   reuse"). Requires site.css loaded first.
+   Phase 6 additions for things the hi-fi had no data for are appended at the
+   end, clearly marked. */
+@import "../shared/filter-panel.css";
+@import "../shared/prod.css";
+
+/* ═══════════════════ PHASE 6 ADDITIONS ═══════════════════
+   New elements, not in the hi-fi. Built only from existing tokens. */
+
+/* a real product photo takes the spec plate's slot and ratio (.ph-prod is 1:1) */
+.prod img.prod-photo{
+  display:block; width:100%; aspect-ratio:1/1; object-fit:cover;
+  border-radius:var(--r-in); border:1px solid var(--hairline-2); background:var(--bg-sunken);
+}

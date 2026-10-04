@@ -1,0 +1,43 @@
+/* OrganizeYourNuts — site-wide additions (Phase 6)
+   site.css is the hi-fi's shared stylesheet ported byte-for-byte and stays
+   that way. Anything every page needs that the hi-fi didn't design lives
+   here instead, built only from existing tokens. Site.astro loads this file
+   right after site.css, so it applies to every page. */
+
+/* Messages and states are swapped with the hidden attribute (the cart count,
+   "added to cart" errors, the cart page's states, the contact form). Several
+   of those elements set their own display, which would otherwise beat
+   [hidden]. Phases 4 and 5 each had a copy of this in a page stylesheet. */
+[hidden]{display:none!important;}
+
+/* ── Phone width: the ☰ menu ───────────────────────────────────────────────
+   site.css hides .nav-links and shows ☰ below 768px, but the hi-fi never
+   designed what ☰ opens. It opens the same four links as a panel under the
+   bar (src/scripts/nav-menu.js toggles .menu-open on .nav). The current
+   page gets an orange bar instead of the desktop underline. */
+@container (max-width:768px){
+  .nav.menu-open{
+    background:var(--bg-deep);
+    border-bottom-color:var(--hairline-2);
+  }
+  .nav.menu-open .nav-links{
+    display:flex; flex-direction:column; gap:0; margin:0;
+    position:absolute; top:100%; left:0; right:0;
+    padding:4px var(--gutter) 12px;
+    background:var(--bg-deep);
+    border-bottom:1px solid var(--hairline-2);
+    box-shadow:0 18px 30px -16px rgba(0,0,0,.9);
+  }
+  .nav.menu-open .nav-links a{
+    padding:15px 0 15px 14px; font-size:15px;
+    border-bottom:1px solid var(--hairline);
+  }
+  .nav.menu-open .nav-links a:last-child{border-bottom:0;}
+  .nav.menu-open .nav-links a::after{display:none;}
+  .nav.menu-open .nav-links a.on{box-shadow:inset 3px 0 0 var(--orange);}
+
+  /* ── Phone width: the Cart button with nothing in the cart ──────────────
+     site.css hides the word "Cart" at this width and shows only the count —
+     so at 0 items (count hidden) the pill was empty. Show the word then. */
+  .cart-btn:has(.count[hidden]) .lbl{display:inline;}
+}

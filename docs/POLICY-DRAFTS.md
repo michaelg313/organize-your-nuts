@@ -32,30 +32,28 @@ shipping is on us.
 
 ### What we accept
 
-- Kits and storage items **[Choose: "that are unused and haven't been installed" — recommended,
-  because fasteners that have been torqued, especially torque-to-yield head bolts, are single-use
-  and can't be resold — OR "in any condition"]**.
+- Kits and storage items that are unused and haven't been installed. Fasteners that have been
+  torqued — especially torque-to-yield head bolts — are single-use and can't be resold.
 - Opened bags and boxes are fine — we know you have to open the kit to check it.
 - Please send back everything that came in the kit.
 
 ### How to return something
 
-1. Email **[support email]** with your order number. You don't need to tell us why.
-2. We'll email you a **prepaid return label** within **[1] business day**.
+1. Email michaelg13@gmail.com with your order number. You don't need to tell us why.
+2. We'll email you a **prepaid return label** within 2 business days.
 3. Pack the items, attach the label, and drop the package off with the carrier.
 
 ### Your refund
 
-- We refund the item price to your **original payment method** within **[3] business days** of
+- We refund the item price to your **original payment method** within 3 business days of
   the return arriving. Your bank or card company may take another 5–10 business days to show it.
 - Sales tax on the returned items is refunded with them.
-- **Original shipping charges:** [Choose: "are refunded only when the mistake was ours (see
-  below)" — OR "are always refunded"].
+- Original shipping charges are refunded only when the mistake was ours (see below).
 
 ### When the mistake is ours
 
 If we sent the wrong item, it arrived damaged or with parts missing, or **our site said a kit fits
-your vehicle and it doesn't**, email us within **[7] days of delivery** (a photo helps). We'll make
+your vehicle and it doesn't**, email us within 7 days of delivery (a photo helps). We'll make
 it right — a replacement or a full refund **including the original shipping** — and you won't pay
 for anything.
 
@@ -66,7 +64,7 @@ need — that way the right kit ships right away instead of waiting for your ret
 
 ### Questions
 
-Email **[support email]**. We reply by email.
+Email michaelg13@gmail.com. We reply by email.
 
 ---
 
@@ -74,13 +72,12 @@ Email **[support email]**. We reply by email.
 
 ### Where we ship
 
-We currently ship to **[Choose: "the 48 contiguous United States" — OR "all 50 US states" — and
-whether you ship to P.O. boxes and APO/FPO addresses]**. We don't ship internationally yet.
+We currently ship to the 48 contiguous United States. We don't ship internationally yet.
 
 ### When your order ships
 
 - Orders placed **before 2pm Eastern, Monday–Friday**, ship the **same business day**.
-- Orders placed after 2pm Eastern, on a weekend, or on **[a US federal holiday]** ship the next
+- Orders placed after 2pm Eastern, on a weekend, or on a US federal holiday ship the next
   business day.
 - You'll get an email with tracking as soon as your order ships.
 
@@ -88,30 +85,29 @@ whether you ship to P.O. boxes and APO/FPO addresses]**. We don't ship internati
 
 - Shipping is **calculated at checkout**, based on your address and what's in your cart. You'll see
   the cost before you pay.
-- We ship with **[USPS / UPS / both]**. Most orders arrive within **[2–5] business days** of
-  shipping. **[Optional: "Orders over $[__] ship free."]**
+- We ship with USPS and UPS. Most orders arrive within 2–5 business days of shipping.
 
 ### Check your address
 
 Please double-check your shipping address at checkout. If a package comes back to us because the
-address was wrong or incomplete, we'll email you and reship it once you confirm the address
-**[Choose: "at the cost of the new shipping label" — OR "free"]**.
+address was wrong or incomplete, we'll email you and reship it once you confirm the address. You
+pay for the new shipping label.
 
 ### Changing or cancelling an order
 
-Email **[support email]** as soon as possible. Because most orders ship the same day, we can only
-change or cancel an order that **hasn't shipped yet**. After it ships, you can return it under our
+Email michaelg13@gmail.com as soon as possible. Because most orders ship the same day, we can only
+change or cancel an order that hasn't shipped yet. After it ships, you can return it under our
 Refund policy.
 
 ### Lost, late or damaged packages
 
-- **Damaged or missing items:** email us within **[7] days of delivery** with your order number and
+- Damaged or missing items: email us within 7 days of delivery with your order number and
   a photo, and we'll send a replacement or refund — see "When the mistake is ours" in our Refund
   policy.
-- **Tracking says delivered but it isn't there:** check with neighbors and around your door, then
-  email us within **[7] days**. We'll open a claim with the carrier and work it out with you.
-- **Late:** if tracking hasn't updated in **[5] business days**, email us and we'll chase it.
+- Tracking says delivered but it isn't there: check with neighbors and around your door, then
+  email us within 7 days. We'll open a claim with the carrier and work it out with you.
+- Late: if tracking hasn't updated in 5 business days, email us and we'll chase it.
 
 ### Questions
 
-Email **[support email]**. We reply by email.
+Email michaelg13@gmail.com. We reply by email.

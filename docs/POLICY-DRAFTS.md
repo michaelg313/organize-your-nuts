@@ -52,10 +52,13 @@ shipping is on us.
 
 ### When the mistake is ours
 
-If we sent the wrong item, it arrived damaged or with parts missing, or **our site said a kit fits
-your vehicle and it doesn't**, email us within 7 days of delivery (a photo helps). We'll make
-it right — a replacement or a full refund **including the original shipping** — and you won't pay
-for anything.
+- **Our site said a kit fits your vehicle and it doesn't:** email us within **30 days of
+  delivery** — we know fitment problems often show up partway through a build.
+- **We sent the wrong item, or it arrived damaged or with parts missing:** email us within
+  **7 days of delivery** (a photo helps).
+
+Either way, we'll make it right — a replacement or a full refund **including the original
+shipping** — and you won't pay for anything.
 
 ### Exchanges
 
@@ -72,7 +75,8 @@ Email michaelg13@gmail.com. We reply by email.
 
 ### Where we ship
 
-We currently ship to the 48 contiguous United States. We don't ship internationally yet.
+We currently ship to the 48 contiguous United States and Washington, D.C. We don't yet ship to
+Alaska, Hawaii, US territories, military (APO/FPO) addresses, or outside the US.
 
 ### When your order ships
 
@@ -83,8 +87,8 @@ We currently ship to the 48 contiguous United States. We don't ship internationa
 
 ### Shipping cost and speed
 
-- Shipping is **calculated at checkout**, based on your address and what's in your cart. You'll see
-  the cost before you pay.
+- **Standard shipping is $8, and free on orders of $70 or more. Express shipping is $15.** You'll
+  see the cost at checkout before you pay.
 - We ship with USPS and UPS. Most orders arrive within 2–5 business days of shipping.
 
 ### Check your address

@@ -167,7 +167,9 @@ Pinned in `src/lib/shopify.js` (`STOREFRONT_API_VERSION`). Bump it and redeploy 
 Decided 2026-10-04 (recorded in ADR-001 §6 and §7): **free returns for any reason within 30 days**;
 **Google Search Console + Vercel Web Analytics**; a **hand-written sitemap**; the fallback store is
 **Horizon** (Shopify's default theme, already live). Products are on the Online Store, Point of Sale and
-Headless channels only (Shop and Microsoft Copilot removed 2026-10-04).
+Headless channels only (Shop and Microsoft Copilot removed 2026-10-04). Shopify ships to the **48
+contiguous states + Washington, D.C.** only (Domestic zone set 2026-10-04, matching the Shipping
+policy); rates are Standard $8, free at $70+, Express $15.
 
 What the code does for launch:
 

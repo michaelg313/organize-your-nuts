@@ -15,8 +15,13 @@
  */
 
 export const business = {
+  // Operator's answers, 2026-10-04 (launch prep): (b) 2pm ET; (c) leave off; (d) 30 days,
+  // no questions asked; (e) pending — which grades; (f) no; (g) don't show; (h) the
+  // help@ address; (i) no phone — contact is by email only; (j) no hours — not a
+  // storefront; (k) leave off.
+
   /** (b) Same-day shipping cutoff, e.g. "3pm ET". Shown on Home and About. */
-  sameDayCutoff: null,
+  sameDayCutoff: "2pm ET",
 
   /** (c) Bulk pricing starts at this many kits, e.g. 10. Home readout + About contact card. */
   bulkPricingFrom: null,
@@ -37,7 +42,7 @@ export const business = {
 
   /** (h) The mailbox shoppers can write to, e.g. "help@organizeyournuts.com". About contact card;
    *  also where the contact form falls back to (a pre-written email) if Formspree isn't set. */
-  email: null,
+  email: "help@organizeyournuts.com",
 
   /** (i) e.g. { display: "(770) 555-0142", tel: "+17705550142" }. About contact card. */
   phone: null,

@@ -7,7 +7,8 @@ read them first; they are authoritative:
 - [ADR-002 — front-end framework](ADR-002-frontend-framework.md): Astro, fully pre-rendered, on Vercel.
 - [ADR-003 — partial-match fitment](ADR-003-partial-match-fitment.md): sub-generation platforms, fitment note as backstop.
 
-**Current state: Phase 6 — every template is built: Home, Hardware Kits, Hardware Storage, Cart, About/Contact.**
+**Current state: launch prep — every template is built (Home, Hardware Kits, Hardware Storage, Cart,
+About/Contact); what's left before taking orders is in [Launch](#launch).**
 
 ## Run it
 
@@ -47,6 +48,7 @@ failure this project can produce is written in plain English and says where to f
 | `/hardware-storage/<category>` | one page per entry in [`src/lib/storage.js`](src/lib/storage.js) (`bins`, `organizers`, `cases`), via [`[category].astro`](src/pages/hardware-storage/[category].astro) | Products whose Shopify `custom.storage_type` is that category. Add to cart with no vehicle; live stock. "Sort by" appears at 2+ products. An empty category says "Coming soon" and is `noindex` until it has a product. |
 | `/cart` | [`src/pages/cart.astro`](src/pages/cart.astro), filled in by [`src/scripts/cart-page.js`](src/scripts/cart-page.js) | Hi-fi template ⑤ and its empty state. Not indexed (`noindex`). "Proceed to checkout" hands off to Shopify's checkout. |
 | `/about` | [`src/pages/about.astro`](src/pages/about.astro) + [`src/scripts/contact-form.js`](src/scripts/contact-form.js) | About and the contact form (see "Contact form and business facts" below). |
+| `/sitemap.xml` | [`src/pages/sitemap.xml.js`](src/pages/sitemap.xml.js) | Every page meant to rank, from the same data as the pages. Leaves out `/cart` and empty "Coming soon" categories (both `noindex`). [`public/robots.txt`](public/robots.txt) points to it. |
 
 Vehicle state: the URL is authoritative (`?year=&make=&model=&engine=`, slugged); a chosen vehicle
 always lands on *its* platform's page; `localStorage` only re-fills the form on a return visit.
@@ -76,17 +78,14 @@ where orders ship from, email, phone, hours, address. **`null` means not confirm
 stat or contact row is left off the page.** Catalog numbers (kits, platforms, vehicles covered) are
 counted from the real data at build time.
 
-The contact form sends through **Formspree** (a form service — no code dependency, keeps the site
-static per ADR-002). How it sends follows `business.js`:
+Contact is **by email only** — no phone, no hours, no address (operator's decision, launch prep;
+Formspree was dropped). The contact form checks the fields first, the way the hi-fi's "validation
+errors" state shows, then "Send" opens the shopper's email app with the message pre-written to
+`email` in `business.js`. If that app doesn't open, a note under the form gives the address. With no
+`email` set, the form says it isn't connected, the button is off, and **the build prints a warning**.
 
-- `contactFormEndpoint` set (`https://formspree.io/f/…`, public by design) → Formspree emails the
-  message to the address on your Formspree account.
-- only `email` set → "Send" opens the shopper's email app with the message pre-written.
-- neither → the form says it isn't connected, the button is off, and **the build prints a warning**.
-
-The form checks the fields first, the way the hi-fi's "validation errors" state shows. **When it
-misbehaves:** the shopper sees one plain sentence (plus the email address, if set); the reason is in
-the browser console on a line starting `[contact]`.
+**`email` is temporarily the operator's personal address** for pre-launch tests. Swap in the
+business mailbox before launch (checklist item 0 under Launch).
 
 ## The cart
 
@@ -118,6 +117,7 @@ what to check (token, Headless permissions, stock, or Shopify being unreachable)
 ```
 astro.config.mjs        site URL (for canonicals), static output
 vercel.json             clean URLs, no trailing slash
+public/robots.txt       allows everything; points crawlers at /sitemap.xml
 fitment/                platforms.json + vehicle-map.json — the fitment data (reviewed, CI-checked)
 scripts/validate-fitment.mjs   the CI check; runs before every build
 src/lib/fitment.js      dropdown derivation, slugs, vehicle → platform resolution (build + browser)
@@ -125,7 +125,7 @@ src/lib/shopify.js      the ONE Storefront API fetch per build, plus the plain-E
 src/lib/cart.js         the cart's Storefront API client (browser, PUBLIC token)
 src/lib/display.js      system names + price format, shared by the build and the browser
 src/lib/storage.js      the three storage categories (= Shopify's Storage type choices) and their copy
-src/lib/business.js     business facts the pages state; null = not confirmed = left off. Contact form address.
+src/lib/business.js     business facts the pages state; null = not confirmed = left off. The contact email.
 src/layouts/Site.astro  <head> (incl. the cart's public settings), nav + ☰ menu + cart count, footer, .page root
 src/components/         VehiclePicker.astro, KitCard.astro, StorageCard.astro
 src/scripts/kits-picker.js     the cascading picker in the browser (Kits pages AND Home)
@@ -161,6 +161,74 @@ every handle exists in Shopify, every platform has at least one kit — run at b
 
 Pinned in `src/lib/shopify.js` (`STOREFRONT_API_VERSION`). Bump it and redeploy every ~6 months
 (ADR-001 §6). Shopify releases quarterly and retires versions after a year.
+
+## Launch
+
+Decided 2026-10-04 (recorded in ADR-001 §6 and §7): **free returns for any reason within 30 days**;
+**Google Search Console + Vercel Web Analytics**; a **hand-written sitemap**; the fallback store is
+**Horizon** (Shopify's default theme, already live). Products are on the Online Store, Point of Sale and
+Headless channels only (Shop and Microsoft Copilot removed 2026-10-04). Shopify ships to the **48
+contiguous states + Washington, D.C.** only (Domestic zone set 2026-10-04, matching the Shipping
+policy); rates are Standard $8, free at $70+, Express $15.
+
+What the code does for launch:
+
+- **Footer "Shipping · Returns · Privacy"** link to Shopify's own policy pages. The build asks Shopify
+  for the addresses (`fetchPolicies` in `src/lib/shopify.js`), so nobody types them and they follow the
+  store's primary domain. A policy that isn't written yet stays plain text and the build prints a ⚠
+  line saying which. It never fails the build.
+- **`/sitemap.xml` + `robots.txt`** — see the route table above.
+- **Vercel Web Analytics**: one script tag in `Site.astro`, only in builds on Vercel. It does nothing
+  until Analytics is turned on in the Vercel project (Analytics tab → Enable). No cookies.
+
+### Checklist
+
+| # | Item | Who | Breaks if skipped |
+|---|---|---|---|
+| 0 | Create the business mailbox, then replace the temporary personal `email` in `src/lib/business.js` (and the contact email in Shopify's policies) | Operator creates it; code change | Shoppers' messages go to a personal inbox, and that address stays published on the site |
+| 1 | Vercel plan. Hobby is non-commercial only under Vercel's terms; staying on it for now is the operator's call. Move to Pro (or Cloudflare Pages, ADR-002 §1) before it matters | Operator | Vercel may pause the project |
+| 2 | Production env vars: `SHOPIFY_STORE_DOMAIN` (stays the `.myshopify.com` address), `SHOPIFY_STOREFRONT_PRIVATE_TOKEN`, `PUBLIC_SHOPIFY_STOREFRONT_TOKEN` — each ticked for **Production** | Operator (Vercel → Settings → Environment Variables) | Production build fails; last good deploy keeps serving |
+| 3 | Shopify Payments active; PA sales-tax number added (Settings → Taxes and duties). Not tax advice — confirm with an accountant | Operator | No card payments; PA tax not collected |
+| 4 | Policies: **Refund** (free returns, any reason, 30 days — must match the About page), **Shipping**, Terms of Service; check Privacy. Refund + Shipping drafts: [docs/POLICY-DRAFTS.md](docs/POLICY-DRAFTS.md) | Operator (Settings → Policies) | Footer words stay unlinked; no returns terms on record |
+| 5 | `checkout.organizeyournuts.com`: CNAME → `shops.myshopify.com` at the registrar, then Shopify → Settings → Domains → connect, and make it the **primary** domain | Operator | Checkout shows a `myshopify.com` address |
+| 6 | Horizon fallback: stays published; products stay on Online Store; its menu links to the products; hide it from Google (Online Store → Themes → Edit code → `theme.liquid`, add `<meta name="robots" content="noindex">` inside `<head>`) | Operator (the connector can't edit the live theme) | No fallback store; a duplicate store competes in search |
+| 7 | Test order (below) | Operator types the card | Launching an untested checkout |
+| 8 | `organizeyournuts.com` + `www` → Vercel (Vercel → Domains; DNS records exactly as Vercel shows them; `www` redirects to the bare domain) | Operator | Canonical URLs point at a domain that doesn't serve the site |
+| 9 | Search Console: add a **Domain** property, verify with the DNS TXT record, submit `https://organizeyournuts.com/sitemap.xml` | Operator | No search data; slower discovery |
+| 10 | Inventory → real quantities | Operator (or connector, after approval) | Everything says "Out of stock" |
+| 11 | Remove the password (Online Store → Preferences) | Operator | Checkout shows a password page — nobody can buy |
+| 12 | Storefront API bump `2026-07` → `2027-01` on **2027-01-15** (hard limit ≈ 2027-07-01) | Code | Build may break when 2026-07 retires |
+
+Order: 1–4 (3 takes days) → 5 → 6 → 7 → 8 → 9 → launch day: 10 → 11.
+
+### Launch-day runbook
+
+1. **Inventory** — enter quantities. Check: reload a kit page; the button says "Add to cart" (no redeploy).
+2. **Password off.** Check, in a private window: add a kit and a bin → Proceed to checkout → you land on
+   `checkout.organizeyournuts.com` with **no password page**; a PA address shows PA tax and shipping rates.
+3. *(Optional)* one real-card order, then refund it in full — proves money reaches the bank (~$0.90 in
+   card fees aren't refunded).
+
+### Rollback
+
+| Problem | Do this | Time |
+|---|---|---|
+| A bad deploy | Vercel → Deployments → the last good one → **Instant Rollback** | 1 min |
+| Checkout misbehaving | Turn the store password back **on** — stops all orders | 30 s |
+| Site down and not fixable tonight | **Fallback:** Vercel → Domains → `organizeyournuts.com` → redirect to `https://checkout.organizeyournuts.com` (Horizon: same products, prices, checkout). Remove the redirect when fixed | 2 min |
+| Checkout domain broken | Shopify → Domains → set `organizeyournuts.myshopify.com` back as primary | 2 min |
+| Main domain broken | Remove it in Vercel; `organize-your-nuts.vercel.app` keeps working | 1 min |
+
+### Test order — no real card
+
+1. Temporarily stock **1** of "Interior Trim Clip Assortment" and the bin rack (approved change list first).
+2. Shopify Payments → **test mode** on (or, if Payments isn't active yet, Settings → Payments → the
+   "Bogus Gateway" for testing).
+3. With the password still on, on the live site: pick a vehicle → add the kit → add the bin rack →
+   checkout → Shopify's published test card, a PA address. The operator types the card.
+4. Check the order in Shopify: kit line shows Year / Make / Model / Engine / Platform; bin line shows
+   none; PA tax charged; shipping right; confirmation email arrived; order marked test.
+5. Archive the test order, test mode off (or remove Bogus Gateway), inventory back to 0, read back.
 
 ## Dependencies
 

@@ -10,6 +10,11 @@
    [hidden]. Phases 4 and 5 each had a copy of this in a page stylesheet. */
 [hidden]{display:none!important;}
 
+/* Launch prep: the footer's "Shipping · Returns · Privacy" became links to
+   Shopify's policy pages. Styled like the footer's other links (.foot-grid a). */
+.foot-bottom .policy-links a{color:var(--text-muted);}
+.foot-bottom .policy-links a:hover{color:var(--orange); text-decoration:underline;}
+
 /* ── Phone width: the ☰ menu ───────────────────────────────────────────────
    site.css hides .nav-links and shows ☰ below 768px, but the hi-fi never
    designed what ☰ opens. It opens the same four links as a panel under the

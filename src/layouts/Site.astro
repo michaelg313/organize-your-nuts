@@ -17,7 +17,7 @@
  */
 import "../styles/site.css";
 import "../styles/shared/site-additions.css";
-import { storefrontPublicConfig } from "../lib/shopify.js";
+import { storefrontPublicConfig, loadCatalog } from "../lib/shopify.js";
 import { platforms } from "../lib/fitment.js";
 import { business } from "../lib/business.js";
 
@@ -34,6 +34,21 @@ interface Props {
 const { title, description, canonical, current } = Astro.props;
 const on = (key: string) => (current === key ? { class: "on", "aria-current": "page" } : {});
 const storefront = storefrontPublicConfig();
+
+// Launch prep: footer policy links go to Shopify's hosted policy pages; a
+// policy not written yet stays plain text (see fetchPolicies in shopify.js).
+const { policies } = await loadCatalog();
+const policyLinks = [
+  { label: "Shipping", url: policies.shipping },
+  { label: "Returns", url: policies.returns },
+  { label: "Privacy", url: policies.privacy },
+];
+
+// Launch prep: Vercel Web Analytics (ADR-001 §7.8, operator's decision). No
+// package — Vercel serves this script itself once Analytics is enabled on the
+// project, and only on Vercel, so it's left out of local builds (VERCEL=1 is
+// set by Vercel's build machines).
+const vercelAnalytics = process.env.VERCEL === "1";
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -48,6 +63,7 @@ const storefront = storefrontPublicConfig();
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  {vercelAnalytics && <script is:inline defer src="/_vercel/insights/script.js"></script>}
   <slot name="head" />
 </head>
 <body>
@@ -99,7 +115,9 @@ const storefront = storefrontPublicConfig();
       </div>
       <div class="foot-bottom">
         <span>&copy; 2026 OrganizeYourNuts.com</span>
-        <span>Shipping &middot; Returns &middot; Privacy</span>
+        <span class="policy-links">
+          {policyLinks.map((l, i) => <>{i > 0 && " · "}{l.url ? <a href={l.url}>{l.label}</a> : l.label}</>)}
+        </span>
       </div>
     </div>
   </footer>

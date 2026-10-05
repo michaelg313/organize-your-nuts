@@ -4,28 +4,24 @@
  * 1. Checks the three fields in the browser, the way the hi-fi's "Contact form
  *    — validation errors" state shows: a red box at the top that says how many
  *    fields need attention and links to the first, plus a line under each.
- * 2. Sends. How depends on src/lib/business.js (the page writes it into
- *    data-mode):
- *      "formspree" → posts to Formspree, which emails the operator
- *      "email"     → opens the shopper's email app with the message pre-written
- *      ""          → not connected; the button is disabled and the page says so
+ * 2. Opens the shopper's email app with the message pre-written to the
+ *    business email (src/lib/business.js; the page writes it into data-email).
+ *    Contact is by email only — Formspree was dropped at launch prep.
+ *    data-mode is "" when no email is set: not connected; the button is
+ *    disabled and the page says so.
  *
- * Failures: the shopper sees one plain sentence (and the email address, if
- * there is one). The real reason goes to the browser console on a line
- * starting "[contact]" — right-click → Inspect → Console.
+ * If the email app doesn't open, the note under the form gives the address
+ * to write to directly.
  */
 const form = document.querySelector("[data-contact]");
 if (form && form.dataset.mode) init(form);
 
 function init(form) {
-  const mode = form.dataset.mode;
-  const email = form.dataset.email || null;
+  const email = form.dataset.email;
   const alertBox = form.querySelector("[data-contact-alert]");
   const alertText = form.querySelector("[data-contact-alert-text]");
   const note = form.querySelector("[data-contact-note]");
   const noteText = form.querySelector("[data-contact-note-text]");
-  const submit = form.querySelector("[data-contact-submit]");
-  const sent = document.querySelector("[data-contact-sent]");
 
   // A full address: something@something.something, no spaces.
   const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -81,19 +77,6 @@ function init(form) {
     alertBox.scrollIntoView({ block: "center", behavior: "smooth" });
   }
 
-  function alertForSendFailure(reason) {
-    const nodes = [`This didn’t send. ${reason} `];
-    if (email) {
-      const a = document.createElement("a");
-      a.href = `mailto:${email}`;
-      a.textContent = email;
-      nodes.push("Please email us at ", a, " instead.");
-    } else {
-      nodes.push("Please try again in a few minutes.");
-    }
-    showAlert(nodes);
-  }
-
   // Once a field has been flagged, clear its message as soon as it's fixed.
   for (const f of fields) {
     f.input.addEventListener("input", () => {
@@ -102,37 +85,6 @@ function init(form) {
   }
 
   // ---- sending ------------------------------------------------------------------
-
-  function showSent() {
-    form.hidden = true;
-    sent.hidden = false;
-    sent.focus();
-  }
-
-  async function sendToFormspree() {
-    submit.disabled = true;
-    submit.textContent = "Sending…";
-    try {
-      let res;
-      try {
-        res = await fetch(form.action, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } });
-      } catch (e) {
-        console.error(`[contact] Couldn't reach Formspree (${e.message}). The shopper may be offline, or Formspree is down — check status.formspree.io.`);
-        return alertForSendFailure("We couldn’t reach our message service just now.");
-      }
-      if (res.ok) return showSent();
-      const body = await res.json().catch(() => ({}));
-      const why = (body.errors ?? []).map((e) => e.message).join(" | ");
-      console.error(
-        `[contact] Formspree refused the message (HTTP ${res.status}${why ? `: ${why}` : ""}). ` +
-        "Check contactFormEndpoint in src/lib/business.js against the form's address in your Formspree dashboard, and that the form is active and under its monthly limit.",
-      );
-      alertForSendFailure("Something went wrong on our side.");
-    } finally {
-      submit.disabled = false;
-      submit.textContent = "Send message";
-    }
-  }
 
   function openEmail() {
     const get = (n) => form.querySelector(`[name="${n}"]`).value.trim();
@@ -149,7 +101,6 @@ function init(form) {
     note.hidden = true;
     const bad = validate();
     if (bad.length) return alertForFields(bad);
-    if (mode === "formspree") sendToFormspree();
-    else if (mode === "email") openEmail();
+    openEmail();
   });
 }

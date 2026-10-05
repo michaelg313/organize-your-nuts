@@ -146,6 +146,41 @@ const PLATFORMS_QUERY = /* GraphQL */ `
   }
 `;
 
+// Launch prep: the footer's "Shipping · Returns · Privacy" links point at the
+// policy pages Shopify hosts (Settings → Policies). Their addresses come from
+// here, so nobody types them, and they follow the store's primary domain.
+const POLICIES_QUERY = /* GraphQL */ `
+  query Policies {
+    shop {
+      shippingPolicy { url }
+      refundPolicy { url }
+      privacyPolicy { url }
+    }
+  }
+`;
+
+/**
+ * The three footer policy links. A policy that doesn't exist yet comes back
+ * null and its word stays plain text. Never fails the build — a missing policy
+ * is something to fix in the admin, not a reason to stop the site updating.
+ * @returns {Promise<{shipping:string|null, returns:string|null, privacy:string|null}>}
+ */
+async function fetchPolicies(warnings) {
+  try {
+    const { shop } = await storefront(POLICIES_QUERY);
+    const out = { shipping: shop.shippingPolicy?.url ?? null, returns: shop.refundPolicy?.url ?? null, privacy: shop.privacyPolicy?.url ?? null };
+    const missing = [["Shipping", out.shipping], ["Refund", out.returns], ["Privacy", out.privacy]].filter(([, u]) => !u).map(([n]) => n);
+    if (missing.length) {
+      warnings.push(`No ${missing.join(" / ")} policy in Shopify yet, so the footer shows ${missing.length === 1 ? "that word" : "those words"} without a link. Write ${missing.length === 1 ? "it" : "them"} in Settings → Policies and redeploy.`);
+    }
+    return out;
+  } catch (e) {
+    if (!(e instanceof BuildDataError)) throw e;
+    warnings.push("Couldn't read the store's policies from Shopify, so the footer's Shipping · Returns · Privacy are plain text this build. The reason:" + e.message);
+    return { shipping: null, returns: null, privacy: null };
+  }
+}
+
 async function fetchAllProducts() {
   const out = [];
   let cursor = null;
@@ -204,7 +239,7 @@ function toPlatformRecord(m) {
 
 // ---------- the one build-time load -----------------------------------------
 
-/** @type {Promise<{kits:Kit[], storage:StorageProduct[], platformRecords:Map<string,PlatformRecord>, warnings:string[]}>|null} */
+/** @type {Promise<{kits:Kit[], storage:StorageProduct[], platformRecords:Map<string,PlatformRecord>, policies:{shipping:string|null, returns:string|null, privacy:string|null}, warnings:string[]}>|null} */
 let loaded = null;
 
 /**
@@ -217,9 +252,11 @@ export function loadCatalog() {
 }
 
 async function doLoad() {
-  const [products, platformData] = await Promise.all([
+  const warnings = [];
+  const [products, platformData, policies] = await Promise.all([
     fetchAllProducts(),
     storefront(PLATFORMS_QUERY, { type: METAOBJECT_TYPE }),
+    fetchPolicies(warnings),
   ]);
 
   const all = products.map(toProduct);
@@ -228,7 +265,6 @@ async function doLoad() {
   const platformRecords = new Map(platformData.metaobjects.nodes.map(toPlatformRecord).map((r) => [r.handle, r]));
 
   const problems = [];
-  const warnings = [];
   const knownSystems = new Set(SYSTEMS.map((s) => s.value));
   const knownStorage = new Set(STORAGE_TYPES.map((t) => t.value));
   const repoHandles = new Set(repoPlatforms.map((p) => p.handle));
@@ -312,7 +348,7 @@ async function doLoad() {
   if (problems.length) fail([`${problems.length} problem${problems.length === 1 ? "" : "s"} with the Shopify data:`, "", ...problems.map((p) => `• ${p}`), "", "Fix the items above in the Shopify admin (or the repo, where it says so) and run the build again."]);
 
   console.log(`✓ Shopify: ${kits.length} kits across ${platformRecords.size} platforms, ${storage.length} storage product${storage.length === 1 ? "" : "s"} (Storefront API ${STOREFRONT_API_VERSION}).`);
-  return { kits, storage, platformRecords, warnings };
+  return { kits, storage, platformRecords, policies, warnings };
 }
 
 /** Storage products in one category, in the order Shopify lists them. */

@@ -8,12 +8,10 @@
  * until confirmed. Numbers about the catalog are counted from the real data.
  *
  * The contact form (src/scripts/contact-form.js) checks the fields in the
- * browser the way the hi-fi's error state shows, then sends through Formspree
- * (operator's decision, Phase 6) — the site stays fully static (ADR-002).
- * How it sends depends on business.js:
- *   contactFormEndpoint set → Formspree emails the message to the operator
- *   only `email` set        → opens the shopper's email app, message pre-written
- *   neither                 → the form says it isn't connected yet (and the build warns)
+ * browser the way the hi-fi's error state shows, then opens the shopper's
+ * email app with the message pre-written to business.js `email` — contact is
+ * by email only (operator's decision, launch prep; Formspree dropped). With no
+ * `email` set, the form says it isn't connected yet and the build warns.
  */
 import Site from "../layouts/Site.astro";
 import { loadCatalog } from "../lib/shopify.js";
@@ -28,7 +26,7 @@ const mode = contactMode();
 if (!mode) {
   console.warn(
     "⚠ The About page's contact form isn't connected yet, so it can't send anything. " +
-    "Put the Formspree form address (contactFormEndpoint) or a real mailbox (email) in src/lib/business.js.",
+    "Put a real mailbox (email) in src/lib/business.js.",
   );
 }
 
@@ -45,7 +43,7 @@ const madeFrom = [
 // Three stat cards: confirmed business facts first, then true counts.
 const stats = [
   { b: String(kits.length), s: "Kits, each matched to its engine platform" },
-  b.returnsDays && { b: `${b.returnsDays} days`, s: "To send back a kit that doesn’t fit" },
+  b.returnsDays && { b: `${b.returnsDays} days`, s: "Free returns, for any reason" },
   b.sameDayCutoff && { b: "Same day", s: `Shipping before ${b.sameDayCutoff}` },
   { b: String(platforms.length), s: "Engine platforms covered" },
   { b: vehicleCount().toLocaleString("en-US"), s: "Vehicles covered, by year, model and engine" },
@@ -54,7 +52,7 @@ const stats = [
 // "Reach us directly" shows only confirmed rows; with none, the form gets the full width.
 const hasDetails = Boolean(b.email || b.phone || b.hours || b.address || b.bulkPricingFrom);
 
-const formAction = mode === "formspree" ? b.contactFormEndpoint : mode === "email" ? `mailto:${b.email}` : undefined;
+const formAction = mode === "email" ? `mailto:${b.email}` : undefined;
 ---
 <Site
   title="About & Contact | OrganizeYourNuts"
@@ -79,7 +77,7 @@ const formAction = mode === "formspree" ? b.contactFormEndpoint : mode === "emai
           <h2>Kits, not guesswork</h2>
           <p class="muted" style="font-size:15px; line-height:1.75; margin-top:14px;">Kits are matched to engine platforms, not guessed from a parts catalog. Pick your year, make, model and engine and you see only the kits that fit it &mdash; and where a kit doesn&rsquo;t fit every vehicle on its platform, the kit says so before you order.</p>
           {madeFrom && <p class="muted" style="font-size:15px; line-height:1.75; margin-top:14px;">{madeFrom}</p>}
-          {b.returnsDays && <p class="muted" style="font-size:15px; line-height:1.75; margin-top:14px;">If a kit doesn&rsquo;t fit what you&rsquo;re working on, send it back inside {b.returnsDays} days. We&rsquo;d rather you get the right hardware than keep the wrong box.</p>}
+          {b.returnsDays && <p class="muted" style="font-size:15px; line-height:1.75; margin-top:14px;">Kit doesn&rsquo;t fit what you&rsquo;re working on, or just changed your mind? Send it back inside {b.returnsDays} days, for any reason &mdash; returns are free. We&rsquo;d rather you get the right hardware than keep the wrong box.</p>}
           <div class="stat-row">
             {stats.map((st) => <div class="card stat"><b>{st.b}</b><span>{st.s}</span></div>)}
           </div>
@@ -126,23 +124,9 @@ const formAction = mode === "formspree" ? b.contactFormEndpoint : mode === "emai
               <span class="err" id="e-message" hidden></span>
             </label>
           </div>
-          {mode === "formspree" && (
-            <>
-              <input type="hidden" name="_subject" value="New message from organizeyournuts.com" />
-              <!-- spam trap: people never see or fill this; bots do, and Formspree drops those -->
-              <input type="text" name="_gotcha" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true" />
-            </>
-          )}
           <button class="btn btn-primary btn-block" type="submit" style="margin-top:20px;" data-contact-submit disabled={!mode}>Send message</button>
           <p class="muted" style="font-size:12px; margin-top:13px;">We reply by email.</p>
         </form>
-
-        <div class="card" style="padding:26px;" data-contact-sent hidden tabindex="-1">
-          <div class="notice" role="status" style="margin-bottom:0;">
-            <span class="nmark" aria-hidden="true">&#10003;</span>
-            <p><b>Thanks &mdash; your message is on its way.</b> We&rsquo;ll reply by email.</p>
-          </div>
-        </div>
 
         {hasDetails && (
           <aside class="card" style="padding:26px;">

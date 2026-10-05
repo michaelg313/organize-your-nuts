@@ -45,7 +45,7 @@ const madeFrom = [
 // Three stat cards: confirmed business facts first, then true counts.
 const stats = [
   { b: String(kits.length), s: "Kits, each matched to its engine platform" },
-  b.returnsDays && { b: `${b.returnsDays} days`, s: "To send back a kit that doesn’t fit" },
+  b.returnsDays && { b: `${b.returnsDays} days`, s: "Free returns, for any reason" },
   b.sameDayCutoff && { b: "Same day", s: `Shipping before ${b.sameDayCutoff}` },
   { b: String(platforms.length), s: "Engine platforms covered" },
   { b: vehicleCount().toLocaleString("en-US"), s: "Vehicles covered, by year, model and engine" },
@@ -79,7 +79,7 @@ const formAction = mode === "formspree" ? b.contactFormEndpoint : mode === "emai
           <h2>Kits, not guesswork</h2>
           <p class="muted" style="font-size:15px; line-height:1.75; margin-top:14px;">Kits are matched to engine platforms, not guessed from a parts catalog. Pick your year, make, model and engine and you see only the kits that fit it &mdash; and where a kit doesn&rsquo;t fit every vehicle on its platform, the kit says so before you order.</p>
           {madeFrom && <p class="muted" style="font-size:15px; line-height:1.75; margin-top:14px;">{madeFrom}</p>}
-          {b.returnsDays && <p class="muted" style="font-size:15px; line-height:1.75; margin-top:14px;">If a kit doesn&rsquo;t fit what you&rsquo;re working on, send it back inside {b.returnsDays} days. We&rsquo;d rather you get the right hardware than keep the wrong box.</p>}
+          {b.returnsDays && <p class="muted" style="font-size:15px; line-height:1.75; margin-top:14px;">Kit doesn&rsquo;t fit what you&rsquo;re working on, or just changed your mind? Send it back inside {b.returnsDays} days, for any reason &mdash; returns are free. We&rsquo;d rather you get the right hardware than keep the wrong box.</p>}
           <div class="stat-row">
             {stats.map((st) => <div class="card stat"><b>{st.b}</b><span>{st.s}</span></div>)}
           </div>

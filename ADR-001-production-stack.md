@@ -192,7 +192,7 @@ About/Contact. All straightforward once Phases 4–5 hold.
 
 | Risk | Mitigation |
 |---|---|
-| Front end breaks and the operator cannot diagnose it | Keep a minimal Dawn theme published on the `.myshopify.com` domain. Products, prices, and checkout already live in Shopify, so this is a working fallback store reachable in minutes, not a rebuild. |
+| Front end breaks and the operator cannot diagnose it | Keep a minimal Dawn theme published on the `.myshopify.com` domain. Products, prices, and checkout already live in Shopify, so this is a working fallback store reachable in minutes, not a rebuild. *(Launch prep 2026-10-04: the fallback is **Horizon**, Shopify's current default theme, already live on the store — operator's decision; same role as Dawn. Runbook in README → Launch.)* |
 | Storefront API version retires | Calendar reminder every 6 months to bump the API version and redeploy. Small, predictable, ignorable for a while — but not forever. |
 | A wrong fitment claim ships | CI validation (Phase 3) plus a manual review of `vehicle-map.json` diffs. Consider a visible "verify fitment before ordering" note and a generous returns policy on fitment errors. |
 | Agency guides price headless builds at $30k–$150k | Those are Plus-tier brands with multi-market requirements, dedicated dev retainers, and Algolia. Not comparable to a 50-SKU single-market store. Cited only so the number isn't a surprise if encountered. |
@@ -213,9 +213,16 @@ About/Contact. All straightforward once Phases 4–5 hold.
 3. **Product photography.** Not started. Likely the real critical path.
 4. **PA registration and sales tax specifics.** Prerequisite, not designed. Requires an accountant.
 5. **Returns policy for fitment errors.** Directly downstream of item 1. Still open after ADR-003.
+   **Decided 2026-10-04 (launch prep):** free returns for any reason within 30 days — fitment errors
+   included, no separate rule. `returnsDays: 30` in `src/lib/business.js`; the Shopify Refund policy
+   must say the same.
 6. **Customer accounts.** Guest checkout only at launch, unless a reason appears.
 7. **Search.** No site search at launch; the platform pages are the navigation.
 8. **Analytics.** Nothing chosen. Needs to exist before judging whether the SEO thesis is working.
+   **Decided 2026-10-04 (launch prep):** Google Search Console (search queries, impressions and clicks
+   per platform page — the direct test of §2.2) plus Vercel Web Analytics (cookieless page views; one
+   script tag, no package). A hand-written `/sitemap.xml` (no dependency) is submitted to Search Console.
+   Sales numbers stay in Shopify's own reports.
 9. **ACES/VCdb, revisited.** If selling into marketplaces or supplying data to distributors later, ACES
    becomes a requirement of *that* channel, not of this website. Do not pre-build for it.
 10. **The Engine / Engines naming collision** flagged in the wireframe changelog — the filter field (which

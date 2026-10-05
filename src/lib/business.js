@@ -21,8 +21,10 @@ export const business = {
   /** (c) Bulk pricing starts at this many kits, e.g. 10. Home readout + About contact card. */
   bulkPricingFrom: null,
 
-  /** (d) Returns window in days, e.g. 30. About copy + stat. Returns policy is ADR-001 §7.5 — still open. */
-  returnsDays: null,
+  /** (d) Returns window in days. About copy + stat. ADR-001 §7.5, decided at launch prep
+   *  (2026-10-04): free returns for any reason within this many days. Keep the Refund
+   *  policy in Shopify (Settings → Policies) saying the same thing. */
+  returnsDays: 30,
 
   /** (e) Materials the kits come in, e.g. "grade-8 and stainless". Home kit card + About. */
   kitMaterials: null,

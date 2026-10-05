@@ -15,13 +15,15 @@
  */
 
 export const business = {
-  // Operator's answers, 2026-10-04 (launch prep): (b) 2pm ET; (c) leave off; (d) 30 days,
-  // no questions asked; (e) pending — which grades; (f) no; (g) don't show; (h) the
-  // help@ address; (i) no phone — contact is by email only; (j) no hours — not a
-  // storefront; (k) leave off.
+  // Operator's answers, 2026-10-04 (launch prep): (b) 2pm ET, Mon–Fri; (c) leave off;
+  // (d) 30 days, no questions asked; (e) leave off — grades go in each kit's own copy
+  // in Shopify; (f) no; (g) don't show; (h) TEMPORARY personal address for pre-launch
+  // tests — replace with the business mailbox before launch (README → Launch);
+  // (i) no phone — contact is by email only; (j) no hours — not a storefront;
+  // (k) leave off. Formspree dropped: the contact form opens the shopper's email app.
 
-  /** (b) Same-day shipping cutoff, e.g. "3pm ET". Shown on Home and About. */
-  sameDayCutoff: "2pm ET",
+  /** (b) Same-day shipping cutoff, read after "before …", e.g. "3pm ET". Shown on Home and About. */
+  sameDayCutoff: "2pm ET, Mon–Fri",
 
   /** (c) Bulk pricing starts at this many kits, e.g. 10. Home readout + About contact card. */
   bulkPricingFrom: null,
@@ -40,9 +42,10 @@ export const business = {
   /** (g) Where orders ship from, e.g. { city: "Covington", state: "Georgia" }. Footer + About. */
   shipsFrom: null,
 
-  /** (h) The mailbox shoppers can write to, e.g. "help@organizeyournuts.com". About contact card;
-   *  also where the contact form falls back to (a pre-written email) if Formspree isn't set. */
-  email: "help@organizeyournuts.com",
+  /** (h) The mailbox shoppers write to. About contact card, and where the contact form
+   *  sends (it opens the shopper's email app with the message pre-written).
+   *  TEMPORARY until launch — swap in the business mailbox (e.g. help@organizeyournuts.com). */
+  email: "michaelg13@gmail.com",
 
   /** (i) e.g. { display: "(770) 555-0142", tel: "+17705550142" }. About contact card. */
   phone: null,
@@ -52,18 +55,9 @@ export const business = {
 
   /** (k) Street address shown on the page, e.g. ["1420 Industrial Way", "Covington, GA 30014"]. */
   address: null,
-
-  /**
-   * The contact form's Formspree address, e.g. "https://formspree.io/f/abcdwxyz".
-   * Public by design (it's in the page's HTML) — not a password. Formspree
-   * emails each message to the address on the Formspree account.
-   */
-  contactFormEndpoint: null,
 };
 
-/** How the contact form sends: "formspree", "email" (opens a pre-written email), or null (not connected). */
+/** How the contact form sends: "email" (opens a pre-written email), or null (no mailbox set — not connected). */
 export function contactMode() {
-  if (business.contactFormEndpoint) return "formspree";
-  if (business.email) return "email";
-  return null;
+  return business.email ? "email" : null;
 }

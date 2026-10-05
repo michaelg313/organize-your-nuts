@@ -8,12 +8,10 @@
  * until confirmed. Numbers about the catalog are counted from the real data.
  *
  * The contact form (src/scripts/contact-form.js) checks the fields in the
- * browser the way the hi-fi's error state shows, then sends through Formspree
- * (operator's decision, Phase 6) — the site stays fully static (ADR-002).
- * How it sends depends on business.js:
- *   contactFormEndpoint set → Formspree emails the message to the operator
- *   only `email` set        → opens the shopper's email app, message pre-written
- *   neither                 → the form says it isn't connected yet (and the build warns)
+ * browser the way the hi-fi's error state shows, then opens the shopper's
+ * email app with the message pre-written to business.js `email` — contact is
+ * by email only (operator's decision, launch prep; Formspree dropped). With no
+ * `email` set, the form says it isn't connected yet and the build warns.
  */
 import Site from "../layouts/Site.astro";
 import { loadCatalog } from "../lib/shopify.js";
@@ -28,7 +26,7 @@ const mode = contactMode();
 if (!mode) {
   console.warn(
     "⚠ The About page's contact form isn't connected yet, so it can't send anything. " +
-    "Put the Formspree form address (contactFormEndpoint) or a real mailbox (email) in src/lib/business.js.",
+    "Put a real mailbox (email) in src/lib/business.js.",
   );
 }
 
@@ -54,7 +52,7 @@ const stats = [
 // "Reach us directly" shows only confirmed rows; with none, the form gets the full width.
 const hasDetails = Boolean(b.email || b.phone || b.hours || b.address || b.bulkPricingFrom);
 
-const formAction = mode === "formspree" ? b.contactFormEndpoint : mode === "email" ? `mailto:${b.email}` : undefined;
+const formAction = mode === "email" ? `mailto:${b.email}` : undefined;
 ---
 <Site
   title="About & Contact | OrganizeYourNuts"
@@ -126,23 +124,9 @@ const formAction = mode === "formspree" ? b.contactFormEndpoint : mode === "emai
               <span class="err" id="e-message" hidden></span>
             </label>
           </div>
-          {mode === "formspree" && (
-            <>
-              <input type="hidden" name="_subject" value="New message from organizeyournuts.com" />
-              <!-- spam trap: people never see or fill this; bots do, and Formspree drops those -->
-              <input type="text" name="_gotcha" class="vh" tabindex="-1" autocomplete="off" aria-hidden="true" />
-            </>
-          )}
           <button class="btn btn-primary btn-block" type="submit" style="margin-top:20px;" data-contact-submit disabled={!mode}>Send message</button>
           <p class="muted" style="font-size:12px; margin-top:13px;">We reply by email.</p>
         </form>
-
-        <div class="card" style="padding:26px;" data-contact-sent hidden tabindex="-1">
-          <div class="notice" role="status" style="margin-bottom:0;">
-            <span class="nmark" aria-hidden="true">&#10003;</span>
-            <p><b>Thanks &mdash; your message is on its way.</b> We&rsquo;ll reply by email.</p>
-          </div>
-        </div>
 
         {hasDetails && (
           <aside class="card" style="padding:26px;">

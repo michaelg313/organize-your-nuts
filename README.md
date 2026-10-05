@@ -78,17 +78,14 @@ where orders ship from, email, phone, hours, address. **`null` means not confirm
 stat or contact row is left off the page.** Catalog numbers (kits, platforms, vehicles covered) are
 counted from the real data at build time.
 
-The contact form sends through **Formspree** (a form service — no code dependency, keeps the site
-static per ADR-002). How it sends follows `business.js`:
+Contact is **by email only** — no phone, no hours, no address (operator's decision, launch prep;
+Formspree was dropped). The contact form checks the fields first, the way the hi-fi's "validation
+errors" state shows, then "Send" opens the shopper's email app with the message pre-written to
+`email` in `business.js`. If that app doesn't open, a note under the form gives the address. With no
+`email` set, the form says it isn't connected, the button is off, and **the build prints a warning**.
 
-- `contactFormEndpoint` set (`https://formspree.io/f/…`, public by design) → Formspree emails the
-  message to the address on your Formspree account.
-- only `email` set → "Send" opens the shopper's email app with the message pre-written.
-- neither → the form says it isn't connected, the button is off, and **the build prints a warning**.
-
-The form checks the fields first, the way the hi-fi's "validation errors" state shows. **When it
-misbehaves:** the shopper sees one plain sentence (plus the email address, if set); the reason is in
-the browser console on a line starting `[contact]`.
+**`email` is temporarily the operator's personal address** for pre-launch tests. Swap in the
+business mailbox before launch (checklist item 0 under Launch).
 
 ## The cart
 
@@ -128,7 +125,7 @@ src/lib/shopify.js      the ONE Storefront API fetch per build, plus the plain-E
 src/lib/cart.js         the cart's Storefront API client (browser, PUBLIC token)
 src/lib/display.js      system names + price format, shared by the build and the browser
 src/lib/storage.js      the three storage categories (= Shopify's Storage type choices) and their copy
-src/lib/business.js     business facts the pages state; null = not confirmed = left off. Contact form address.
+src/lib/business.js     business facts the pages state; null = not confirmed = left off. The contact email.
 src/layouts/Site.astro  <head> (incl. the cart's public settings), nav + ☰ menu + cart count, footer, .page root
 src/components/         VehiclePicker.astro, KitCard.astro, StorageCard.astro
 src/scripts/kits-picker.js     the cascading picker in the browser (Kits pages AND Home)
@@ -186,10 +183,11 @@ What the code does for launch:
 
 | # | Item | Who | Breaks if skipped |
 |---|---|---|---|
+| 0 | Create the business mailbox, then replace the temporary personal `email` in `src/lib/business.js` (and the contact email in Shopify's policies) | Operator creates it; code change | Shoppers' messages go to a personal inbox, and that address stays published on the site |
 | 1 | Vercel plan. Hobby is non-commercial only under Vercel's terms; staying on it for now is the operator's call. Move to Pro (or Cloudflare Pages, ADR-002 §1) before it matters | Operator | Vercel may pause the project |
 | 2 | Production env vars: `SHOPIFY_STORE_DOMAIN` (stays the `.myshopify.com` address), `SHOPIFY_STOREFRONT_PRIVATE_TOKEN`, `PUBLIC_SHOPIFY_STOREFRONT_TOKEN` — each ticked for **Production** | Operator (Vercel → Settings → Environment Variables) | Production build fails; last good deploy keeps serving |
 | 3 | Shopify Payments active; PA sales-tax number added (Settings → Taxes and duties). Not tax advice — confirm with an accountant | Operator | No card payments; PA tax not collected |
-| 4 | Policies: **Refund** (free returns, any reason, 30 days — must match the About page), **Shipping**, Terms of Service; check Privacy | Operator (Settings → Policies) | Footer words stay unlinked; no returns terms on record |
+| 4 | Policies: **Refund** (free returns, any reason, 30 days — must match the About page), **Shipping**, Terms of Service; check Privacy. Refund + Shipping drafts: [docs/POLICY-DRAFTS.md](docs/POLICY-DRAFTS.md) | Operator (Settings → Policies) | Footer words stay unlinked; no returns terms on record |
 | 5 | `checkout.organizeyournuts.com`: CNAME → `shops.myshopify.com` at the registrar, then Shopify → Settings → Domains → connect, and make it the **primary** domain | Operator | Checkout shows a `myshopify.com` address |
 | 6 | Horizon fallback: stays published; products stay on Online Store; its menu links to the products; hide it from Google (Online Store → Themes → Edit code → `theme.liquid`, add `<meta name="robots" content="noindex">` inside `<head>`) | Operator (the connector can't edit the live theme) | No fallback store; a duplicate store competes in search |
 | 7 | Test order (below) | Operator types the card | Launching an untested checkout |
